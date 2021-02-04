@@ -7,7 +7,8 @@
   "repository": "https://github.com/mymonero/mymonero-web-js",
   "scripts": {
     "start": "bin/start_dev_browser",
-    "postinstall": "bin/update_submodules"
+    "postinstall": "bin/update_submodules",
+    "watch": "(webpack --config webpack.browser.dev.config.js --display-modules --watch) & bin/start_dev_browser"
   },
   "engines": {
     "node": "12.4.0"
@@ -18,7 +19,7 @@
     "fastclick": "1.0.6",
     "html5-fs": "0.1.1",
     "jsqr": "1.1.1",
-    "mymonero-exchange": "^0.1.3",
+    "mymonero-exchange": "^0.1.5",
     "qrcode": "^1.4.4",
     "uuid": "3.3.2",
     "velocity-animate": "1.5.2",
