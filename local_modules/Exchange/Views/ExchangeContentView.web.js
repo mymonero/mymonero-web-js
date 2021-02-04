@@ -526,7 +526,6 @@ class ExchangeContentView extends View {
                 return;
             }
             const Utils = require('../../Exchange/Javascript/ExchangeUtilityFunctions');
-            console.log(Utils);
             const ExchangeLibrary = require('mymonero-exchange');
             const ExchangeFunctions = new ExchangeLibrary();
             const ExchangeUtils = require('../Javascript/ExchangeUtilityFunctions');
@@ -700,7 +699,6 @@ class ExchangeContentView extends View {
                 let BTCToReceive;
                 let XMRbalance = parseFloat(XMRcurrencyInput.value);
                 let in_amount = XMRbalance.toFixed(12);
-                console.log(currencyInputTimer);
                 BTCcurrencyInput.value = "Loading...";
                 if (currencyInputTimer !== undefined) {
                     clearTimeout(currencyInputTimer);
@@ -778,7 +776,7 @@ class ExchangeContentView extends View {
                 ExchangeFunctions.getRatesAndLimits().then(() => {
                     loaderPage.classList.remove('active');
                     exchangePage.classList.add("active");
-                    console.log("Exchange page should be visible");
+                    
                 }).catch((error) => {
                     if (retry !== null) {
                         retry.classList.remove('hidden');
@@ -806,8 +804,6 @@ class ExchangeContentView extends View {
                 }).finally(() => {
                     ExchangeFunctions.initialiseExchangeConfiguration().then((response) => {
                         // Data returned by resolve
-                        console.log("init config");
-                        console.log(response)
                         let localmoneroDiv = document.getElementById("localmonero");
                         let localmoneroAnchor = document.getElementById('localmonero-anchor');
                         // let indacoinAnchor = document.getElementById('indacoin-anchor');
@@ -815,12 +811,6 @@ class ExchangeContentView extends View {
                         // indacoinAnchor.setAttribute("url", "https://indacoin.com/");
                         // indacoinAnchor.setAttribute("referrer_id", response.referrer_info.indacoin.referrer_id)
                         // indacoinAnchor.setAttribute("param_str", "");
-    
-                        console.log(localmoneroAnchor);
-                        console.log(localmoneroDiv);
-
-                        console.log(response.data);
-
                         localmoneroAnchor.setAttribute("referrer_id", response.data.referrer_info.localmonero.referrer_id)
                         localmoneroAnchor.setAttribute("url", "https://localmonero.co")
                         localmoneroAnchor.setAttribute("param_str", "rc");
@@ -835,7 +825,6 @@ class ExchangeContentView extends View {
                             localmoneroAnchor.addEventListener('click', openClickableLink);
                         }
                     }).catch(error => {
-                        console.log(error);
                         let localmoneroDiv = document.getElementById("localmonero");
                         let localmoneroAnchor = document.getElementById('localmonero-anchor');
                         
@@ -1006,7 +995,6 @@ function renderOrderStatus(order) {
                     exchangeXmrDiv.classList.add('active');
                     //backBtn.innerHTML = `<div class="base-button hoverable-cell utility grey-menu-button disableable left-back-button" style="cursor: default; -webkit-app-region: no-drag; position: absolute; opacity: 1; left: 0px;"></div>`;
                     orderTimer = setInterval(() => {
-                        console.log("Order timer tick");
                         if (orderStatusResponse.hasOwnProperty('expires_at')) {
                             orderStatusResponse.orderTick++;
                             renderOrderStatus(orderStatusResponse);
@@ -1035,7 +1023,7 @@ function renderOrderStatus(order) {
                                 }
                         }
                         if ((orderStatusResponse.orderTick % 10) == 0) {
-                            console.log("Get status update");
+
                             ExchangeFunctions.getOrderStatus().then(function (response) {
                                 let elemArr = document.getElementsByClassName("provider-name");
                                 if (firstTick == true || elemArr[0].innerHTML == 'undefined') {
@@ -1079,7 +1067,6 @@ function renderOrderStatus(order) {
     }
             let exchangeRendered = document.getElementById('orderStatusPage'); 
             if (exchangeRendered == null) {
-                console.log('We have not shown the order status page');
                 return;
             } else {
                 
@@ -1208,14 +1195,6 @@ function renderOrderStatus(order) {
 		return displayString
 	}
 
-/**
- *                 let exchangeRate = document.getElementById('exchangeRate');
-                
-                exchangeRate.addEventListener('click', function() {
-                    const rateObj = await ExchangeFunctions.getRatesAndLimits();
-                    console.log(rateObj);
-                })
-*/
     Navigation_Title() {
         return "Exchange"
     }
