@@ -195,6 +195,18 @@ class ExchangeContentView extends View {
             layer.innerHTML = "You can exchange XMR to Bitcoin here. Please wait while we load rates.";
             contentContainerLayer.appendChild(layer)
         }
+
+        {
+            // const layer = document.createElement("div")
+            // layer.id = "localmonero";
+            // layer.innerHTML = "Buy Monero using LocalMonero";
+            // layer.style.textTransform = "uppercase";
+            // layer.style.display = "none";
+
+            
+
+            // contentContainerLayer.appendChild(layer)
+        }
         
         {
             // Send Funds
@@ -366,6 +378,8 @@ class ExchangeContentView extends View {
                         <input id="btcAddress" class="full-width longTextInput" type="text" placeholder="Destination BTC Address" autocomplete="off" autocapitalize="none" spellcheck="false" value="">
                     </div>
                 </div>
+                <div id="localmonero"><a href="#" id="localmonero-anchor" class="clickableLinkButton">Buy Monero using LocalMonero</a></div>
+                <div id="indacoin"><a href="#" id="indacoin-anchor" class="clickableLinkButton">Buy Monero using Indacoin</a></div>
                 <div id="validation-messages"></div>
                 <div id="address-messages"></div>
                 <div id="server-messages"></div>
@@ -381,14 +395,14 @@ class ExchangeContentView extends View {
             <div class="field_title form-field-title">
                 <table>
                     <tr>
-                        <td colspan="2" style="word-wrap: normal; word-break: normal;">Please note that MyMonero cannot provide support for any exchanges. For all issues, please contact XMR.to with your UUID, as they will be able to assist.</td>
+                    <td colspan="2" style="word-wrap: normal; word-break: normal;">Please note an exchange may take a few minutes to process. <span class="provider-name"></span> are able to provide support for any exchanges. For all issues, please contact <span class="provider-name"></span> with your UUID for assistance.</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="field_title form-field-title uppercase">
                                 <div style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0;">
-                                    <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">XMR.to UUID</span>
-                                    <div id="provider_order_id" class="textInput currencyOutput" type="text" placeholder="0.00"></div>
+                                    <span class="field_title form-field-title label-spacing uppercase" style="margin-top: 0px;"><span class="provider-name"></span> UUID</span>
+                                    <div id="provider_order_id" class="textInput currencyOutput" type="text" placeholder="0.00" style="text-transform: none !important"></div>
                                     <div class="currencySelect"><option value="XMR" style="text-align: center;">&nbsp;&nbsp;&nbsp;&nbsp;</option></select> 
                                 </div>
                             </div>
@@ -512,7 +526,6 @@ class ExchangeContentView extends View {
                 return;
             }
             const Utils = require('../../Exchange/Javascript/ExchangeUtilityFunctions');
-            console.log(Utils);
             const ExchangeLibrary = require('mymonero-exchange');
             const ExchangeFunctions = new ExchangeLibrary();
             const ExchangeUtils = require('../Javascript/ExchangeUtilityFunctions');
@@ -686,7 +699,6 @@ class ExchangeContentView extends View {
                 let BTCToReceive;
                 let XMRbalance = parseFloat(XMRcurrencyInput.value);
                 let in_amount = XMRbalance.toFixed(12);
-                console.log(currencyInputTimer);
                 BTCcurrencyInput.value = "Loading...";
                 if (currencyInputTimer !== undefined) {
                     clearTimeout(currencyInputTimer);
@@ -764,6 +776,7 @@ class ExchangeContentView extends View {
                 ExchangeFunctions.getRatesAndLimits().then(() => {
                     loaderPage.classList.remove('active');
                     exchangePage.classList.add("active");
+                    
                 }).catch((error) => {
                     if (retry !== null) {
                         retry.classList.remove('hidden');
@@ -788,6 +801,40 @@ class ExchangeContentView extends View {
                         explanatoryMessage.appendChild(errorDiv);
                         explanatoryMessage.appendChild(retryBtn);
                     }
+                }).finally(() => {
+                    ExchangeFunctions.initialiseExchangeConfiguration().then((response) => {
+                        // Data returned by resolve
+                        let localmoneroDiv = document.getElementById("localmonero");
+                        let localmoneroAnchor = document.getElementById('localmonero-anchor');
+                        // let indacoinAnchor = document.getElementById('indacoin-anchor');
+                        
+                        // indacoinAnchor.setAttribute("url", "https://indacoin.com/");
+                        // indacoinAnchor.setAttribute("referrer_id", response.referrer_info.indacoin.referrer_id)
+                        // indacoinAnchor.setAttribute("param_str", "");
+                        localmoneroAnchor.setAttribute("referrer_id", response.data.referrer_info.localmonero.referrer_id)
+                        localmoneroAnchor.setAttribute("url", "https://localmonero.co")
+                        localmoneroAnchor.setAttribute("param_str", "rc");
+                        
+                        
+                        // if (response.referrer_info.indacoin.enabled === true) {
+                        //     indacoinDiv.style.display = "block";
+                        //     indacoinAnchor.addEventListener('click', openClickableLink);
+                        // }
+                        if (response.data.referrer_info.localmonero.enabled === true) {
+                            localmoneroDiv.style.display = "block";
+                            localmoneroAnchor.addEventListener('click', openClickableLink);
+                        }
+                    }).catch(error => {
+                        let localmoneroDiv = document.getElementById("localmonero");
+                        let localmoneroAnchor = document.getElementById('localmonero-anchor');
+                        
+                        localmoneroAnchor.setAttribute("referrer_id", "h2t1")
+                        localmoneroAnchor.setAttribute("url", "https://localmonero.co")
+                        localmoneroAnchor.setAttribute("param_str", "rc");
+                        // No data received from promise resolve(). Display link for LocalMonero
+                        localmoneroDiv.style.display = "block";
+                        localmoneroAnchor.addEventListener('click', openClickableLink);
+                    });
                 });
             }
 
@@ -874,6 +921,22 @@ function renderOrderStatus(order) {
         return true;
     }
 
+    function openClickableLink() {
+        const self = this;
+        let referrer_id = self.getAttribute("referrer_id");
+        let url = self.getAttribute("url");
+        let paramStr = self.getAttribute("param_str");
+        if (referrer_id.length > 0) {
+            console.log("Got a referrer -- generate custom URL");
+            let urlToOpen = url + "?" + paramStr + "=" + referrer_id;
+            window.open(urlToOpen);
+        } else {
+            console.log("No referrer");
+            window.open("https://localmonero.co");
+        }
+    }
+
+
     function isValidBase10Decimal(number) {
         let str = number.toString();
         let strArr = str.split('.');
@@ -910,31 +973,32 @@ function renderOrderStatus(order) {
             return;
         }
         let btc_dest_address = document.getElementById('btcAddress').value;
-        
+        let firstTick = true;
         orderBtn.style.display = "none";
         orderStarted = true;
         //backBtn.style.display = "block";
         loaderPage.classList.add('active');
-
+        let orderStatusResponse = { orderTick: 0 };
         let out_amount = document.getElementById('BTCcurrencyInput').value;
         let in_currency = 'XMR';
         let out_currency = 'BTC';
         try {
-            let offer = ExchangeFunctions.getOfferWithOutAmount(in_currency, out_currency, out_amount).then((error, response) => {
+            let offer = ExchangeFunctions.getOfferWithOutAmount(in_currency, out_currency, out_amount).then((response) => {
                 
             }).then((error, response) => {
                 let selectedWallet = document.getElementById('selected-wallet');
                 
-                ExchangeFunctions.createOrder(btc_dest_address, selectedWallet.dataset.walletpublicaddress).then((error, response) => {
+                ExchangeFunctions.createOrder(btc_dest_address, selectedWallet.dataset.walletpublicaddress).then((response) => {
                     document.getElementById("orderStatusPage").classList.remove('active');
                     loaderPage.classList.remove('active');
                     orderStatusDiv.classList.add('active');
+                    exchangeXmrDiv.classList.add('active');
                     //backBtn.innerHTML = `<div class="base-button hoverable-cell utility grey-menu-button disableable left-back-button" style="cursor: default; -webkit-app-region: no-drag; position: absolute; opacity: 1; left: 0px;"></div>`;
                     orderTimer = setInterval(() => {
-                        ExchangeFunctions.getOrderStatus().then(function (response) {                            
-                            renderOrderStatus(response);
-                            exchangeXmrDiv.classList.add('active');
-                            let expiryTime = response.expires_at;
+                        if (orderStatusResponse.hasOwnProperty('expires_at')) {
+                            orderStatusResponse.orderTick++;
+                            renderOrderStatus(orderStatusResponse);
+                            let expiryTime = orderStatusResponse.expires_at;
                             let secondsElement = document.getElementById('secondsRemaining');
                             let minutesElement = document.getElementById('minutesRemaining');
                             if (secondsElement !== null) {
@@ -949,12 +1013,36 @@ function renderOrderStatus(order) {
                                 let xmr_dest_address_elem = document.getElementById('in_address');
                                 xmr_dest_address_elem.value = response.receiving_subaddress; 
                             }
-                        })
+
+                            if (orderStatusResponse.status == "PAID" || orderStatusResponse.status == "TIMED_OUT"
+                                || orderStatusResponse.status == "DONE" || orderStatusResponse.status == "FLAGGED_DESTINATION_ADDRESS"
+                                || orderStatusResponse.status == "PAYMENT_FAILED" || orderStatusResponse.status == "REJECTED" 
+                                || orderStatusResponse.status == "EXPIRED") 
+                                {
+                                    clearInterval(localOrderTimer);
+                                }
+                        }
+                        if ((orderStatusResponse.orderTick % 10) == 0) {
+
+                            ExchangeFunctions.getOrderStatus().then(function (response) {
+                                let elemArr = document.getElementsByClassName("provider-name");
+                                if (firstTick == true || elemArr[0].innerHTML == 'undefined') {
+                                    renderOrderStatus(response);
+                                    elemArr[0].innerHTML = response.provider_name;
+                                    elemArr[1].innerHTML = response.provider_name;
+                                    elemArr[2].innerHTML = response.provider_name;
+                                    
+                                    firstTick = false;
+                                }
+                                let orderTick = orderStatusResponse.orderTick;
+                                orderTick++;
+                                response.orderTick = orderTick;
+                                orderStatusResponse = response;
+                            })
+                        }
                     }, 1000);
                     document.getElementById("orderStatusPage").classList.remove('active');
-                    loaderPage.classList.remove('active');
-                    orderStatusDiv.classList.add('active');
-                    //exchangeXmrDiv.classList.add('active');
+
                 }).catch((error) => {
                     let errorDiv = document.createElement('div');
                     errorDiv.classList.add('message-label');
@@ -979,7 +1067,6 @@ function renderOrderStatus(order) {
     }
             let exchangeRendered = document.getElementById('orderStatusPage'); 
             if (exchangeRendered == null) {
-                console.log('We have not shown the order status page');
                 return;
             } else {
                 
@@ -1002,7 +1089,6 @@ function renderOrderStatus(order) {
                     }
                 });
                 getRates();
-
                 clearInterval(exchangeInitTimer);
                 initialized = true;
             }
@@ -1109,14 +1195,6 @@ function renderOrderStatus(order) {
 		return displayString
 	}
 
-/**
- *                 let exchangeRate = document.getElementById('exchangeRate');
-                
-                exchangeRate.addEventListener('click', function() {
-                    const rateObj = await ExchangeFunctions.getRatesAndLimits();
-                    console.log(rateObj);
-                })
-*/
     Navigation_Title() {
         return "Exchange"
     }
