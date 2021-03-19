@@ -26,18 +26,18 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Includes usage of OpenTip tooltip library which is copyright (c) 2012 by 
+// Includes usage of OpenTip tooltip library which is copyright (c) 2012 by
 // Matias Meno <m@tias.me> and licensed under The MIT License. https://github.com/enyo/opentip
 //
-"use strict"
+'use strict'
 //
 const Opentip = require('./Vendor/opentip-native.min.js')
 //
 const commonComponents_tables = require('./tables.web')
 //
 const Views__cssRules = require('../Views/cssRules.web')
-const NamespaceName = "tooltips"
-const haveCSSRulesBeenInjected_documentKey = "__haveCSSRulesBeenInjected_"+NamespaceName
+const NamespaceName = 'tooltips'
+const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
 const cssRules =
 [
 	// from opentip:
@@ -199,64 +199,60 @@ const cssRules =
 		font-weight: normal;
 		-webkit-font-smoothing: subpixel-antialiased;
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; /* the one place where i can't easily access context.themeController.FontFamily_sansSerif */
-	}`,
+	}`
 
 ]
-function __injectCSSRules_ifNecessary() { Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules) }
+function __injectCSSRules_ifNecessary () { Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules) }
 //
-function _once_listenForTouchStartToDismissTooltip()
-{
-	const documentKey = NamespaceName+"_did_listenForMobileNonHoveringEventsToDismissTooltip"
-	if (document[documentKey] !== true) {
-		document[documentKey] = true
-		//
-		window.addEventListener('touchstart', function(e)
-		{
-			for (var i = 0; i < Opentip.tips.length; i ++) { 
-				Opentip.tips[i].hide()
-			}
-		})
-	}
+function _once_listenForTouchStartToDismissTooltip () {
+  const documentKey = NamespaceName + '_did_listenForMobileNonHoveringEventsToDismissTooltip'
+  if (document[documentKey] !== true) {
+    document[documentKey] = true
+    //
+    window.addEventListener('touchstart', function (e) {
+      for (let i = 0; i < Opentip.tips.length; i++) {
+        Opentip.tips[i].hide()
+      }
+    })
+  }
 }
 //
-function New_TooltipSpawningButtonView(tooltipText, context)
-{
-	__injectCSSRules_ifNecessary()
+function New_TooltipSpawningButtonView (tooltipText, context) {
+  __injectCSSRules_ifNecessary()
 
-	const buttonTitle = "?"
-	const view = commonComponents_tables.New_clickableLinkButtonView(buttonTitle, context)
-	const layer = view.layer
-	layer.style.marginLeft = "7px"
-	layer.style.display = "inline" // same line
-	layer.style.float = "none"
-	layer.style.clear = "none" // must unset
-	const tooltip_options = 
+  const buttonTitle = '?'
+  const view = commonComponents_tables.New_clickableLinkButtonView(buttonTitle, context)
+  const layer = view.layer
+  layer.style.marginLeft = '7px'
+  layer.style.display = 'inline' // same line
+  layer.style.float = 'none'
+  layer.style.clear = 'none' // must unset
+  const tooltip_options =
 	{
-		target: true, // target trigger (`layer`)
-		tipJoint: "bottom center",
-		containInViewport: true,
-		//
-		stemBase: 14,
-		stemLength: 13,
-		//
-		background: "#FCFBFC",
-		//
-		borderWidth: 0,
-		borderRadius: 5,
-		//
-		shadow: true,
-		shadowBlur: 38,
-		shadowOffset: [ 0, 19 ],
-		shadowColor: "rgba(0,0,0,0.26)"
+	  target: true, // target trigger (`layer`)
+	  tipJoint: 'bottom center',
+	  containInViewport: true,
+	  //
+	  stemBase: 14,
+	  stemLength: 13,
+	  //
+	  background: '#FCFBFC',
+	  //
+	  borderWidth: 0,
+	  borderRadius: 5,
+	  //
+	  shadow: true,
+	  shadowBlur: 38,
+	  shadowOffset: [0, 19],
+	  shadowColor: 'rgba(0,0,0,0.26)'
 	}
-	if (context.Tooltips_nonHoveringBehavior == true) {
-		tooltip_options.showOn = "click"
-		tooltip_options.hideOn = "click"
-		_once_listenForTouchStartToDismissTooltip()
-	}
-	const tooltip = new Opentip(layer, tooltip_options)
-	tooltip.setContent(tooltipText)
-	return view 
+  if (context.Tooltips_nonHoveringBehavior == true) {
+    tooltip_options.showOn = 'click'
+    tooltip_options.hideOn = 'click'
+    _once_listenForTouchStartToDismissTooltip()
+  }
+  const tooltip = new Opentip(layer, tooltip_options)
+  tooltip.setContent(tooltipText)
+  return view
 }
 exports.New_TooltipSpawningButtonView = New_TooltipSpawningButtonView
-

@@ -26,28 +26,26 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const ContactsTabContentView_Base = require('./ContactsTabContentView_Base.web')
 const ContactsDownloadAppEmptyScreenView = require('./ContactsDownloadAppEmptyScreenView.Lite.web')
 //
-class ContactsTabContentView extends ContactsTabContentView_Base
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
-	setup()
-	{
-		super.setup() // we must call on super
-		//
-		const self = this
-		const view = new ContactsDownloadAppEmptyScreenView({}, self.context)
-		self.SetStackViews(
-			[
-				view
-			]
-		)
-	}
+class ContactsTabContentView extends ContactsTabContentView_Base {
+  constructor (options, context) {
+    super(options, context)
+  }
+
+  setup () {
+    super.setup() // we must call on super
+    //
+    const self = this
+    const view = new ContactsDownloadAppEmptyScreenView({}, self.context)
+    self.SetStackViews(
+      [
+        view
+      ]
+    )
+  }
 }
 module.exports = ContactsTabContentView

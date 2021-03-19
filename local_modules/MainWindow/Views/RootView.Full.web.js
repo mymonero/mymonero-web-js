@@ -26,15 +26,13 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const RootView_Base = require('./RootView_Base.web')
 //
-class RootView extends RootView_Base
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
+class RootView extends RootView_Base {
+  constructor (options, context) {
+    super(options, context)
+  }
 }
 module.exports = RootView

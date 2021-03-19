@@ -26,26 +26,24 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const Locale_Abstract = require('./Locale_Abstract')
 //
-class Locale extends Locale_Abstract
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
-	Locale(fn)
-	{
-		const self = this
-		var language;
-		if (window.navigator.languages) {
-			language = window.navigator.languages[0]
-		} else {
-			language = window.navigator.userLanguage || window.navigator.language
-		}
-		fn(null, language) // TODO: is language really locale name?
-	}
+class Locale extends Locale_Abstract {
+  constructor (options, context) {
+    super(options, context)
+  }
+
+  Locale (fn) {
+    const self = this
+    let language
+    if (window.navigator.languages) {
+      language = window.navigator.languages[0]
+    } else {
+      language = window.navigator.userLanguage || window.navigator.language
+    }
+    fn(null, language) // TODO: is language really locale name?
+  }
 }
 module.exports = Locale

@@ -26,20 +26,20 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const Views__cssRules = require('../Views/cssRules.web')
 //
 const SizeClasses =
 {
-	Large48: "large-48",
-	Large43: "large-43",
-	Medium32: "medium-32",
+  Large48: 'large-48',
+  Large43: 'large-43',
+  Medium32: 'medium-32'
 }
 exports.SizeClasses = SizeClasses
 //
-const NamespaceName = "walletIcons"
-const haveCSSRulesBeenInjected_documentKey = "__haveCSSRulesBeenInjected_"+NamespaceName
+const NamespaceName = 'walletIcons'
+const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
 const cssRules =
 [
 	// set bg clr on .walletIcon and .walletIcon > span
@@ -69,28 +69,25 @@ const cssRules =
 	  background-size: 32px 32px;
 	}`
 ]
-function __injectCSSRules_ifNecessary()
-{
-	Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules)
+function __injectCSSRules_ifNecessary () {
+  Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules)
 }
 //
-function New_WalletIconLayer(context, optl_sizeClass)
-{
-	var sizeClass = optl_sizeClass || SizeClasses.Large48
-	const assetsPath = "../../" + (context.ThemeController_rootPathSuffixPrefixingPathToFontFiles || "")
-	//
-	__injectCSSRules_ifNecessary()
-	//
-	const div = document.createElement("div")
-	div.classList.add("walletIcon")
-	div.classList.add(sizeClass)
-	//
-	div.ConfigureWithHexColorString = function(to_hexColorString)
-	{
-		const to_hexColorString_sansPound = to_hexColorString.substring(1, to_hexColorString.length)
-		div.style.backgroundImage = `url(${assetsPath}assets/img/wallet-${to_hexColorString_sansPound}@3x.png)`
-	}
-	//
-	return div
+function New_WalletIconLayer (context, optl_sizeClass) {
+  const sizeClass = optl_sizeClass || SizeClasses.Large48
+  const assetsPath = '../../' + (context.ThemeController_rootPathSuffixPrefixingPathToFontFiles || '')
+  //
+  __injectCSSRules_ifNecessary()
+  //
+  const div = document.createElement('div')
+  div.classList.add('walletIcon')
+  div.classList.add(sizeClass)
+  //
+  div.ConfigureWithHexColorString = function (to_hexColorString) {
+    const to_hexColorString_sansPound = to_hexColorString.substring(1, to_hexColorString.length)
+    div.style.backgroundImage = `url(${assetsPath}assets/img/wallet-${to_hexColorString_sansPound}@3x.png)`
+  }
+  //
+  return div
 }
 exports.New_WalletIconLayer = New_WalletIconLayer

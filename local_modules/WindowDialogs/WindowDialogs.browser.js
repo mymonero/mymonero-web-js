@@ -26,28 +26,27 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const WindowDialogs_Abstract = require('./WindowDialogs_Abstract')
 //
-class WindowDialogs extends WindowDialogs_Abstract
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
-	//
-	// Runtime - Imperatives - Dialogs
-	PresentQuestionAlertDialogWith(
-		title,
-		message,
-		okButtonTitle,
-		cancelButtonTitle,
-		fn // (err?, didChooseYes?) -> Void
-	) {
-		const self = this
-		const trueIfUserClickedOK_notCancel = confirm(message) // add: title, buttons
-		fn(null, trueIfUserClickedOK_notCancel)
-	}
+class WindowDialogs extends WindowDialogs_Abstract {
+  constructor (options, context) {
+    super(options, context)
+  }
+
+  //
+  // Runtime - Imperatives - Dialogs
+  PresentQuestionAlertDialogWith (
+    title,
+    message,
+    okButtonTitle,
+    cancelButtonTitle,
+    fn // (err?, didChooseYes?) -> Void
+  ) {
+    const self = this
+    const trueIfUserClickedOK_notCancel = confirm(message) // add: title, buttons
+    fn(null, trueIfUserClickedOK_notCancel)
+  }
 }
 module.exports = WindowDialogs

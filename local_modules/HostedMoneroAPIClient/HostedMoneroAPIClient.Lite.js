@@ -26,17 +26,15 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"use strict"
+'use strict'
 //
 const HostedMoneroAPIClient_Base = require('./HostedMoneroAPIClient_Base')
 //
-class HostedMoneroAPIClient extends HostedMoneroAPIClient_Base
-{
-	//
-	// Lifecycle - Init
-	constructor(options, context)
-	{
-		super(options, context)
-	}
+class HostedMoneroAPIClient extends HostedMoneroAPIClient_Base {
+  //
+  // Lifecycle - Init
+  constructor (options, context) {
+    super(options, context)
+  }
 }
 module.exports = HostedMoneroAPIClient

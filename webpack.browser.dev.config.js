@@ -26,18 +26,18 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const merge = require('webpack-merge')
 const common = require('./webpack.config.browser.common.js')
 //
 module.exports = merge(common, {
-	mode: 'development',
-	devtool: 'source-map', // "source-map"
-	optimization: {
-        minimize: false
-    }
-	// devServer: {
-	// 	contentBase: './browser_build'
-	// }
+  mode: 'development',
+  devtool: 'source-map', // "source-map"
+  optimization: {
+    minimize: false
+  }
+  // devServer: {
+  // 	contentBase: './browser_build'
+  // }
 })

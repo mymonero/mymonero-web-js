@@ -26,88 +26,88 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const webpack = require('webpack')
 const path = require('path')
 //
-module.exports = 
+module.exports =
 {
-	devtool: "source-map",
-	context: __dirname,
-	entry: "./local_modules/MainWindow/Views/index.browser.js",
-	output: {
-		path: path.resolve(__dirname, "browser_build"),
-		filename: "mymonero-app-bundle.js"
-	},
-	cache: false,
-	resolve: {
-		alias: {
-			"fs": "html5-fs"
-		},
-		extensions: ['.js', '.jsx', '.css', '.json', 'otf', 'ttf', 'eot', 'svg'],
-		modules: [
-			'node_modules'
-		]
-	},
-	externals: {
-	},
-	stats: {
-		colors: true
-	},
-	plugins: [
-		// to fix warning from locales require in moment, "Module not found: Error: Can't resolve './locale/"
-		new webpack.IgnorePlugin(/\.\/locale$/)
-    ],
-	module: {
-		rules: [
-			{
-				test: /\.(otf|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-				use: [
-					{ loader: 'file-loader' }
-				]
-			},
-			{
-				test: /\.css$/,
-				use: [
-					{ loader: 'style!css!postcss' }
-				]
-			},
-			{
-				test: /\.styl$/,
-				use: [
-					{ loader: 'style!css!postcss!stylus?paths=node_modules' }
-				]
-			},
-			{
-				test: /\.js$/,
-				exclude: {
-					test: [
-						path.join(__dirname, 'node_modules'),
-						/MyMoneroCoreCpp_ASMJS\.asm\.js/,
-						/MyMoneroCoreCpp_ASMJS\.wasm/,
-						/MyMoneroCoreCpp_WASM\.js/,
-						/MyMoneroCoreCpp_WASM\.wasm/,
-						/MyMoneroCoreBridge\.js/,
-						/MyMoneroCoreBridgeClass\.js/
-					],
-					exclude: [
-						path.resolve(__dirname, 'mymonero-core-js/tests'),
-						path.resolve(__dirname, 'mymonero_libapp_js/tests'),
-					]
-				},
-				use: [
-					{
-						loader: 'babel-loader',
-						options: {
-							cacheDirectory: false
-							// ,
-							// presets: [ "es2015" ],
-							// plugins: ["transform-runtime"]
-						}
-					}
-				]
-			}
-		]
-	}
+  devtool: 'source-map',
+  context: __dirname,
+  entry: './local_modules/MainWindow/Views/index.browser.js',
+  output: {
+    path: path.resolve(__dirname, 'browser_build'),
+    filename: 'mymonero-app-bundle.js'
+  },
+  cache: false,
+  resolve: {
+    alias: {
+      fs: 'html5-fs'
+    },
+    extensions: ['.js', '.jsx', '.css', '.json', 'otf', 'ttf', 'eot', 'svg'],
+    modules: [
+      'node_modules'
+    ]
+  },
+  externals: {
+  },
+  stats: {
+    colors: true
+  },
+  plugins: [
+    // to fix warning from locales require in moment, "Module not found: Error: Can't resolve './locale/"
+    new webpack.IgnorePlugin(/\.\/locale$/)
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.(otf|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        use: [
+          { loader: 'file-loader' }
+        ]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: 'style!css!postcss' }
+        ]
+      },
+      {
+        test: /\.styl$/,
+        use: [
+          { loader: 'style!css!postcss!stylus?paths=node_modules' }
+        ]
+      },
+      {
+        test: /\.js$/,
+        exclude: {
+          test: [
+            path.join(__dirname, 'node_modules'),
+            /MyMoneroCoreCpp_ASMJS\.asm\.js/,
+            /MyMoneroCoreCpp_ASMJS\.wasm/,
+            /MyMoneroCoreCpp_WASM\.js/,
+            /MyMoneroCoreCpp_WASM\.wasm/,
+            /MyMoneroCoreBridge\.js/,
+            /MyMoneroCoreBridgeClass\.js/
+          ],
+          exclude: [
+            path.resolve(__dirname, 'mymonero-core-js/tests'),
+            path.resolve(__dirname, 'mymonero_libapp_js/tests')
+          ]
+        },
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: false
+              // ,
+              // presets: [ "es2015" ],
+              // plugins: ["transform-runtime"]
+            }
+          }
+        ]
+      }
+    ]
+  }
 }

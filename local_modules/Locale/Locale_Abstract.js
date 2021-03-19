@@ -26,20 +26,18 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
-class Locale_Abstract
-{
-	constructor(options, context)
-	{
-		const self = this
-		self.options = options
-		self.context = context
-	}
-	Locale(fn)
-	{
-		const self = this
-		throw "Override Locale in " + self.constructor.name
-	}
+class Locale_Abstract {
+  constructor (options, context) {
+    const self = this
+    self.options = options
+    self.context = context
+  }
+
+  Locale (fn) {
+    const self = this
+    throw 'Override Locale in ' + self.constructor.name
+  }
 }
 module.exports = Locale_Abstract

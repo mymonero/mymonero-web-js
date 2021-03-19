@@ -26,22 +26,22 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-//"use strict"
+// "use strict"
 
-const Utils = require('../../Exchange/Javascript/ExchangeUtilityFunctions');
-const ExchangeLibrary = require('mymonero-exchange');
-const ValidationLibrary = require('wallet-address-validator');
-const Listeners = require('../../Exchange/Javascript/ExchangeListeners');
-const View = require('../../Views/View.web');
-const ListView = require('../../Lists/Views/ListView.web');
-const emoji_web = require('../../Emoji/emoji_web');
-const ExchangeFunctions = require('../Javascript/ExchangeFunctions');
+const Utils = require('../../Exchange/Javascript/ExchangeUtilityFunctions')
+const ExchangeLibrary = require('mymonero-exchange')
+const ValidationLibrary = require('wallet-address-validator')
+const Listeners = require('../../Exchange/Javascript/ExchangeListeners')
+const View = require('../../Views/View.web')
+const ListView = require('../../Lists/Views/ListView.web')
+const emoji_web = require('../../Emoji/emoji_web')
+const ExchangeFunctions = require('../Javascript/ExchangeFunctions')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_tooltips = require('../../MMAppUICommonComponents/tooltips.web')
 const WalletsSelectView = require('../../WalletsList/Views/WalletsSelectView.web')
-const fs = require('fs');
-//const commonComponents_contactPicker = require('../../MMAppUICommonComponents/contactPicker.web')
+const fs = require('fs')
+// const commonComponents_contactPicker = require('../../MMAppUICommonComponents/contactPicker.web')
 const jsQR = require('jsqr')
 const monero_requestURI_utils = require('../../MoneroUtils/monero_requestURI_utils')
 const JSBigInt = require('../../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/biginteger').BigInteger // important: grab defined export
@@ -49,63 +49,56 @@ const monero_sendingFunds_utils = require('../../mymonero_libapp_js/mymonero-cor
 const monero_openalias_utils = require('../../OpenAlias/monero_openalias_utils')
 const monero_config = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_config')
 const monero_amount_format_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
-const documents = require('../../DocumentPersister/DocumentPersister_Interface.js');
+const documents = require('../../DocumentPersister/DocumentPersister_Interface.js')
 const ListBaseController = require('../../Lists/Controllers/ListBaseController')
 const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emptyScreens.web')
 
-
-
 class ExchangeContentView extends View {
-    constructor(options, context) {
-        
-        
-        super(options, context)
-        const ecvSelf = this;
-		let self = context;
+  constructor (options, context) {
+    super(options, context)
+    const ecvSelf = this
+    const self = context
 
-		//
-		const view = new View({}, self.context)
-		const layer = view.layer
-		const margin_side = 16
-		const marginTop = 56
-		layer.style.marginTop = `${marginTop}px`
-		layer.style.marginLeft = margin_side + "px"
-		layer.style.width = `calc(100% - ${2 * margin_side}px)`
-		layer.style.height = `calc(100% - ${marginTop}px - 15px)`
-		
+    //
+    const view = new View({}, self.context)
+    const layer = view.layer
+    const margin_side = 16
+    const marginTop = 56
+    layer.style.marginTop = `${marginTop}px`
+    layer.style.marginLeft = margin_side + 'px'
+    layer.style.width = `calc(100% - ${2 * margin_side}px)`
+    layer.style.height = `calc(100% - ${marginTop}px - 15px)`
 
-        ecvSelf._setup_emptyStateContainerView(context)
-        ecvSelf._setup_views()
-        ecvSelf.observerIsSet = false;
+    ecvSelf._setup_emptyStateContainerView(context)
+    ecvSelf._setup_views()
+    ecvSelf.observerIsSet = false
 
-        let interval = setInterval(function() {
-            // if wallets exist, setup the wallet selector for the exchange page
-            try {
-                if (context.walletsListController.records !== undefined) {
-                    //ecvSelf._setup_walletExchangeOptions(self.context);
-                }
-            } catch {
-                // wallet not instantiated yet, no need to display notices
-            }
-            ecvSelf._refresh_sending_fee();
-        }, 2000);
-        ecvSelf.keepExchangeOptionsUpdated = interval;
-    }
-
-    
-
-    _setup_walletExchangeOptions(context) {
-        let self = this;
-        let walletDiv = document.getElementById('wallet-selector');
-        if (walletDiv === null) {
-            return;
+    const interval = setInterval(function () {
+      // if wallets exist, setup the wallet selector for the exchange page
+      try {
+        if (context.walletsListController.records !== undefined) {
+          // ecvSelf._setup_walletExchangeOptions(self.context);
         }
-        // if the user has selected a wallet, we update the balances for the    
+      } catch {
+        // wallet not instantiated yet, no need to display notices
+      }
+      ecvSelf._refresh_sending_fee()
+    }, 2000)
+    ecvSelf.keepExchangeOptionsUpdated = interval
+  }
 
-        // get oldest wallet based on how wallets are inserted into wallets as a zero element, changing indexes backwards
-        let defaultOffset = 0;
-        let defaultWallet = context.walletsListController.records[defaultOffset];
-        let walletSelectOptions = `
+  _setup_walletExchangeOptions (context) {
+    const self = this
+    const walletDiv = document.getElementById('wallet-selector')
+    if (walletDiv === null) {
+      return
+    }
+    // if the user has selected a wallet, we update the balances for the
+
+    // get oldest wallet based on how wallets are inserted into wallets as a zero element, changing indexes backwards
+    const defaultOffset = 0
+    const defaultWallet = context.walletsListController.records[defaultOffset]
+    const walletSelectOptions = `
         <div data-walletoffset="0" data-walletpublicaddress="${defaultWallet.public_address}" data-walletLabel="${defaultWallet.walletLabel}" data-swatch="${defaultWallet.swatch.substr(1)}" data-walletbalance="${self.UnlockedBalance_FormattedString(defaultWallet)}" data-walletid="${defaultWallet._id}" id="selected-wallet" class="hoverable-cell utility selectionDisplayCellView" style="">
                 <div id="selected-wallet-icon" class="walletIcon medium-32" style="background-image: url(MMAppUICommonComponents/Resources/wallet-00C6FF@3x.png)"></div>
                 <div id="selected-wallet-label" class="walletName">${defaultWallet.walletLabel}</div>
@@ -115,66 +108,66 @@ class ExchangeContentView extends View {
                 <div class="options_cellViews_containerView" style="position: relative; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 20; overflow-y: auto; max-height: 174.9px;">
                 </div>
             </div>
-        `;
-        walletDiv.innerHTML = walletSelectOptions;
+        `
+    walletDiv.innerHTML = walletSelectOptions
+  }
+
+  _refresh_sending_fee () {
+    const self = this
+    const tx_fee = document.getElementById('tx-fee')
+    if (tx_fee !== null) {
+      tx_fee.dataset.txFee = self._new_estimatedNetworkFee_displayString()
+      tx_fee.innerHTML = `<span class="field_title form-field-title" style="margin-top: 8px; color: rgb(158, 156, 158); display: inline-block;">+ ${self._new_estimatedNetworkFee_displayString()} XMR EST. FEE</span>`
     }
+  }
 
-    _refresh_sending_fee() {
-        const self = this;
-        let tx_fee = document.getElementById('tx-fee');
-        if (tx_fee !== null) {
-            tx_fee.dataset.txFee = self._new_estimatedNetworkFee_displayString();
-            tx_fee.innerHTML = `<span class="field_title form-field-title" style="margin-top: 8px; color: rgb(158, 156, 158); display: inline-block;">+ ${self._new_estimatedNetworkFee_displayString()} XMR EST. FEE</span>`;
-        }
+  _setup_views () {
+    // // to do -- clean up interval timers a bit.
+    // const self = this
+    // super._setup_views()
+    // self._setup_emptyStateContainerView()
+    // self.observerIsSet = false;
+
+    // let interval = setInterval(function() {
+    //     // if wallets exist, setup the wallet selector for the exchange page
+    //     if (self.context.wallets !== undefined) {
+    //         self._setup_walletExchangeOptions(self.context);
+    //     }
+    //     self._refresh_sending_fee();
+    // }, 4000);
+    // self.keepExchangeOptionsUpdated = interval; // we use a named interval attached to the view so that we can stop it if we ever want to;
+  }
+
+  _setup_emptyStateContainerView (context) {
+    // TODO: wrap this in a promise so that we can execute logic after this
+    const self = this
+
+    // We run this on an interval because of the way DOM elements are instantiated. Our Exchange DOM only renders once a user clicks the XMR->BTC menu tab
+    const initialExchangeInit = setInterval(() => {
+      const walletDiv = document.getElementById('wallet-selector')
+      if (walletDiv !== null) {
+        clearInterval(self.initialExchangeInit)
+        self._setup_walletExchangeOptions(self.context)
+      }
+    }, 200)
+
+    self.initialExchangeInit = initialExchangeInit
+
+    const view = new View({}, self.context)
+    {
+      const layer = view.layer
+      layer.classList.add('emptyScreens')
+      layer.classList.add('empty-page-panel')
     }
-
-    _setup_views() {
-        // // to do -- clean up interval timers a bit.
-        // const self = this
-        // super._setup_views()
-        // self._setup_emptyStateContainerView()
-        // self.observerIsSet = false;
-
-        // let interval = setInterval(function() {
-        //     // if wallets exist, setup the wallet selector for the exchange page
-        //     if (self.context.wallets !== undefined) {
-        //         self._setup_walletExchangeOptions(self.context);
-        //     }
-        //     self._refresh_sending_fee();
-        // }, 4000);
-        // self.keepExchangeOptionsUpdated = interval; // we use a named interval attached to the view so that we can stop it if we ever want to;
-    }
-    
-    _setup_emptyStateContainerView(context) {
-        // TODO: wrap this in a promise so that we can execute logic after this
-        const self = this;
-        
-        // We run this on an interval because of the way DOM elements are instantiated. Our Exchange DOM only renders once a user clicks the XMR->BTC menu tab
-        let initialExchangeInit = setInterval(() => {
-            let walletDiv = document.getElementById('wallet-selector');
-            if (walletDiv !== null) {
-                clearInterval( self.initialExchangeInit ); 
-                self._setup_walletExchangeOptions(self.context);
-            }
-        }, 200);
-
-        self.initialExchangeInit = initialExchangeInit;
-
-        const view = new View({}, self.context)
-        {
-            const layer = view.layer
-            layer.classList.add("emptyScreens")
-            layer.classList.add("empty-page-panel")
-        }
-        var contentContainerLayer;
-        {
-            const layer = document.createElement("div");
-            layer.classList.add("content-container")
-            layer.classList.add("empty-page-content-container")
-            view.layer.appendChild(layer)
-            contentContainerLayer = layer
-            //layer.classList.add("xmr_input");
-            let html = `
+    let contentContainerLayer
+    {
+      const layer = document.createElement('div')
+      layer.classList.add('content-container')
+      layer.classList.add('empty-page-content-container')
+      view.layer.appendChild(layer)
+      contentContainerLayer = layer
+      // layer.classList.add("xmr_input");
+      const html = `
             <style>
                 .NavigationBarView + div {}
             </style>
@@ -184,159 +177,152 @@ class ExchangeContentView extends View {
                     <div id="loader" class="active">
                         <!-- gets replaced by loader -->
                     </div>`
-            layer.innerHTML = html;
-        }
+      layer.innerHTML = html
+    }
 
-        {
-            const layer = document.createElement("div")
-            layer.classList.add("message-label")
-            layer.classList.add("exchangeRate")
-            layer.id = "explanatory-message";
-            layer.innerHTML = "You can exchange XMR to Bitcoin here. Please wait while we load rates.";
-            contentContainerLayer.appendChild(layer)
-        }
+    {
+      const layer = document.createElement('div')
+      layer.classList.add('message-label')
+      layer.classList.add('exchangeRate')
+      layer.id = 'explanatory-message'
+      layer.innerHTML = 'You can exchange XMR to Bitcoin here. Please wait while we load rates.'
+      contentContainerLayer.appendChild(layer)
+    }
 
-        {
-            // const layer = document.createElement("div")
-            // layer.id = "localmonero";
-            // layer.innerHTML = "Buy Monero using LocalMonero";
-            // layer.style.textTransform = "uppercase";
-            // layer.style.display = "none";
+    {
+      // const layer = document.createElement("div")
+      // layer.id = "localmonero";
+      // layer.innerHTML = "Buy Monero using LocalMonero";
+      // layer.style.textTransform = "uppercase";
+      // layer.style.display = "none";
 
-            
+      // contentContainerLayer.appendChild(layer)
+    }
 
-            // contentContainerLayer.appendChild(layer)
-        }
-        
-        {
-            // Send Funds
-            const layer = document.createElement("div");
-            // we use ES6's spread operator (...buttonClasses) to invoke the addition of classes -- cleaner than a foreach
-            let buttonClasses = ['base-button', 'hoverable-cell', 'navigation-blue-button-enabled', 'action', 'right-add-button', 'exchange-button'];
-            layer.classList.add(...buttonClasses);  
-            layer.id = "exchange-xmr";
-            layer.innerText = "Exchange XMR";
-            var orderSent = false;
-            layer.addEventListener('click', function(orderSent) {
+    {
+      // Send Funds
+      const layer = document.createElement('div')
+      // we use ES6's spread operator (...buttonClasses) to invoke the addition of classes -- cleaner than a foreach
+      const buttonClasses = ['base-button', 'hoverable-cell', 'navigation-blue-button-enabled', 'action', 'right-add-button', 'exchange-button']
+      layer.classList.add(...buttonClasses)
+      layer.id = 'exchange-xmr'
+      layer.innerText = 'Exchange XMR'
+      const orderSent = false
+      layer.addEventListener('click', function (orderSent) {
+        const exchangeXmrDiv = document.getElementById('exchange-xmr')
+        exchangeXmrDiv.classList.remove('active')
 
-                let exchangeXmrDiv = document.getElementById('exchange-xmr');
-                exchangeXmrDiv.classList.remove('active');
-                
-                    /* 
-                    * We define the status update and the response handling function here, since we need to update the DOM with status feedback from the monero-daemon. 
+        /*
+                    * We define the status update and the response handling function here, since we need to update the DOM with status feedback from the monero-daemon.
                     * We pass them as the final argument to ExchangeUtils.sendFunds
                     * It performs the necessary DOM-based status updates in this file so that we don't tightly couple DOM updates to a Utility module.
                     */
-                    function validation_status_fn(str)
-                    {
-
-                        let monerodUpdates = document.getElementById('monerod-updates')
-                        monerodUpdates.innerText = str;
-                    }
-                    /* 
+        function validation_status_fn (str) {
+          const monerodUpdates = document.getElementById('monerod-updates')
+          monerodUpdates.innerText = str
+        }
+        /*
                     * We perform the necessary DOM-based status updates in this file so that we don't tightly couple DOM updates to a Utility module.
                     */
-                    function handle_response_fn(err, mockedTransaction)
-                    {
-                        let str;
-                        let monerodUpdates = document.getElementById('monerod-updates');
-                        if (err) {
-                            str = typeof err === 'string' ? err : err.message;
-                            monerodUpdates.innerText = str;
-                            return
-                        }
-                        str = "Sent successfully.";
-                        monerodUpdates.innerText = str;
-                    }
-                    // No cancel handler code since we don't provide a cancel method
-                    function cancelled_fn() { // canceled_fn    
-                        // No cancel handler code since we don't provide a cancel method 
-                    }
-                    /*
+        function handle_response_fn (err, mockedTransaction) {
+          let str
+          const monerodUpdates = document.getElementById('monerod-updates')
+          if (err) {
+            str = typeof err === 'string' ? err : err.message
+            monerodUpdates.innerText = str
+            return
+          }
+          str = 'Sent successfully.'
+          monerodUpdates.innerText = str
+        }
+        // No cancel handler code since we don't provide a cancel method
+        function cancelled_fn () { // canceled_fn
+          // No cancel handler code since we don't provide a cancel method
+        }
+        /*
                     * We declare sendfunds here to have access to the context object
                     */
 
-                function sendFunds(wallet, xmr_amount, xmr_send_address, sweep_wallet, validation_status_fn, handle_response_fn, context) {
-                        if (context.walletsListController.orderSent == true) {
-                            console.log('Duplicate order');
-                        } else {
-                            try {
-                                return new Promise((resolve, reject) => {
-                                    context.walletsListController.orderSent = true;  
+        function sendFunds (wallet, xmr_amount, xmr_send_address, sweep_wallet, validation_status_fn, handle_response_fn, context) {
+          if (context.walletsListController.orderSent == true) {
+            console.log('Duplicate order')
+          } else {
+            try {
+              return new Promise((resolve, reject) => {
+                context.walletsListController.orderSent = true
 
-                                        let enteredAddressValue = xmr_send_address; //;
-                                        let resolvedAddress = "";
-                                        let manuallyEnteredPaymentID = "";
-                                        let resolvedPaymentID = "";
-                                        let hasPickedAContact = false;
-                                        let manuallyEnteredPaymentID_fieldIsVisible = false;
-                                        let resolvedPaymentID_fieldIsVisible = false;
-                                        let resolvedAddress_fieldIsVisible = false;
-                                        let contact_payment_id = undefined;
-                                        let cached_OAResolved_address = undefined;
-                                        let contact_hasOpenAliasAddress = undefined;
-                                        let contact_address = undefined;
-                                        let raw_amount_string = xmr_amount; // XMR amount in double
-                                        let sweeping = sweep_wallet;
-                                        let simple_priority = 1;
-                                
-                                        wallet.SendFunds(
-                                            enteredAddressValue,
-                                            resolvedAddress,
-                                            manuallyEnteredPaymentID,
-                                            resolvedPaymentID,
-                                            hasPickedAContact,
-                                            resolvedAddress_fieldIsVisible,
-                                            manuallyEnteredPaymentID_fieldIsVisible,
-                                            resolvedPaymentID_fieldIsVisible,
-                                            contact_payment_id,
-                                            cached_OAResolved_address,
-                                            contact_hasOpenAliasAddress,
-                                            contact_address,
-                                            raw_amount_string,
-                                            sweeping,
-                                            simple_priority,
-                                            validation_status_fn,
-                                            cancelled_fn,
-                                            handle_response_fn
-                                        );
-                                    })
-                                } catch (error) {
-                                    context.walletsListController.orderSent = false;
-                                    console.log(error);
-                                }
-                        } 
-                    } // end of function
-                
-                let xmr_amount = document.getElementById('in_amount_remaining').innerHTML;
-                let xmr_send_address = document.getElementById('receiving_subaddress').innerHTML;
-                let xmr_amount_str = "" + xmr_amount;
-                
-                let selectedWallet = document.getElementById('selected-wallet');
-                let selectorOffset = selectedWallet.dataset.walletoffset;
-                let sweep_wallet = false; // TODO: Add sweeping functionality
-                try {
-                    if (context.walletsListController.hasOwnProperty('orderSent')) {
-                        console.log('Order already sent previously');
-                    } else {
-                        context.walletsListController.orderSent = false;
-                    }
-                    sendFunds(context.walletsListController.records[0], xmr_amount_str, xmr_send_address, sweep_wallet, validation_status_fn, handle_response_fn, context);
-                } catch (error) {
-                    console.log(error);
-                }
-            });
+                const enteredAddressValue = xmr_send_address // ;
+                const resolvedAddress = ''
+                const manuallyEnteredPaymentID = ''
+                const resolvedPaymentID = ''
+                const hasPickedAContact = false
+                const manuallyEnteredPaymentID_fieldIsVisible = false
+                const resolvedPaymentID_fieldIsVisible = false
+                const resolvedAddress_fieldIsVisible = false
+                let contact_payment_id
+                let cached_OAResolved_address
+                let contact_hasOpenAliasAddress
+                let contact_address
+                const raw_amount_string = xmr_amount // XMR amount in double
+                const sweeping = sweep_wallet
+                const simple_priority = 1
 
+                wallet.SendFunds(
+                  enteredAddressValue,
+                  resolvedAddress,
+                  manuallyEnteredPaymentID,
+                  resolvedPaymentID,
+                  hasPickedAContact,
+                  resolvedAddress_fieldIsVisible,
+                  manuallyEnteredPaymentID_fieldIsVisible,
+                  resolvedPaymentID_fieldIsVisible,
+                  contact_payment_id,
+                  cached_OAResolved_address,
+                  contact_hasOpenAliasAddress,
+                  contact_address,
+                  raw_amount_string,
+                  sweeping,
+                  simple_priority,
+                  validation_status_fn,
+                  cancelled_fn,
+                  handle_response_fn
+                )
+              })
+            } catch (error) {
+              context.walletsListController.orderSent = false
+              console.log(error)
+            }
+          }
+        } // end of function
 
-            contentContainerLayer.appendChild(layer);
+        const xmr_amount = document.getElementById('in_amount_remaining').innerHTML
+        const xmr_send_address = document.getElementById('receiving_subaddress').innerHTML
+        const xmr_amount_str = '' + xmr_amount
+
+        const selectedWallet = document.getElementById('selected-wallet')
+        const selectorOffset = selectedWallet.dataset.walletoffset
+        const sweep_wallet = false // TODO: Add sweeping functionality
+        try {
+          if (context.walletsListController.hasOwnProperty('orderSent')) {
+            console.log('Order already sent previously')
+          } else {
+            context.walletsListController.orderSent = false
+          }
+          sendFunds(context.walletsListController.records[0], xmr_amount_str, xmr_send_address, sweep_wallet, validation_status_fn, handle_response_fn, context)
+        } catch (error) {
+          console.log(error)
         }
-        {
-            // let's make the xmr.to form in HTML for sanity's sake
-            const layer = document.createElement("div");
-            //layer.classList.add("xmr_input");
-            let html = '    <div>';
-            //html += fs.readFileSync(__dirname + '/Body.html', 'utf8');
-            html += `
+      })
+
+      contentContainerLayer.appendChild(layer)
+    }
+    {
+      // let's make the xmr.to form in HTML for sanity's sake
+      const layer = document.createElement('div')
+      // layer.classList.add("xmr_input");
+      let html = '    <div>'
+      // html += fs.readFileSync(__dirname + '/Body.html', 'utf8');
+      html += `
             <div id="orderStatusPage">
             <div id="wallet-selector" class="WalletSelectView ListCustomSelectView form_field">
                         <!-- we insert this html dynamically from ECV.web.js -->
@@ -507,340 +493,327 @@ class ExchangeContentView extends View {
         </div>
     </div>
     `
-            layer.innerHTML = html;
-            contentContainerLayer.appendChild(layer);
+      layer.innerHTML = html
+      contentContainerLayer.appendChild(layer)
+    }
+
+    self.emptyStateMessageContainerView = view
+    self.addSubview(view)
+
+    const a = document.getElementById('server-invalid')
+
+    let initialized = false
+
+    const exchangeInitTimer = setInterval((context, options) => {
+      const loaderPage = document.getElementById('loader')
+      if (typeof (loaderPage) === undefined) {
+        return
+      }
+      const Utils = require('../../Exchange/Javascript/ExchangeUtilityFunctions')
+      const ExchangeLibrary = require('mymonero-exchange')
+      const ExchangeFunctions = new ExchangeLibrary()
+      const ExchangeUtils = require('../Javascript/ExchangeUtilityFunctions')
+      const ValidationLibrary = require('wallet-address-validator')
+      const order = {}
+      const exchangePage = document.getElementById('orderStatusPage')
+      const btcAddressInput = document.getElementById('btcAddress')
+      const walletSelector = document.getElementById('wallet-selector')
+      const walletOptions = document.getElementById('wallet-options')
+      const exchangeXmrDiv = document.getElementById('exchange-xmr')
+      let orderStarted = false
+      const orderCreated = false
+      const orderStatusPage = document.getElementById('orderStatusPage')
+      // let backBtn = document.getElementsByClassName('nav-button-left-container')[0];
+      // backBtn.style.display = "none";
+      const addressValidation = document.getElementById('address-messages')
+      const serverValidation = document.getElementById('server-messages')
+      const explanatoryMessage = document.getElementById('explanatory-message')
+      const selectedWallet = document.getElementById('selected-wallet')
+      const serverRatesValidation = document.getElementById('server-rates-messages')
+      const XMRcurrencyInput = document.getElementById('XMRcurrencyInput')
+      const BTCcurrencyInput = document.getElementById('BTCcurrencyInput')
+      const validationMessages = document.getElementById('validation-messages')
+      const orderBtn = document.getElementById('order-button')
+      let orderTimer = {}
+      let currencyInputTimer
+      const orderStatusDiv = document.getElementById('exchangePage')
+
+      function validateBTCAddress (address, ValidationLibrary) {
+        try {
+          if (ValidationLibrary.validate(address) == false) {
+            console.log(ValidationLibrary.validate(address))
+            return false
+          }
+        } catch (Error) {
+          console.log(Error)
+        }
+        console.log(ValidationLibrary.validate(address))
+        return true
+      }
+
+      const BTCAddressInputListener = function () {
+        const btcAddressInput = document.getElementById('btcAddress')
+        addressValidation.innerHTML = ''
+
+        if (validateBTCAddress(btcAddressInput.value, ValidationLibrary) == false) {
+          const error = document.createElement('div')
+          error.classList.add('message-label')
+          error.id = 'btc-invalid'
+          error.innerHTML = 'Your BTC address is not valid.'
+          addressValidation.appendChild(error)
+        }
+      }
+
+      const XMRCurrencyInputKeydownListener = function (event) {
+        if (event.which == 8 || event.which == 110 || event.which == 46 || event.which == 190) { return }
+
+        if ((event.which >= 48 && event.which <= 57) || (event.which >= 96 && event.which <= 105)) {
+          return
         }
 
-                    
-        self.emptyStateMessageContainerView = view
-        self.addSubview(view)
+        if (!checkDecimals(XMRcurrencyInput.value, 12)) {
+          event.preventDefault()
+          return
+        }
 
-        let a = document.getElementById("server-invalid");
+        event.preventDefault()
+      }
 
+      const BTCCurrencyInputKeydownListener = function (event) {
+        if (event.which == 8 || event.which == 110 || event.which == 46 || event.which == 190) { return }
 
-        let initialized = false;
+        if ((event.which >= 48 && event.which <= 57) || (event.which >= 96 && event.which <= 105)) {
+          return
+        }
 
-        let exchangeInitTimer = setInterval((context, options) => {
-            let loaderPage = document.getElementById('loader'); 
-            if (typeof(loaderPage) == undefined) {
-                return;
+        if (!checkDecimals(BTCcurrencyInput.value, 8)) {
+          event.preventDefault()
+          return
+        }
+
+        event.preventDefault()
+      }
+
+      const btcBalanceChecks = function () {
+        let BTCToReceive
+        const BTCbalance = parseFloat(BTCcurrencyInput.value)
+        const out_amount = BTCbalance.toFixed(12)
+        XMRcurrencyInput.value = 'Loading...'
+        if (currencyInputTimer !== undefined) {
+          clearTimeout(currencyInputTimer)
+        }
+
+        if (ExchangeFunctions.currentRates.out_min > BTCbalance) {
+          const error = document.createElement('div')
+          error.classList.add('message-label')
+          error.id = 'xmrexceeded'
+          error.innerHTML = `You cannot exchange less than ${ExchangeFunctions.currentRates.out_min} BTC`
+          validationMessages.appendChild(error)
+          return
+        }
+        if (ExchangeFunctions.currentRates.out_max < BTCbalance) {
+          const error = document.createElement('div')
+          error.classList.add('message-label')
+          error.id = 'xmrexceeded'
+          error.innerHTML = `You cannot exchange more than ${ExchangeFunctions.currentRates.out_max} BTC`
+          validationMessages.appendChild(error)
+          return
+        }
+        validationMessages.innerHTML = ''
+        serverValidation.innerHTML = ''
+        currencyInputTimer = setTimeout(() => {
+          ExchangeFunctions.getOfferWithOutAmount(ExchangeFunctions.in_currency, ExchangeFunctions.out_currency, out_amount)
+            .then((response) => {
+              const XMRtoReceive = parseFloat(response.in_amount)
+              const selectedWallet = document.getElementById('selected-wallet')
+              const tx_feeElem = document.getElementById('tx-fee')
+              const tx_fee = tx_feeElem.dataset.txFee
+              const tx_fee_double = parseFloat(tx_fee)
+              const walletMaxSpendDouble = parseFloat(selectedWallet.dataset.walletbalance)
+              const walletMaxSpend = walletMaxSpendDouble - tx_fee
+              // let BTCToReceive = XMRcurrencyInput.value * exchangeFunctions.currentRates.price;
+              // let XMRbalance = parseFloat(XMRcurrencyInput.value);
+              const BTCCurrencyValue = parseFloat(BTCcurrencyInput.value)
+
+              if ((walletMaxSpend - XMRtoReceive) < 0) {
+                const error = document.createElement('div')
+                error.classList.add('message-label')
+                error.id = 'xmrexceeded'
+                error.innerHTML = `You cannot exchange more than ${walletMaxSpend} XMR`
+                validationMessages.appendChild(error)
+              }
+
+              if (BTCCurrencyValue.toFixed(12) > ExchangeFunctions.currentRates.upper_limit) {
+                const error = document.createElement('div')
+                error.id = 'xmrexceeded'
+                error.classList.add('message-label')
+                const btc_amount = parseFloat(ExchangeFunctions.currentRates.upper_limit)
+                error.innerHTML = `You cannot exchange more than ${btc_amount} BTC.`
+                validationMessages.appendChild(error)
+              }
+              if (BTCCurrencyValue.toFixed(8) < ExchangeFunctions.currentRates.lower_limit) {
+                const error = document.createElement('div')
+                error.id = 'xmrtoolow'
+                error.classList.add('message-label')
+                const btc_amount = parseFloat(ExchangeFunctions.currentRates.lower_limit)
+                error.innerHTML = `You cannot exchange less than ${btc_amount} BTC.`
+                validationMessages.appendChild(error)
+              }
+              XMRcurrencyInput.value = XMRtoReceive.toFixed(12)
+            }).catch((error) => {
+              const errorDiv = document.createElement('div')
+              errorDiv.classList.add('message-label')
+              errorDiv.id = 'server-invalid'
+              errorDiv.innerHTML = 'There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>' + error.message
+              serverValidation.appendChild(errorDiv)
+            })
+        }, 1500)
+      }
+
+      const xmrBalanceChecks = function () {
+        serverValidation.innerHTML = ''
+        let BTCToReceive
+        const XMRbalance = parseFloat(XMRcurrencyInput.value)
+        const in_amount = XMRbalance.toFixed(12)
+        BTCcurrencyInput.value = 'Loading...'
+        if (currencyInputTimer !== undefined) {
+          clearTimeout(currencyInputTimer)
+        }
+        if (ExchangeFunctions.currentRates.in_min > XMRbalance) {
+          const error = document.createElement('div')
+          error.classList.add('message-label')
+          error.id = 'xmrexceeded'
+          error.innerHTML = `You cannot exchange less than ${ExchangeFunctions.currentRates.in_min} XMR`
+          validationMessages.appendChild(error)
+          return
+        }
+        if (ExchangeFunctions.currentRates.in_max < XMRbalance) {
+          const error = document.createElement('div')
+          error.classList.add('message-label')
+          error.id = 'xmrexceeded'
+          error.innerHTML = `You cannot exchange more than ${ExchangeFunctions.currentRates.in_max} XMR`
+          validationMessages.appendChild(error)
+          return
+        }
+        validationMessages.innerHTML = ''
+        serverValidation.innerHTML = ''
+        currencyInputTimer = setTimeout(() => {
+          ExchangeFunctions.getOfferWithInAmount(ExchangeFunctions.in_currency, ExchangeFunctions.out_currency, in_amount)
+            .then((response) => {
+              console.log('async return', response)
+              BTCToReceive = parseFloat(response.out_amount)
+              const selectedWallet = document.getElementById('selected-wallet')
+              const tx_feeElem = document.getElementById('tx-fee')
+              const tx_fee = tx_feeElem.dataset.txFee
+              const tx_fee_double = parseFloat(tx_fee)
+              const walletMaxSpendDouble = parseFloat(selectedWallet.dataset.walletbalance)
+              const walletMaxSpend = walletMaxSpendDouble - tx_fee
+
+              if ((walletMaxSpend - XMRbalance) < 0) {
+                const error = document.createElement('div')
+                error.classList.add('message-label')
+                error.id = 'xmrexceeded'
+                error.innerHTML = `You cannot exchange more than ${walletMaxSpend} XMR`
+                validationMessages.appendChild(error)
+              }
+              if (BTCToReceive.toFixed(8) > ExchangeFunctions.currentRates.out_max) {
+                const error = document.createElement('div')
+                error.classList.add('message-label')
+                error.id = 'xmrexceeded'
+                error.innerHTML = `You cannot exchange more than ${ExchangeFunctions.currentRates.in_max.toFixed(12)} XMR`
+                validationMessages.appendChild(error)
+              }
+              if (BTCToReceive.toFixed(8) < ExchangeFunctions.currentRates.lower_limit) {
+                const error = document.createElement('div')
+                error.classList.add('message-label')
+                error.id = 'xmrtoolow'
+                error.innerHTML = `You cannot exchange less than ${ExchangeFunctions.currentRates.in_min.toFixed(12)} XMR.`
+                validationMessages.appendChild(error)
+              }
+              BTCcurrencyInput.value = BTCToReceive.toFixed(8)
+            }).catch((error) => {
+              const errorDiv = document.createElement('div')
+              errorDiv.classList.add('message-label')
+              errorDiv.id = 'server-invalid'
+              errorDiv.innerHTML = 'There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>' + error.message
+              serverValidation.appendChild(errorDiv)
+            })
+        }, 1500)
+      }
+
+      function getRates () {
+        serverRatesValidation.innerHTML = ''
+        const retry = document.getElementById('retry-rates')
+        const errorDiv = document.getElementById('retry-error')
+        if (retry !== null) {
+          retry.classList.add('hidden')
+          errorDiv.classList.add('hidden')
+        }
+        ExchangeFunctions.getRatesAndLimits().then(() => {
+          loaderPage.classList.remove('active')
+          exchangePage.classList.add('active')
+        }).catch((error) => {
+          if (retry !== null) {
+            retry.classList.remove('hidden')
+            errorDiv.classList.remove('hidden')
+          } else {
+            // KB: Remove this ---
+
+            // end remove
+
+            const errorDiv = document.createElement('div')
+            errorDiv.innerText = "There was a problem with retrieving rates from the server. Please click the 'Retry' button to try connect again. The error message was: " + error.message
+            errorDiv.id = 'retry-error'
+            errorDiv.classList.add('message-label')
+            const retryBtn = document.createElement('div')
+            retryBtn.id = 'retry-rates'
+            retryBtn.classList.add('base-button')
+            retryBtn.classList.add('hoverable-cell')
+            retryBtn.classList.add('navigation-blue-button-enabled')
+            retryBtn.classList.add('action')
+            retryBtn.innerHTML = 'Retry'
+            retryBtn.addEventListener('click', getRates)
+            explanatoryMessage.appendChild(errorDiv)
+            explanatoryMessage.appendChild(retryBtn)
+          }
+        }).finally(() => {
+          ExchangeFunctions.initialiseExchangeConfiguration().then((response) => {
+            // Data returned by resolve
+            const localmoneroDiv = document.getElementById('localmonero')
+            const localmoneroAnchor = document.getElementById('localmonero-anchor')
+            // let indacoinAnchor = document.getElementById('indacoin-anchor');
+
+            // indacoinAnchor.setAttribute("url", "https://indacoin.com/");
+            // indacoinAnchor.setAttribute("referrer_id", response.referrer_info.indacoin.referrer_id)
+            // indacoinAnchor.setAttribute("param_str", "");
+            localmoneroAnchor.setAttribute('referrer_id', response.data.referrer_info.localmonero.referrer_id)
+            localmoneroAnchor.setAttribute('url', 'https://localmonero.co')
+            localmoneroAnchor.setAttribute('param_str', 'rc')
+
+            // if (response.referrer_info.indacoin.enabled === true) {
+            //     indacoinDiv.style.display = "block";
+            //     indacoinAnchor.addEventListener('click', openClickableLink);
+            // }
+            if (response.data.referrer_info.localmonero.enabled === true) {
+              localmoneroDiv.style.display = 'block'
+              localmoneroAnchor.addEventListener('click', openClickableLink)
             }
-            const Utils = require('../../Exchange/Javascript/ExchangeUtilityFunctions');
-            const ExchangeLibrary = require('mymonero-exchange');
-            const ExchangeFunctions = new ExchangeLibrary();
-            const ExchangeUtils = require('../Javascript/ExchangeUtilityFunctions');
-            const ValidationLibrary = require('wallet-address-validator');
-            const order = {};
-            const exchangePage = document.getElementById('orderStatusPage');
-            const btcAddressInput = document.getElementById("btcAddress");
-            let walletSelector = document.getElementById('wallet-selector');
-            let walletOptions = document.getElementById('wallet-options');
-            let exchangeXmrDiv = document.getElementById('exchange-xmr');
-            let orderStarted = false;
-            let orderCreated = false;
-            let orderStatusPage = document.getElementById("orderStatusPage");
-            //let backBtn = document.getElementsByClassName('nav-button-left-container')[0];    
-            //backBtn.style.display = "none";
-            let addressValidation = document.getElementById('address-messages');
-            let serverValidation = document.getElementById('server-messages');
-            let explanatoryMessage = document.getElementById('explanatory-message');
-            const selectedWallet = document.getElementById('selected-wallet');
-            const serverRatesValidation = document.getElementById('server-rates-messages');
-            const XMRcurrencyInput = document.getElementById('XMRcurrencyInput');
-            const BTCcurrencyInput = document.getElementById('BTCcurrencyInput');
-            const validationMessages = document.getElementById('validation-messages');   
-            var orderBtn = document.getElementById("order-button");
-            var orderTimer = {};
-            let currencyInputTimer;
-            let orderStatusDiv = document.getElementById("exchangePage");
+          }).catch(error => {
+            const localmoneroDiv = document.getElementById('localmonero')
+            const localmoneroAnchor = document.getElementById('localmonero-anchor')
 
-            function validateBTCAddress(address, ValidationLibrary) {
-                try {
-                    if (ValidationLibrary.validate(address) == false) {
-                        console.log(ValidationLibrary.validate(address));
-                        return false;
-                    }
-                } catch (Error) {
-                    console.log(Error);
-                }
-                console.log(ValidationLibrary.validate(address));
-                return true;
-            }
-            
-            let BTCAddressInputListener = function() {
-                let btcAddressInput = document.getElementById("btcAddress");
-                addressValidation.innerHTML = "";
+            localmoneroAnchor.setAttribute('referrer_id', 'h2t1')
+            localmoneroAnchor.setAttribute('url', 'https://localmonero.co')
+            localmoneroAnchor.setAttribute('param_str', 'rc')
+            // No data received from promise resolve(). Display link for LocalMonero
+            localmoneroDiv.style.display = 'block'
+            localmoneroAnchor.addEventListener('click', openClickableLink)
+          })
+        })
+      }
 
-                if (validateBTCAddress(btcAddressInput.value, ValidationLibrary) == false) {
-                        let error = document.createElement('div');
-                        error.classList.add('message-label');
-                        error.id = 'btc-invalid';
-                        error.innerHTML = `Your BTC address is not valid.`;
-                        addressValidation.appendChild(error);
-                } 
-                return;
-            }
-
-            let XMRCurrencyInputKeydownListener = function(event) {
-                if (event.which == 8 || event.which == 110 || event.which == 46 || event.which == 190) 
-                return;
-            
-                if ( (event.which >= 48 && event.which <= 57) || (event.which >= 96 && event.which <= 105) ) {
-                    return;
-                }
-            
-                if (!checkDecimals(XMRcurrencyInput.value, 12)) {
-                    event.preventDefault();
-                    return;
-                }
-            
-                event.preventDefault();
-                return;
-            }
-
-            let BTCCurrencyInputKeydownListener = function(event) {
-                if (event.which == 8 || event.which == 110 || event.which == 46 || event.which == 190) 
-                return;
-            
-                if ( (event.which >= 48 && event.which <= 57) || (event.which >= 96 && event.which <= 105) ) {
-                    return;
-                }
-            
-                if (!checkDecimals(BTCcurrencyInput.value, 8)) {
-                    event.preventDefault();
-                    return;
-                }
-            
-                event.preventDefault();
-                return;
-            }
-
-            let btcBalanceChecks = function() {
-                
-                let BTCToReceive;
-                let BTCbalance = parseFloat(BTCcurrencyInput.value);
-                let out_amount = BTCbalance.toFixed(12);
-                XMRcurrencyInput.value = "Loading...";
-                if (currencyInputTimer !== undefined) {
-                    clearTimeout(currencyInputTimer);
-                }
-            
-                if (ExchangeFunctions.currentRates.out_min > BTCbalance) {
-                    let error = document.createElement('div');
-                    error.classList.add('message-label');
-                    error.id = 'xmrexceeded';
-                    error.innerHTML = `You cannot exchange less than ${ExchangeFunctions.currentRates.out_min} BTC`;
-                    validationMessages.appendChild(error);
-                    return;
-                }
-                if (ExchangeFunctions.currentRates.out_max < BTCbalance) {
-                    let error = document.createElement('div');
-                    error.classList.add('message-label');
-                    error.id = 'xmrexceeded';
-                    error.innerHTML = `You cannot exchange more than ${ExchangeFunctions.currentRates.out_max} BTC`;
-                    validationMessages.appendChild(error);
-                    return;
-                }
-                validationMessages.innerHTML = "";
-                serverValidation.innerHTML = "";
-                currencyInputTimer = setTimeout(() => {
-                    ExchangeFunctions.getOfferWithOutAmount(ExchangeFunctions.in_currency, ExchangeFunctions.out_currency, out_amount)
-                        .then((response) => {
-                            let XMRtoReceive = parseFloat(response.in_amount);
-                            let selectedWallet = document.getElementById('selected-wallet');
-                            let tx_feeElem = document.getElementById('tx-fee');
-                            let tx_fee = tx_feeElem.dataset.txFee;
-                            let tx_fee_double = parseFloat(tx_fee);
-                            let walletMaxSpendDouble = parseFloat(selectedWallet.dataset.walletbalance);
-                            let walletMaxSpend = walletMaxSpendDouble - tx_fee;
-                            //let BTCToReceive = XMRcurrencyInput.value * exchangeFunctions.currentRates.price;
-                            //let XMRbalance = parseFloat(XMRcurrencyInput.value);
-                            let BTCCurrencyValue = parseFloat(BTCcurrencyInput.value);
-            
-            
-                            if ((walletMaxSpend - XMRtoReceive) < 0) {
-                                let error = document.createElement('div');
-                                error.classList.add('message-label');
-                                error.id = 'xmrexceeded';
-                                error.innerHTML = `You cannot exchange more than ${walletMaxSpend} XMR`;
-                                validationMessages.appendChild(error);
-                            }
-            
-                            if (BTCCurrencyValue.toFixed(12) > ExchangeFunctions.currentRates.upper_limit) {
-                                let error = document.createElement('div');
-                                error.id = 'xmrexceeded';
-                                error.classList.add('message-label');
-                                let btc_amount = parseFloat(ExchangeFunctions.currentRates.upper_limit);
-                                error.innerHTML = `You cannot exchange more than ${btc_amount} BTC.`;
-                                validationMessages.appendChild(error);
-                            }
-                            if (BTCCurrencyValue.toFixed(8) < ExchangeFunctions.currentRates.lower_limit) {
-                                let error = document.createElement('div');
-                                error.id = 'xmrtoolow';
-                                error.classList.add('message-label');
-                                let btc_amount = parseFloat(ExchangeFunctions.currentRates.lower_limit);
-                                error.innerHTML = `You cannot exchange less than ${btc_amount} BTC.`;
-                                validationMessages.appendChild(error);
-                            }
-                            XMRcurrencyInput.value = XMRtoReceive.toFixed(12);
-                        }).catch((error) => {
-                            let errorDiv = document.createElement('div');
-                            errorDiv.classList.add('message-label');
-                            errorDiv.id = 'server-invalid';
-                            errorDiv.innerHTML = `There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>` + error.message;
-                            serverValidation.appendChild(errorDiv);
-                        });
-                }, 1500);
-            }
-
-            let xmrBalanceChecks = function() {
-                
-                serverValidation.innerHTML = "";
-                let BTCToReceive;
-                let XMRbalance = parseFloat(XMRcurrencyInput.value);
-                let in_amount = XMRbalance.toFixed(12);
-                BTCcurrencyInput.value = "Loading...";
-                if (currencyInputTimer !== undefined) {
-                    clearTimeout(currencyInputTimer);
-                }
-                if (ExchangeFunctions.currentRates.in_min > XMRbalance) {
-                    let error = document.createElement('div');
-                    error.classList.add('message-label');
-                    error.id = 'xmrexceeded';
-                    error.innerHTML = `You cannot exchange less than ${ExchangeFunctions.currentRates.in_min} XMR`;
-                    validationMessages.appendChild(error);
-                    return;
-                }
-                if (ExchangeFunctions.currentRates.in_max < XMRbalance) {
-                    let error = document.createElement('div');
-                    error.classList.add('message-label');
-                    error.id = 'xmrexceeded';
-                    error.innerHTML = `You cannot exchange more than ${ExchangeFunctions.currentRates.in_max} XMR`;
-                    validationMessages.appendChild(error);
-                    return;
-                }
-                validationMessages.innerHTML = "";
-                serverValidation.innerHTML = "";
-                currencyInputTimer = setTimeout(() => {
-                    ExchangeFunctions.getOfferWithInAmount(ExchangeFunctions.in_currency, ExchangeFunctions.out_currency, in_amount)
-                        .then((response) => {
-                            console.log('async return', response);
-                            BTCToReceive = parseFloat(response.out_amount);
-                            let selectedWallet = document.getElementById('selected-wallet');
-                            let tx_feeElem = document.getElementById('tx-fee');
-                            let tx_fee = tx_feeElem.dataset.txFee;
-                            let tx_fee_double = parseFloat(tx_fee);
-                            let walletMaxSpendDouble = parseFloat(selectedWallet.dataset.walletbalance);
-                            let walletMaxSpend = walletMaxSpendDouble - tx_fee;
-                            
-                            if ((walletMaxSpend - XMRbalance) < 0) {
-                                let error = document.createElement('div');
-                                error.classList.add('message-label');
-                                error.id = 'xmrexceeded';
-                                error.innerHTML = `You cannot exchange more than ${walletMaxSpend} XMR`;
-                                validationMessages.appendChild(error);
-                            }
-                            if (BTCToReceive.toFixed(8) > ExchangeFunctions.currentRates.out_max) {
-                                let error = document.createElement('div');
-                                error.classList.add('message-label');
-                                error.id = 'xmrexceeded';
-                                error.innerHTML = `You cannot exchange more than ${ExchangeFunctions.currentRates.in_max.toFixed(12)} XMR`;
-                                validationMessages.appendChild(error);
-                            }
-                            if (BTCToReceive.toFixed(8) < ExchangeFunctions.currentRates.lower_limit) {
-                                let error = document.createElement('div');
-                                error.classList.add('message-label');
-                                error.id = 'xmrtoolow';
-                                error.innerHTML = `You cannot exchange less than ${ExchangeFunctions.currentRates.in_min.toFixed(12)} XMR.`;
-                                validationMessages.appendChild(error);
-                            }
-                            BTCcurrencyInput.value = BTCToReceive.toFixed(8);
-                        }).catch((error) => {
-                            let errorDiv = document.createElement('div');
-                            errorDiv.classList.add('message-label');
-                            errorDiv.id = 'server-invalid';
-                            errorDiv.innerHTML = `There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>` + error.message;
-                            serverValidation.appendChild(errorDiv);
-                        });
-                }, 1500);
-            }
-
-            function getRates() {
-                serverRatesValidation.innerHTML = "";
-                let retry = document.getElementById('retry-rates');
-                let errorDiv = document.getElementById('retry-error');
-                if (retry !== null) {
-                    retry.classList.add('hidden');
-                    errorDiv.classList.add('hidden');
-                }
-                ExchangeFunctions.getRatesAndLimits().then(() => {
-                    loaderPage.classList.remove('active');
-                    exchangePage.classList.add("active");
-                    
-                }).catch((error) => {
-                    if (retry !== null) {
-                        retry.classList.remove('hidden');
-                        errorDiv.classList.remove('hidden');
-                    } else {            
-                        // KB: Remove this ---
-                        
-                        // end remove
-
-                        let errorDiv = document.createElement('div');
-                        errorDiv.innerText = "There was a problem with retrieving rates from the server. Please click the 'Retry' button to try connect again. The error message was: " + error.message;
-                        errorDiv.id = "retry-error";
-                        errorDiv.classList.add('message-label');
-                        let retryBtn = document.createElement('div');
-                        retryBtn.id = "retry-rates";
-                        retryBtn.classList.add('base-button');
-                        retryBtn.classList.add('hoverable-cell'); 
-                        retryBtn.classList.add('navigation-blue-button-enabled');
-                        retryBtn.classList.add('action');
-                        retryBtn.innerHTML = "Retry";
-                        retryBtn.addEventListener('click', getRates);
-                        explanatoryMessage.appendChild(errorDiv);
-                        explanatoryMessage.appendChild(retryBtn);
-                    }
-                }).finally(() => {
-                    ExchangeFunctions.initialiseExchangeConfiguration().then((response) => {
-                        // Data returned by resolve
-                        let localmoneroDiv = document.getElementById("localmonero");
-                        let localmoneroAnchor = document.getElementById('localmonero-anchor');
-                        // let indacoinAnchor = document.getElementById('indacoin-anchor');
-                        
-                        // indacoinAnchor.setAttribute("url", "https://indacoin.com/");
-                        // indacoinAnchor.setAttribute("referrer_id", response.referrer_info.indacoin.referrer_id)
-                        // indacoinAnchor.setAttribute("param_str", "");
-                        localmoneroAnchor.setAttribute("referrer_id", response.data.referrer_info.localmonero.referrer_id)
-                        localmoneroAnchor.setAttribute("url", "https://localmonero.co")
-                        localmoneroAnchor.setAttribute("param_str", "rc");
-                        
-                        
-                        // if (response.referrer_info.indacoin.enabled === true) {
-                        //     indacoinDiv.style.display = "block";
-                        //     indacoinAnchor.addEventListener('click', openClickableLink);
-                        // }
-                        if (response.data.referrer_info.localmonero.enabled === true) {
-                            localmoneroDiv.style.display = "block";
-                            localmoneroAnchor.addEventListener('click', openClickableLink);
-                        }
-                    }).catch(error => {
-                        let localmoneroDiv = document.getElementById("localmonero");
-                        let localmoneroAnchor = document.getElementById('localmonero-anchor');
-                        
-                        localmoneroAnchor.setAttribute("referrer_id", "h2t1")
-                        localmoneroAnchor.setAttribute("url", "https://localmonero.co")
-                        localmoneroAnchor.setAttribute("param_str", "rc");
-                        // No data received from promise resolve(). Display link for LocalMonero
-                        localmoneroDiv.style.display = "block";
-                        localmoneroAnchor.addEventListener('click', openClickableLink);
-                    });
-                });
-            }
-
-function renderOrderStatus(order) {    
-
-/*
+      function renderOrderStatus (order) {
+        /*
 
         "btc_amount",
         "btc_amount_partial",
@@ -865,40 +838,38 @@ function renderOrderStatus(order) {
 
 */
 
+        const idArr = [
+          'in_amount_remaining',
+          'out_amount',
+          'status',
+          'expires_at',
+          'provider_order_id',
+          'in_address',
+          'in_amount'
+        ]
 
-    let idArr = [
-        "in_amount_remaining",
-        "out_amount",
-        "status",
-        "expires_at",
-        "provider_order_id",
-        "in_address",
-        "in_amount"
-    ];
-
-    let test = document.getElementById('exchangePage');
-    if (!(test == null)) {
-        idArr.forEach((item, index) => {
-            if (item == "in_address") {
-                document.getElementById('receiving_subaddress').innerHTML = order[item];
+        const test = document.getElementById('exchangePage')
+        if (!(test == null)) {
+          idArr.forEach((item, index) => {
+            if (item == 'in_address') {
+              document.getElementById('receiving_subaddress').innerHTML = order[item]
             } else {
-                document.getElementById(item).innerHTML = order[item];
+              document.getElementById(item).innerHTML = order[item]
             }
-            
-        });
-    }
-}
+          })
+        }
+      }
 
-    function getTimeRemaining(endtime){
-        let total = Date.parse(endtime) - Date.parse(new Date());
-        let seconds = Math.floor( (total/1000) % 60 );
-        let minutes = Math.floor( (total/1000/60) % 60 );
-        let hours = Math.floor( (total/(1000*60*60)) % 24 );
-        let days = Math.floor( total/(1000*60*60*24) );
-        
+      function getTimeRemaining (endtime) {
+        const total = Date.parse(endtime) - Date.parse(new Date())
+        let seconds = Math.floor((total / 1000) % 60)
+        let minutes = Math.floor((total / 1000 / 60) % 60)
+        const hours = Math.floor((total / (1000 * 60 * 60)) % 24)
+        const days = Math.floor(total / (1000 * 60 * 60 * 24))
+
         if (total < 0) {
-            seconds = 0;
-            minutes = 0;
+          seconds = 0
+          minutes = 0
         }
 
         return {
@@ -907,343 +878,330 @@ function renderOrderStatus(order) {
           hours,
           minutes,
           seconds
-        };
-    }
+        }
+      }
 
-    function checkDecimals(value, decimals) {
-        let str = value.toString();
-        let strArr = str.split('.');
+      function checkDecimals (value, decimals) {
+        const str = value.toString()
+        const strArr = str.split('.')
         if (strArr.length > 1) {
-            if (strArr[1].length >= decimals) {
-                return false;
-            }
+          if (strArr[1].length >= decimals) {
+            return false
+          }
         }
-        return true;
-    }
+        return true
+      }
 
-    function openClickableLink() {
-        const self = this;
-        let referrer_id = self.getAttribute("referrer_id");
-        let url = self.getAttribute("url");
-        let paramStr = self.getAttribute("param_str");
+      function openClickableLink () {
+        const self = this
+        const referrer_id = self.getAttribute('referrer_id')
+        const url = self.getAttribute('url')
+        const paramStr = self.getAttribute('param_str')
         if (referrer_id.length > 0) {
-            console.log("Got a referrer -- generate custom URL");
-            let urlToOpen = url + "?" + paramStr + "=" + referrer_id;
-            window.open(urlToOpen);
+          console.log('Got a referrer -- generate custom URL')
+          const urlToOpen = url + '?' + paramStr + '=' + referrer_id
+          window.open(urlToOpen)
         } else {
-            console.log("No referrer");
-            window.open("https://localmonero.co");
+          console.log('No referrer')
+          window.open('https://localmonero.co')
         }
-    }
+      }
 
-
-    function isValidBase10Decimal(number) {
-        let str = number.toString();
-        let strArr = str.split('.');
-        if (strArr.size > 1 && typeof(strArr) == Array) {
-            return false;
+      function isValidBase10Decimal (number) {
+        const str = number.toString()
+        const strArr = str.split('.')
+        if (strArr.size > 1 && typeof (strArr) === Array) {
+          return false
         }
         for (let i = 0; i < 2; i++) {
-            if (isNaN(parseInt(strArr[i]))) {
-                return false;
-            }
+          if (isNaN(parseInt(strArr[i]))) {
+            return false
+          }
         }
         if (strArr.size > 1) {
-            if (strArr[1].length == 0) {
-                return false;
-            }
+          if (strArr[1].length == 0) {
+            return false
+          }
         }
-        return true;
-    }            
+        return true
+      }
 
-    function orderBtnClicked() {
-        let validationError = false;
-        serverValidation.innerHTML = "";
+      function orderBtnClicked () {
+        let validationError = false
+        serverValidation.innerHTML = ''
         if (orderStarted == true) {
-            return;
-        } 
+          return
+        }
         if (validationMessages.firstChild !== null) {
-            validationMessages.firstChild.style.color = "#ff0000";
-            validationError = true;
-            return;
+          validationMessages.firstChild.style.color = '#ff0000'
+          validationError = true
+          return
         }
         if (addressValidation.firstChild !== null) {
-            addressValidation.firstChild.style.color = "#ff0000";
-            validationError = true;
-            return;
+          addressValidation.firstChild.style.color = '#ff0000'
+          validationError = true
+          return
         }
-        let btc_dest_address = document.getElementById('btcAddress').value;
-        let firstTick = true;
-        orderBtn.style.display = "none";
-        orderStarted = true;
-        //backBtn.style.display = "block";
-        loaderPage.classList.add('active');
-        let orderStatusResponse = { orderTick: 0 };
-        let out_amount = document.getElementById('BTCcurrencyInput').value;
-        let in_currency = 'XMR';
-        let out_currency = 'BTC';
+        const btc_dest_address = document.getElementById('btcAddress').value
+        let firstTick = true
+        orderBtn.style.display = 'none'
+        orderStarted = true
+        // backBtn.style.display = "block";
+        loaderPage.classList.add('active')
+        let orderStatusResponse = { orderTick: 0 }
+        const out_amount = document.getElementById('BTCcurrencyInput').value
+        const in_currency = 'XMR'
+        const out_currency = 'BTC'
         try {
-            let offer = ExchangeFunctions.getOfferWithOutAmount(in_currency, out_currency, out_amount).then((response) => {
-                
-            }).then((error, response) => {
-                let selectedWallet = document.getElementById('selected-wallet');
-                
-                ExchangeFunctions.createOrder(btc_dest_address, selectedWallet.dataset.walletpublicaddress).then((response) => {
-                    document.getElementById("orderStatusPage").classList.remove('active');
-                    loaderPage.classList.remove('active');
-                    orderStatusDiv.classList.add('active');
-                    exchangeXmrDiv.classList.add('active');
-                    //backBtn.innerHTML = `<div class="base-button hoverable-cell utility grey-menu-button disableable left-back-button" style="cursor: default; -webkit-app-region: no-drag; position: absolute; opacity: 1; left: 0px;"></div>`;
-                    orderTimer = setInterval(() => {
-                        if (orderStatusResponse.hasOwnProperty('expires_at')) {
-                            orderStatusResponse.orderTick++;
-                            renderOrderStatus(orderStatusResponse);
-                            let expiryTime = orderStatusResponse.expires_at;
-                            let secondsElement = document.getElementById('secondsRemaining');
-                            let minutesElement = document.getElementById('minutesRemaining');
-                            if (secondsElement !== null) {
-                                
-                                let minutesElement = document.getElementById('minutesRemaining');
-                                let timeRemaining = getTimeRemaining(expiryTime);
-                                minutesElement.innerHTML = timeRemaining.minutes;
-                                if (timeRemaining.seconds <= 9) {
-                                    timeRemaining.seconds = "0" + timeRemaining.seconds;
-                                }
-                                secondsElement.innerHTML = timeRemaining.seconds;
-                                let xmr_dest_address_elem = document.getElementById('in_address');
-                                xmr_dest_address_elem.value = response.receiving_subaddress; 
-                            }
+          const offer = ExchangeFunctions.getOfferWithOutAmount(in_currency, out_currency, out_amount).then((response) => {
 
-                            if (orderStatusResponse.status == "PAID" || orderStatusResponse.status == "TIMED_OUT"
-                                || orderStatusResponse.status == "DONE" || orderStatusResponse.status == "FLAGGED_DESTINATION_ADDRESS"
-                                || orderStatusResponse.status == "PAYMENT_FAILED" || orderStatusResponse.status == "REJECTED" 
-                                || orderStatusResponse.status == "EXPIRED") 
-                                {
-                                    clearInterval(localOrderTimer);
-                                }
-                        }
-                        if ((orderStatusResponse.orderTick % 10) == 0) {
+          }).then((error, response) => {
+            const selectedWallet = document.getElementById('selected-wallet')
 
-                            ExchangeFunctions.getOrderStatus().then(function (response) {
-                                let elemArr = document.getElementsByClassName("provider-name");
-                                if (firstTick == true || elemArr[0].innerHTML == 'undefined') {
-                                    renderOrderStatus(response);
-                                    elemArr[0].innerHTML = response.provider_name;
-                                    elemArr[1].innerHTML = response.provider_name;
-                                    elemArr[2].innerHTML = response.provider_name;
-                                    
-                                    firstTick = false;
-                                }
-                                let orderTick = orderStatusResponse.orderTick;
-                                orderTick++;
-                                response.orderTick = orderTick;
-                                orderStatusResponse = response;
-                            })
-                        }
-                    }, 1000);
-                    document.getElementById("orderStatusPage").classList.remove('active');
-
-                }).catch((error) => {
-                    let errorDiv = document.createElement('div');
-                    errorDiv.classList.add('message-label');
-                    errorDiv.id = 'server-invalid';
-                    errorDiv.innerHTML = `There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>` + error;
-                    serverValidation.appendChild(errorDiv);
-                    orderBtn.style.display = "block";
-                    orderStarted = false;
-                })
-            }).catch((error) => {
-                let errorDiv = document.createElement('div');
-                errorDiv.classList.add('message-label');
-                errorDiv.id = 'server-invalid';
-                errorDiv.innerHTML = `There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>` + error;
-                serverValidation.appendChild(errorDiv);
-                orderBtn.style.display = "block";
-                orderStarted = false;
-            });
-        } catch (Error) {
-            console.log(Error);
-        }
-    }
-            let exchangeRendered = document.getElementById('orderStatusPage'); 
-            if (exchangeRendered == null) {
-                return;
-            } else {
-                
-                btcAddressInput.addEventListener('input', BTCAddressInputListener);
-                XMRcurrencyInput.addEventListener('keydown', XMRCurrencyInputKeydownListener);
-                BTCcurrencyInput.addEventListener('keydown', BTCCurrencyInputKeydownListener);
-                orderBtn.addEventListener('click', orderBtnClicked);
-                            
-                BTCcurrencyInput.addEventListener('keyup', function(event) {
-                    validationMessages.innerHTML = '';
-                    if (BTCcurrencyInput.value.length > 0) {
-                        btcBalanceChecks();            
+            ExchangeFunctions.createOrder(btc_dest_address, selectedWallet.dataset.walletpublicaddress).then((response) => {
+              document.getElementById('orderStatusPage').classList.remove('active')
+              loaderPage.classList.remove('active')
+              orderStatusDiv.classList.add('active')
+              exchangeXmrDiv.classList.add('active')
+              // backBtn.innerHTML = `<div class="base-button hoverable-cell utility grey-menu-button disableable left-back-button" style="cursor: default; -webkit-app-region: no-drag; position: absolute; opacity: 1; left: 0px;"></div>`;
+              orderTimer = setInterval(() => {
+                if (orderStatusResponse.hasOwnProperty('expires_at')) {
+                  orderStatusResponse.orderTick++
+                  renderOrderStatus(orderStatusResponse)
+                  const expiryTime = orderStatusResponse.expires_at
+                  const secondsElement = document.getElementById('secondsRemaining')
+                  const minutesElement = document.getElementById('minutesRemaining')
+                  if (secondsElement !== null) {
+                    const minutesElement = document.getElementById('minutesRemaining')
+                    const timeRemaining = getTimeRemaining(expiryTime)
+                    minutesElement.innerHTML = timeRemaining.minutes
+                    if (timeRemaining.seconds <= 9) {
+                      timeRemaining.seconds = '0' + timeRemaining.seconds
                     }
-                });            
+                    secondsElement.innerHTML = timeRemaining.seconds
+                    const xmr_dest_address_elem = document.getElementById('in_address')
+                    xmr_dest_address_elem.value = response.receiving_subaddress
+                  }
 
-                XMRcurrencyInput.addEventListener('keyup', function(event) {
-                    validationMessages.innerHTML = '';
-                    if (XMRcurrencyInput.value.length > 0) {
-                        xmrBalanceChecks();            
-                    }
-                });
-                getRates();
-                clearInterval(exchangeInitTimer);
-                initialized = true;
-            }
-        }, 5000);
-    }
-
-    Balance_JSBigInt(wallet)
-    {
-        const self = this;
-        var total_received = wallet.total_received
-        var total_sent = wallet.total_sent
-        if (typeof total_received === 'undefined') {
-            total_received = new JSBigInt(0) // patch up to avoid crash as this doesn't need to be fatal
-        }
-        if (typeof total_sent === 'undefined') {
-            total_sent = new JSBigInt(0) // patch up to avoid crash as this doesn't need to be fatal
-        }
-        const balance_JSBigInt = total_received.subtract(total_sent)
-        if (balance_JSBigInt.compare(0) < 0) {
-            return new JSBigInt(0)
-        }
-        return balance_JSBigInt
-    }
-    UnlockedBalance_FormattedString(wallet)
-	{ // provided for convenience mainly so consumers don't have to require monero_utils
-        let self = this;
-		let balance_JSBigInt = self.UnlockedBalance_JSBigInt(wallet);
-		return monero_amount_format_utils.formatMoney(balance_JSBigInt) 
-	}
-    Balance_FormattedString(wallet)
-	{ // provided for convenience mainly so consumers don't have to require monero_utils
-        let self = this;
-		let balance_JSBigInt = self.Balance_JSBigInt(wallet);
-		return monero_amount_format_utils.formatMoney(balance_JSBigInt) 
-	}
-	Balance_DoubleNumber(wallet)
-	{
-		let self = wallet;
-		return parseFloat(self.Balance_FormattedString()) // is this appropriate and safe?
-	}
-	UnlockedBalance_JSBigInt(wallet)
-	{
-		let self = wallet;
-		const difference = self.Balance_JSBigInt().subtract(
-			self.locked_balance || new JSBigInt(0)
-		)
-		if (difference.compare(0) < 0) {
-			return new JSBigInt(0)
-		}
-		return difference
-	}
-	LockedBalance_JSBigInt(wallet)
-	{
-		let self = wallet;
-		var lockedBalance_JSBigInt = self.locked_balance
-		if (typeof lockedBalance_JSBigInt === 'undefined') {
-			lockedBalance_JSBigInt = new JSBigInt(0)
-		}
-		//
-		return lockedBalance_JSBigInt
-	}
-	LockedBalance_FormattedString()
-	{ // provided for convenience mainly so consumers don't have to require monero_utils
-		let self = this
-		let lockedBalance_JSBigInt = self.LockedBalance_JSBigInt()
-		//
-		return monero_amount_format_utils.formatMoney(lockedBalance_JSBigInt)
-	}
-	LockedBalance_DoubleNumber()
-	{
-		let self = this
-		return parseFloat(self.LockedBalance_FormattedString()) // is this appropriate and safe?
-    }
-    
-	new_xmr_estFeeAmount() 
-	{
-		const self = this
-		const estimatedNetworkFee_JSBigInt = new JSBigInt(self.context.monero_utils.estimated_tx_network_fee(
-			null, // deprecated - will be removed soon
-			1,
-			"24658" // TODO: grab this from wallet via API request
-		))
-		const estimatedTotalFee_JSBigInt = estimatedNetworkFee_JSBigInt // no tx hosting service fee
-		//
-		return estimatedTotalFee_JSBigInt
-	}
-
-    _new_estimatedNetworkFee_displayString()
-	{
-		const self = this
-		const estimatedTotalFee_JSBigInt = self.new_xmr_estFeeAmount()
-		const estimatedTotalFee_str = monero_amount_format_utils.formatMoney(estimatedTotalFee_JSBigInt)
-		const estimatedTotalFee_moneroAmountDouble = parseFloat(estimatedTotalFee_str)
-		
-		// const estimatedTotalFee_moneroAmountDouble = 0.028
-		// Just hard-coding this to a reasonable estimate for now as the fee estimator algo uses the median blocksize which results in an estimate about twice what it should be
-		let displayCcySymbol = self.context.settingsController.displayCcySymbol
-		let finalizable_ccySymbol = displayCcySymbol
-		var finalizable_formattedAmountString = estimatedTotalFee_str;//`${estimatedTotalFee_moneroAmountDouble}`
-		let final_formattedAmountString = finalizable_formattedAmountString
-		let final_ccySymbol = "XMR";
-		let displayString = `${final_formattedAmountString}`
-		//
-		return displayString
-	}
-
-    Navigation_Title() {
-        return "Exchange"
-    }
-
-    Navigation_New_RightBarButtonView()
-    {
-        const self = this
-        //
-        const view = commonComponents_navigationBarButtons.New_RightSide_AddButtonView(self.context)
-        //const view = _New_ButtonBase_View(context)
-        const layer = view.layer
-        { // setup/style
-            layer.href = "" // to make it non-clickable -- KB: Or you could event.preventDefault..., like sane people?
-            layer.innerHTML = "Create Order";
-            layer.id = "order-button"
-            layer.classList.add('exchange-button')
-            layer.classList.add('base-button'); 
-            layer.classList.add('hoverable-cell'); 
-            layer.classList.add('navigation-blue-button-enabled'); 
-            layer.classList.add('action'); 
-            if (typeof process !== 'undefined' && process.platform === "linux") {
-                layer.style.fontWeight = "700" // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
-            } else {
-                layer.style.fontWeight = "300"
+                  if (orderStatusResponse.status == 'PAID' || orderStatusResponse.status == 'TIMED_OUT' ||
+                                orderStatusResponse.status == 'DONE' || orderStatusResponse.status == 'FLAGGED_DESTINATION_ADDRESS' ||
+                                orderStatusResponse.status == 'PAYMENT_FAILED' || orderStatusResponse.status == 'REJECTED' ||
+                                orderStatusResponse.status == 'EXPIRED') {
+                    clearInterval(localOrderTimer)
+                  }
                 }
-            }
+                if ((orderStatusResponse.orderTick % 10) == 0) {
+                  ExchangeFunctions.getOrderStatus().then(function (response) {
+                    const elemArr = document.getElementsByClassName('provider-name')
+                    if (firstTick == true || elemArr[0].innerHTML == 'undefined') {
+                      renderOrderStatus(response)
+                      elemArr[0].innerHTML = response.provider_name
+                      elemArr[1].innerHTML = response.provider_name
+                      elemArr[2].innerHTML = response.provider_name
 
-            
-            // view.layer.addEventListener(
-            //     "click",
-            //     function(e)
-            //     {
-            //         e.preventDefault()
-            //         //
-            //         let orderElement = document.getElementById("")    
-            //         //
-            //         // const view = new AddContactFromContactsTabView({}, self.context)
-            //         // self.currentlyPresented_AddContactView = view
-            //         // const navigationView = new StackAndModalNavigationView({}, self.context)
-            //         // navigationView.SetStackViews([ view ])
-            //         // self.navigationController.PresentView(navigationView, true)
-            //         //
-            //         return false
-            //     }
-            // )
-            return view
+                      firstTick = false
+                    }
+                    let orderTick = orderStatusResponse.orderTick
+                    orderTick++
+                    response.orderTick = orderTick
+                    orderStatusResponse = response
+                  })
+                }
+              }, 1000)
+              document.getElementById('orderStatusPage').classList.remove('active')
+            }).catch((error) => {
+              const errorDiv = document.createElement('div')
+              errorDiv.classList.add('message-label')
+              errorDiv.id = 'server-invalid'
+              errorDiv.innerHTML = 'There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>' + error
+              serverValidation.appendChild(errorDiv)
+              orderBtn.style.display = 'block'
+              orderStarted = false
+            })
+          }).catch((error) => {
+            const errorDiv = document.createElement('div')
+            errorDiv.classList.add('message-label')
+            errorDiv.id = 'server-invalid'
+            errorDiv.innerHTML = 'There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>' + error
+            serverValidation.appendChild(errorDiv)
+            orderBtn.style.display = 'block'
+            orderStarted = false
+          })
+        } catch (Error) {
+          console.log(Error)
         }
+      }
+      const exchangeRendered = document.getElementById('orderStatusPage')
+      if (exchangeRendered == null) {
+
+      } else {
+        btcAddressInput.addEventListener('input', BTCAddressInputListener)
+        XMRcurrencyInput.addEventListener('keydown', XMRCurrencyInputKeydownListener)
+        BTCcurrencyInput.addEventListener('keydown', BTCCurrencyInputKeydownListener)
+        orderBtn.addEventListener('click', orderBtnClicked)
+
+        BTCcurrencyInput.addEventListener('keyup', function (event) {
+          validationMessages.innerHTML = ''
+          if (BTCcurrencyInput.value.length > 0) {
+            btcBalanceChecks()
+          }
+        })
+
+        XMRcurrencyInput.addEventListener('keyup', function (event) {
+          validationMessages.innerHTML = ''
+          if (XMRcurrencyInput.value.length > 0) {
+            xmrBalanceChecks()
+          }
+        })
+        getRates()
+        clearInterval(exchangeInitTimer)
+        initialized = true
+      }
+    }, 5000)
+  }
+
+  Balance_JSBigInt (wallet) {
+    const self = this
+    let total_received = wallet.total_received
+    let total_sent = wallet.total_sent
+    if (typeof total_received === 'undefined') {
+      total_received = new JSBigInt(0) // patch up to avoid crash as this doesn't need to be fatal
+    }
+    if (typeof total_sent === 'undefined') {
+      total_sent = new JSBigInt(0) // patch up to avoid crash as this doesn't need to be fatal
+    }
+    const balance_JSBigInt = total_received.subtract(total_sent)
+    if (balance_JSBigInt.compare(0) < 0) {
+      return new JSBigInt(0)
+    }
+    return balance_JSBigInt
+  }
+
+  UnlockedBalance_FormattedString (wallet) { // provided for convenience mainly so consumers don't have to require monero_utils
+    const self = this
+    const balance_JSBigInt = self.UnlockedBalance_JSBigInt(wallet)
+    return monero_amount_format_utils.formatMoney(balance_JSBigInt)
+  }
+
+  Balance_FormattedString (wallet) { // provided for convenience mainly so consumers don't have to require monero_utils
+    const self = this
+    const balance_JSBigInt = self.Balance_JSBigInt(wallet)
+    return monero_amount_format_utils.formatMoney(balance_JSBigInt)
+  }
+
+  Balance_DoubleNumber (wallet) {
+    const self = wallet
+    return parseFloat(self.Balance_FormattedString()) // is this appropriate and safe?
+  }
+
+  UnlockedBalance_JSBigInt (wallet) {
+    const self = wallet
+    const difference = self.Balance_JSBigInt().subtract(
+      self.locked_balance || new JSBigInt(0)
+    )
+    if (difference.compare(0) < 0) {
+      return new JSBigInt(0)
+    }
+    return difference
+  }
+
+  LockedBalance_JSBigInt (wallet) {
+    const self = wallet
+    let lockedBalance_JSBigInt = self.locked_balance
+    if (typeof lockedBalance_JSBigInt === 'undefined') {
+      lockedBalance_JSBigInt = new JSBigInt(0)
+    }
+    //
+    return lockedBalance_JSBigInt
+  }
+
+  LockedBalance_FormattedString () { // provided for convenience mainly so consumers don't have to require monero_utils
+    const self = this
+    const lockedBalance_JSBigInt = self.LockedBalance_JSBigInt()
+    //
+    return monero_amount_format_utils.formatMoney(lockedBalance_JSBigInt)
+  }
+
+  LockedBalance_DoubleNumber () {
+    const self = this
+    return parseFloat(self.LockedBalance_FormattedString()) // is this appropriate and safe?
+  }
+
+  new_xmr_estFeeAmount () {
+    const self = this
+    const estimatedNetworkFee_JSBigInt = new JSBigInt(self.context.monero_utils.estimated_tx_network_fee(
+      null, // deprecated - will be removed soon
+      1,
+      '24658' // TODO: grab this from wallet via API request
+    ))
+    const estimatedTotalFee_JSBigInt = estimatedNetworkFee_JSBigInt // no tx hosting service fee
+    //
+    return estimatedTotalFee_JSBigInt
+  }
+
+  _new_estimatedNetworkFee_displayString () {
+    const self = this
+    const estimatedTotalFee_JSBigInt = self.new_xmr_estFeeAmount()
+    const estimatedTotalFee_str = monero_amount_format_utils.formatMoney(estimatedTotalFee_JSBigInt)
+    const estimatedTotalFee_moneroAmountDouble = parseFloat(estimatedTotalFee_str)
+
+    // const estimatedTotalFee_moneroAmountDouble = 0.028
+    // Just hard-coding this to a reasonable estimate for now as the fee estimator algo uses the median blocksize which results in an estimate about twice what it should be
+    const displayCcySymbol = self.context.settingsController.displayCcySymbol
+    const finalizable_ccySymbol = displayCcySymbol
+    const finalizable_formattedAmountString = estimatedTotalFee_str// `${estimatedTotalFee_moneroAmountDouble}`
+    const final_formattedAmountString = finalizable_formattedAmountString
+    const final_ccySymbol = 'XMR'
+    const displayString = `${final_formattedAmountString}`
+    //
+    return displayString
+  }
+
+  Navigation_Title () {
+    return 'Exchange'
+  }
+
+  Navigation_New_RightBarButtonView () {
+    const self = this
+    //
+    const view = commonComponents_navigationBarButtons.New_RightSide_AddButtonView(self.context)
+    // const view = _New_ButtonBase_View(context)
+    const layer = view.layer
+    { // setup/style
+      layer.href = '' // to make it non-clickable -- KB: Or you could event.preventDefault..., like sane people?
+      layer.innerHTML = 'Create Order'
+      layer.id = 'order-button'
+      layer.classList.add('exchange-button')
+      layer.classList.add('base-button')
+      layer.classList.add('hoverable-cell')
+      layer.classList.add('navigation-blue-button-enabled')
+      layer.classList.add('action')
+      if (typeof process !== 'undefined' && process.platform === 'linux') {
+        layer.style.fontWeight = '700' // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
+      } else {
+        layer.style.fontWeight = '300'
+      }
     }
 
-
+    // view.layer.addEventListener(
+    //     "click",
+    //     function(e)
+    //     {
+    //         e.preventDefault()
+    //         //
+    //         let orderElement = document.getElementById("")
+    //         //
+    //         // const view = new AddContactFromContactsTabView({}, self.context)
+    //         // self.currentlyPresented_AddContactView = view
+    //         // const navigationView = new StackAndModalNavigationView({}, self.context)
+    //         // navigationView.SetStackViews([ view ])
+    //         // self.navigationController.PresentView(navigationView, true)
+    //         //
+    //         return false
+    //     }
+    // )
+    return view
+  }
+}
 
 module.exports = ExchangeContentView

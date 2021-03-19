@@ -26,24 +26,24 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const View = require('../Views/View.web')
 const Views__cssRules = require('../Views/cssRules.web')
 //
-const k_transitionTime         = 0.2
-const k_height                 = 12 
-const k_width                  = k_height * 2 
-const k_knobHeight             = k_height - 4 
-const k_knobWidth              = k_height - 4 
-const k_backgroundColor        = "#1D1B1D"
-const k_backgroundColorChecked = "#1D1B1D"
-const k_knobColor              = "#333638"
-const k_knobColorChecked       = "#00C6FF"
+const k_transitionTime = 0.2
+const k_height = 12
+const k_width = k_height * 2
+const k_knobHeight = k_height - 4
+const k_knobWidth = k_height - 4
+const k_backgroundColor = '#1D1B1D'
+const k_backgroundColorChecked = '#1D1B1D'
+const k_knobColor = '#333638'
+const k_knobColorChecked = '#00C6FF'
 //
 // CSS rules
-const NamespaceName = "switchToggles"
-const haveCSSRulesBeenInjected_documentKey = "__haveCSSRulesBeenInjected_"+NamespaceName
+const NamespaceName = 'switchToggles'
+const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
 const cssRules =
 [
 	`.switch {
@@ -119,111 +119,100 @@ const cssRules =
 		opacity: 0.5;
 	}`
 ]
-function __injectCSSRules_ifNecessary()
-{
-	Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules)
+function __injectCSSRules_ifNecessary () {
+  Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules)
 }
 //
-function New_fieldValue_switchToggleView(params, context)
-{
-	__injectCSSRules_ifNecessary()
+function New_fieldValue_switchToggleView (params, context) {
+  __injectCSSRules_ifNecessary()
 
-	const note = params.note || "note"
-	const checked = params.checked == true ? true : false
-	const border = params.border
-	const changed_fn = params.changed_fn || function(isChecked) {}
-	const shouldToggle_fn = params.shouldToggle_fn || function(to_isSelected, async_shouldToggle_fn) { async_shouldToggle_fn(true) }
+  const note = params.note || 'note'
+  const checked = params.checked == true
+  const border = params.border
+  const changed_fn = params.changed_fn || function (isChecked) {}
+  const shouldToggle_fn = params.shouldToggle_fn || function (to_isSelected, async_shouldToggle_fn) { async_shouldToggle_fn(true) }
 
-	const view = new View({ tag: "div" }, context)
-	const containerLayer = view.layer
-	containerLayer.className = "switch"
-	containerLayer.className += border ? " border" : ""
+  const view = new View({ tag: 'div' }, context)
+  const containerLayer = view.layer
+  containerLayer.className = 'switch'
+  containerLayer.className += border ? ' border' : ''
 
-	const noteDiv = document.createElement("span")
-	noteDiv.className = "note"
-	context.themeController.StyleLayer_FontAsMessageBearingSmallLightMonospace(noteDiv)
-	noteDiv.innerHTML = note 
-	containerLayer.appendChild(noteDiv)
+  const noteDiv = document.createElement('span')
+  noteDiv.className = 'note'
+  context.themeController.StyleLayer_FontAsMessageBearingSmallLightMonospace(noteDiv)
+  noteDiv.innerHTML = note
+  containerLayer.appendChild(noteDiv)
 
-	const input = document.createElement("input")
-	input.className = "toggle"
-	input.type = "checkbox"
-	input.checked = checked
-	containerLayer.appendChild(input)
-	
-	const label = document.createElement("label")
-	label.for = input.id
-	containerLayer.appendChild(label)
-	//
-	view.isChecked = function()
-	{
-		return input.checked == true
-	}
-	view.setChecked = function(checked, squelch_changed_fn_emit, setWithoutShouldToggle)
-	{
-		function __really_toggle()
-		{
-			const normalized__currentValue = input.checked == true ? true : false // for comparison
-			const normalized__toValue = checked == true ? true : false
-			if (normalized__currentValue != normalized__toValue) {
-				input.checked = normalized__toValue
-				//
-				if (squelch_changed_fn_emit != true) {
-					changed_fn(checked)
-				}
-			}
-		}
-		if (setWithoutShouldToggle) {
-			__really_toggle()
-		} else {
-			setTimeout(function()
-			{ // on 'next tick' so any consumers' animations remain smooth
-				shouldToggle_fn( // enable consumer to disallow toggle
-					checked, 
-					function(shouldToggle)
-					{
-						if (shouldToggle) {
-							__really_toggle()
-						}
-					}
-				)
-			})
-		}
-	}
-	view.toggleChecked = function(squelch_changed_fn_emit)
-	{
-		view.setChecked(!input.checked, squelch_changed_fn_emit)
-	}
-	view.SetEnabled = function(isEnabled)
-	{
-		input.disabled = isEnabled ? undefined : true
-		if (isEnabled) {
-			containerLayer.classList.remove("disabled")
-		} else {
-			containerLayer.classList.add("disabled")
-		}
-	}
-	//
-	containerLayer.onclick = function()
-	{
-		if (input.disabled == true) {
-			return // must manually guard on this as toggleChecked / setChecked bypass interactivity
-		}
-		view.toggleChecked(false/*do not squelch emit*/)
-	}
-	input.addEventListener(
-		'click',
-		function(e)
-		{
-			// prevent any automatic checking/unchecking
-			e.preventDefault()
-			e.stopPropagation()
-			//
-			// this is done so as to gain the ability to programmatically mediate checking
-			view.toggleChecked(false/*do not squelch emit*/)
-		}
-	)
+  const input = document.createElement('input')
+  input.className = 'toggle'
+  input.type = 'checkbox'
+  input.checked = checked
+  containerLayer.appendChild(input)
 
-	return view
+  const label = document.createElement('label')
+  label.for = input.id
+  containerLayer.appendChild(label)
+  //
+  view.isChecked = function () {
+    return input.checked == true
+  }
+  view.setChecked = function (checked, squelch_changed_fn_emit, setWithoutShouldToggle) {
+    function __really_toggle () {
+      const normalized__currentValue = input.checked == true // for comparison
+      const normalized__toValue = checked == true
+      if (normalized__currentValue != normalized__toValue) {
+        input.checked = normalized__toValue
+        //
+        if (squelch_changed_fn_emit != true) {
+          changed_fn(checked)
+        }
+      }
+    }
+    if (setWithoutShouldToggle) {
+      __really_toggle()
+    } else {
+      setTimeout(function () { // on 'next tick' so any consumers' animations remain smooth
+        shouldToggle_fn( // enable consumer to disallow toggle
+          checked,
+          function (shouldToggle) {
+            if (shouldToggle) {
+              __really_toggle()
+            }
+          }
+        )
+      })
+    }
+  }
+  view.toggleChecked = function (squelch_changed_fn_emit) {
+    view.setChecked(!input.checked, squelch_changed_fn_emit)
+  }
+  view.SetEnabled = function (isEnabled) {
+    input.disabled = isEnabled ? undefined : true
+    if (isEnabled) {
+      containerLayer.classList.remove('disabled')
+    } else {
+      containerLayer.classList.add('disabled')
+    }
+  }
+  //
+  containerLayer.onclick = function () {
+    if (input.disabled == true) {
+      return // must manually guard on this as toggleChecked / setChecked bypass interactivity
+    }
+    view.toggleChecked(false/* do not squelch emit */)
+  }
+  input.addEventListener(
+    'click',
+    function (e) {
+      // prevent any automatic checking/unchecking
+      e.preventDefault()
+      e.stopPropagation()
+      //
+      // this is done so as to gain the ability to programmatically mediate checking
+      view.toggleChecked(false/* do not squelch emit */)
+    }
+  )
+
+  return view
 }
 exports.New_fieldValue_switchToggleView = New_fieldValue_switchToggleView
