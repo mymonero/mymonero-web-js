@@ -60,11 +60,9 @@ const rateServiceDomainText = 'cryptocompare.com'
 class SendFundsView extends View {
   constructor (options, context) {
     super(options, context) // call super before `this`
-    //
+
     const self = this
-    {
-      self.fromContact = options.fromContact || null
-    }
+    self.fromContact = options.fromContact || null
     self.setup()
   }
 
@@ -99,31 +97,26 @@ class SendFundsView extends View {
     self._setup_validationMessageLayer()
     self._setup_form_containerLayer()
     { // action buttons toolbar
-      const margin_h = 16
       let view
-      if (self._isUsingRelativeNotFixedActionButtonsContainer() == false) {
-        const margin_fromWindowLeft = self.context.themeController.TabBarView_thickness() + margin_h // we need this for a position:fixed, width:100% container
-        const margin_fromWindowRight = margin_h
+      if (self._isUsingRelativeNotFixedActionButtonsContainer() === false) {
+        const margin_fromWindowLeft = self.context.themeController.TabBarView_thickness() + 16 // we need this for a position:fixed, width:100% container
         view = commonComponents_actionButtons.New_ActionButtonsContainerView(
           margin_fromWindowLeft,
-          margin_fromWindowRight,
+          16,
           self.context
         )
         view.layer.style.paddingLeft = '16px'
       } else {
         view = commonComponents_actionButtons.New_Stacked_ActionButtonsContainerView(
-          margin_h,
-          margin_h,
+          16,
+          16,
           15,
           self.context
         )
       }
       self.actionButtonsContainerView = view
       {
-        if (self.context.Cordova_isMobile === true /* but not context.isMobile */) { // til we have Electron support
-          self._setup_actionButton_useCamera()
-        }
-        if (self.context.isLiteApp != true) {
+        if (self.context.isLiteApp !== true) {
           self._setup_actionButton_chooseFile()
         }
       }
@@ -146,18 +139,6 @@ class SendFundsView extends View {
     layer.style.width = '100%'
     layer.style.height = '100%'
     layer.style.padding = '0' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
-    if (self.context.Cordova_isMobile === true) {
-      layer.style.paddingBottom = '300px' // very hacky, but keyboard UX takes dedication to get right, and would like to save that effort for native app
-      // layer.style.webkitOverflowScrolling = "touch"
-      // disabling this cause it conflicts with touchup/end of contacts picker
-      // layer.addEventListener("touchmove", function()
-      // { // blur currently text input field on user scroll
-      // 	const activeElement = document.activeElement
-      // 	if (activeElement) {
-      // 		activeElement.blur()
-      // 	}
-      // }, false)
-    }
     layer.style.overflowY = 'auto'
     layer.classList.add( // so that we get autoscroll to form field inputs on mobile platforms
       commonComponents_forms.ClassNameForScrollingAncestorOfScrollToAbleElement()
@@ -1339,9 +1320,6 @@ class SendFundsView extends View {
       self.set_isSubmittable_needsUpdate() // since we've updated form enabled
       //
       self.context.userIdleInWindowController.ReEnable_userIdle()
-      if (self.context.Cordova_isMobile === true) {
-        window.plugins.insomnia.allowSleepAgain() // re-enable screen dim/off
-      }
       //
       self.walletSelectView.SetEnabled(true)
       //
@@ -1364,9 +1342,6 @@ class SendFundsView extends View {
       self.isFormDisabled = true
       self.set_isSubmittable_needsUpdate() // since we've updated form enabled
       self.context.userIdleInWindowController.TemporarilyDisable_userIdle()
-      if (self.context.Cordova_isMobile === true) {
-        window.plugins.insomnia.keepAwake() // disable screen dim/off
-      }
       //
       if (self.useCamera_buttonView) {
         self.useCamera_buttonView.Disable()

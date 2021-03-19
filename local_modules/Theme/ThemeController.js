@@ -34,7 +34,7 @@ const Views__cssRules = require('../Views/cssRules.web')
 const NamespaceName = 'ThemeController'
 const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
 function cssRules_generatorFn (context) {
-  const assetsPath = '../../' + (context.crossPlatform_indexContextRelativeAssetsRootPathSuffix || '')
+  const assetsPath = '../../' + ('../../')
   const cssRules =
 	[
 		`@font-face {

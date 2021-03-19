@@ -112,7 +112,6 @@ class PasswordController extends PasswordController_Base {
   }
 
   _executeWhenBooted (fn) {
-    const self = this
     fn() // ready to execute
   }
 

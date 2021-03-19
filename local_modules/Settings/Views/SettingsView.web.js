@@ -91,9 +91,7 @@ class SettingsView extends View {
     const containerLayer = document.createElement('div')
     self.form_containerLayer = containerLayer
     {
-      if (self.context.Settings_shouldDisplayAboutAppButton === true) {
-        self._setup_aboutAppButton()
-      }
+      self._setup_aboutAppButton()
       if (self.context.isLiteApp != true) {
         self._setup_form_field_changePasswordButton()
       }

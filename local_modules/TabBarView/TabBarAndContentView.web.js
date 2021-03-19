@@ -27,14 +27,14 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 'use strict'
-//
+
 const View = require('../Views/View.web')
 const TabBarItemButtonView = require('./TabBarItemButtonView.web')
-//
+
 class TabBarAndContentView extends View {
   constructor (options, context) {
     super(options, context)
-    //
+    
     const self = this
     self.setup()
   }
@@ -42,41 +42,29 @@ class TabBarAndContentView extends View {
   setup () { // If you override this, be sure to call on super first ;)
     const self = this
     const context = self.context
+    self._tabBarContentViews = []
+    self._tabBarItemButtonViews = []
+    const layer = self.layer
+    layer.style.position = 'relative'
+    layer.style.left = '0px'
+    layer.style.right = '0px'
+    layer.style.width = '100%'
+    layer.style.height = '100%'
     {
-      self._tabBarContentViews = []
-      self._tabBarItemButtonViews = []
-    }
-    {
-      const layer = self.layer
-      layer.style.position = 'relative'
-      layer.style.left = '0px'
-      layer.style.right = '0px'
-      layer.style.width = '100%'
-      layer.style.height = '100%'
-    }
-    {
+      const view = new View({}, context)
       {
-        const options = {}
-        const view = new View(options, context)
-        {
-          const layer = view.layer
-          layer.style.webkitAppRegion = 'drag' // make draggable
-          layer.style.webkitUserSelect = 'none'
-          layer.style.position = 'relative'
-        }
-        self.tabBarView = view
-        self.addSubview(view)
+        const layer = view.layer
+        layer.style.webkitAppRegion = 'drag' // make draggable
+        layer.style.webkitUserSelect = 'none'
+        layer.style.position = 'relative'
       }
-      {
-        const options = {}
-        const view = new View(options, context)
-        {
-          view.layer.style.overflow = 'hidden' // subviews/layers not allowed to control scroll here - if you want to, you must create your own wrapper
-        }
-        self.contentAreaView = view
-        self.addSubview(view)
-      }
+      self.tabBarView = view
+      self.addSubview(view)
     }
+    const view = new View({}, context)
+    view.layer.style.overflow = 'hidden' // subviews/layers not allowed to control scroll here - if you want to, you must create your own wrapper
+    self.contentAreaView = view
+    self.addSubview(view)
     {
       // default behavior is bar on bottom of screen
       const tabBarView_thickness = self.overridable_tabBarView_thickness()

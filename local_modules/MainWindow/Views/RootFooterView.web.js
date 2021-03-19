@@ -41,12 +41,8 @@ class RootFooterView extends View {
   setup () {
     const self = this
     const layer = self.layer
-    layer.style.height = `${self.context.rootViewFooterHeight}px`
+    layer.style.height = '32px'
     layer.style.backgroundColor = '#171416'
-    //
-    const primaryUtilityLink_colorValue = 'rgb(250, 246, 250)'
-    const utilityLink_colorValue = 'rgb(140, 136, 140)'
-    const importantLink_colorValue = '#11bbec'
     const table = document.createElement('table')
     table.style.border = 'none'
     table.style.padding = '0'
@@ -57,22 +53,22 @@ class RootFooterView extends View {
     table.appendChild(tr)
     layer.appendChild(table)
     //
-    tr.appendChild(self._new_linkButtonLayerElement('Home', primaryUtilityLink_colorValue, function (e) {
+    tr.appendChild(self._new_linkButtonLayerElement('Home', 'rgb(250, 246, 250)', function (e) {
       e.preventDefault()
       window.open('https://www.mymonero.com/', '_blank') // new tab
       return false
     }))
-    tr.appendChild(self._new_linkButtonLayerElement('Privacy', utilityLink_colorValue, function (e) {
+    tr.appendChild(self._new_linkButtonLayerElement('Privacy', 'rgb(140, 136, 140)', function (e) {
       e.preventDefault()
       window.open('https://www.mymonero.com/privacy', '_blank') // new tab
       return false
     }))
-    tr.appendChild(self._new_linkButtonLayerElement('Terms', utilityLink_colorValue, function (e) {
+    tr.appendChild(self._new_linkButtonLayerElement('Terms', 'rgb(140, 136, 140)', function (e) {
       e.preventDefault()
       window.open('https://www.mymonero.com/terms', '_blank') // new tab
       return false
     }))
-    tr.appendChild(self._new_linkButtonLayerElement('Support', importantLink_colorValue, function (e) {
+    tr.appendChild(self._new_linkButtonLayerElement('Support', '#11bbec', function (e) {
       e.preventDefault()
       window.open('https://mymonero.com/?open_support=1', '_blank')
       // shift to this when support can be brought directly back in:

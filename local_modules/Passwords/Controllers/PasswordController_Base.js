@@ -837,7 +837,7 @@ class PasswordController_Base extends EventEmitter {
 
   _executeWhenBooted (fn) {
     const self = this
-    if (self.hasBooted == true) {
+    if (self.hasBooted === true) {
       fn() // ready to execute
       return
     }

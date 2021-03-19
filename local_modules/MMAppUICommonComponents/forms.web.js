@@ -213,7 +213,7 @@ function New_fieldValue_textInputLayer (context, params) {
     const this_layer = this
     _shared_scrollConformingElementIntoView(this_layer)
   }
-  if (context.CommonComponents_Forms_scrollToInputOnFocus == true) {
+  if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
     layer.addEventListener(
       'focus',
       function () {
@@ -281,7 +281,7 @@ function New_fieldValue_textAreaView (params, context) {
     const this_layer = this
     _shared_scrollConformingElementIntoView(this_layer)
   }
-  if (context.CommonComponents_Forms_scrollToInputOnFocus == true) {
+  if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
     layer.addEventListener(
       'focus',
       function () {

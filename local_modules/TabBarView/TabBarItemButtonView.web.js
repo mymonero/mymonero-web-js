@@ -36,26 +36,22 @@ class TabBarItemButtonView extends View {
     //
     super(options, context)
     const self = this
-    {
-      self.isHorizontalBar = typeof options.isHorizontalBar !== 'undefined' ? options.isHorizontalBar : true
-      self.tabBarView_thickness = options.tabBarView_thickness
-      //
-      self.layer_baseStyleTemplate = options.layer_baseStyleTemplate || {}
-      self.icon_baseStyleTemplate = options.icon_baseStyleTemplate || {}
-      self.icon_selected_baseStyleTemplate = options.icon_selected_baseStyleTemplate || self.icon_baseStyleTemplate // fall back to non-selected
-      self.numberOf_tabs = options.numberOf_tabs
-      if (!self.numberOf_tabs) {
-        throw `${self.constructor.name} requires options.numberOf_tabs`
-      }
+    self.isHorizontalBar = typeof options.isHorizontalBar !== 'undefined' ? options.isHorizontalBar : true
+    self.tabBarView_thickness = options.tabBarView_thickness
+    //
+    self.layer_baseStyleTemplate = options.layer_baseStyleTemplate || {}
+    self.icon_baseStyleTemplate = options.icon_baseStyleTemplate || {}
+    self.icon_selected_baseStyleTemplate = options.icon_selected_baseStyleTemplate || self.icon_baseStyleTemplate // fall back to non-selected
+    self.numberOf_tabs = options.numberOf_tabs
+    if (!self.numberOf_tabs) {
+      throw Error(`${self.constructor.name} requires options.numberOf_tabs`)
     }
     self.setup()
   }
 
   setup () {
     const self = this
-    { // state defaults
-      self.isEnabled = true
-    }
+    self.isEnabled = true
     self.setup__preloadStateImages()
     self.setup_views()
     self.Deselect() // also sets selected state
@@ -110,7 +106,7 @@ class TabBarItemButtonView extends View {
       function _backgroundImageURLFrom_baseStyleTemplate (baseStyleTemplate) {
         const value__backgroundImage = baseStyleTemplate.backgroundImage
         if (!value__backgroundImage) {
-          throw '!value__backgroundImage'
+          throw Error('!value__backgroundImage')
         }
         let str = value__backgroundImage
         str = str.replace(/^url\(/, '')
@@ -156,10 +152,9 @@ class TabBarItemButtonView extends View {
 
   // Runtime - Imperatives - UI config - Shared
   __applyStylesToLayer (styles, layer) {
-    const styles_keys = Object.keys(styles)
-    const numberOf_styles_keys = styles_keys.length
-    for (let i = 0; i < numberOf_styles_keys; i++) {
-      const key = styles_keys[i]
+    const stylesKeys = Object.keys(styles)
+    for (let i = 0; i < stylesKeys.length; i++) {
+      const key = stylesKeys[i]
       const value = styles[key]
       layer.style[key] = value
     }
@@ -168,7 +163,7 @@ class TabBarItemButtonView extends View {
   // Runtime - Imperatives - Selection
   Select () {
     const self = this
-    if (self.isEnabled == false) {
+    if (self.isEnabled === false) {
       return
     }
     self.isSelected = true

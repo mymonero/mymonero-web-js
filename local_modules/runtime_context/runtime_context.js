@@ -1,93 +1,62 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 'use strict'
-//
-// Context generation
-// Format is like this:
-// var context_object_instantiation_descriptions =
-// [
-//	 {
-//		 module_path: "../raw_objects/raw_source_documents",
-//		 instance_key: "raw_source_documents_controller",
-//		 options: {}
-//	 },
-//	 {
-//		 module: require("../raw_objects/raw_row_objects"),
-//		 instance_key: "raw_row_objects_controller",
-//		 options: {}
-//	 }
-// ]
-//
-// Hydrate context
-//
-function NewHydratedContext (context_object_instantiation_descriptions, initialContext_orNilForNew) {
+
+const TXTRecordResolver = require('../OpenAlias/TXTResolver.web')
+const txtRecordResolver = new TXTRecordResolver({})
+
+const Pasteboard = require('../Pasteboard/Pasteboard.browser')
+const UrlBrowser = require('../URLBrowser/URLBrowser.browser')
+const FilesystemUI = require('../FilesystemUI/FilesystemUI.browser')
+const WindowDialogs = require('../WindowDialogs/WindowDialogs.browser')
+const CCyConversionRates = require('../CcyConversionRates/Controller')
+const Locale = require('../Locale/Locale.browser')
+const StringCryptor = require('../symmetric_cryptor/BackgroundStringCryptor.noOp')
+const Persister = require('../DocumentPersister/DocumentPersister.InMemory')
+const BackgroundAPIResponseParser = require('../HostedMoneroAPIClient/BackgroundResponseParser.web')
+const HostedMoneroAPIClient = require('../HostedMoneroAPIClient/HostedMoneroAPIClient')
+const OpenAliasResolver = require('../OpenAlias/OpenAliasResolver')
+const ThemeController = require('../Theme/ThemeController')
+const PasswordController = require('../Passwords/Controllers/PasswordController.Lite')
+const SettingsController = require('../Settings/Controllers/SettingsController')
+const UserIdleInWindowController = require('../UserIdle/UserIdleInWindowController')
+const WalletsListController = require('../WalletsList/Controllers/WalletsListController.Lite')
+const WalletAppCoordinator = require('../WalletAppCoordinator/WalletAppCoordinator')
+const ExceptionAlerting = require('../MainWindow/Controllers/ExceptionAlerting.browser.web.js')
+
+function NewHydratedContext (initialContext_orNilForNew) {
   const context = initialContext_orNilForNew != null ? initialContext_orNilForNew : {}
-  for (const i in context_object_instantiation_descriptions) {
-    const description = context_object_instantiation_descriptions[i]
-    const module_path = description.module_path
-    const description_module = description.module
-    if (module_path && typeof module_path !== 'string') {
-      console.error('Invalid description.module_path: ', JSON.stringify(description, null, '  '))
-      throw "runtime_context found invalid description 'module_path' key value type"
-    }
-    if (description_module && typeof description_module === 'string') {
-      console.error('Invalid description.module: ', JSON.stringify(description, null, '  '))
-      throw "runtime_context found invalid description 'module' key value type"
-    }
-    const module = description_module || require('' + module_path)
-    if (typeof module === 'undefined' || module === null) {
-      console.error('Unable to require ' + description.module_path + '. Skipping.')
-      continue
-    }
-    var instance
-    try {
-      instance = new module(description.options, context)
-    } catch (e) {
-      console.error('Code fault while loading ', JSON.stringify(description, null, '  '))
-      throw e
-    }
-    if (typeof instance === 'undefined' || instance === null) {
-      console.error('Unable to create an instance of ' + description.module_path + '. Skipping.')
-      throw 'runtime_context: Unable to create an instance'
-    }
-    context[description.instance_key] = instance
-    //
-    const aliases = description.aliases || []
-    for (const idx in aliases) {
-      const alias = aliases[idx]
-      context[alias] = instance
-    }
-  }
-  const context_keys = Object.keys(context)
-  for (const i in context_keys) {
-    const context_key = context_keys[i]
-    const instance = context[context_key]
+
+  context['pasteboard'] = new Pasteboard({}, context)
+  context['urlBrowser'] = new UrlBrowser({}, context)
+  context['filesystemUI'] = new FilesystemUI({}, context)
+  context['windowDialogs'] = new WindowDialogs({}, context)
+  context['CcyConversionRates_Controller_shared'] = new CCyConversionRates({}, context)
+  context['locale'] = new Locale({}, context)
+  context['string_cryptor__background'] = new StringCryptor({}, context)
+  context['persister'] = new Persister({}, context)
+  context['backgroundAPIResponseParser'] = new BackgroundAPIResponseParser({
+    coreBridge_instance: context.monero_utils // the same as coreBridge_instance
+  }, context)
+  context['hostedMoneroAPIClient'] = new HostedMoneroAPIClient({
+    appUserAgent_product: context.app.getName(),
+    appUserAgent_version: context.app.getVersion(),
+    request_conformant_module: require('xhr')
+  }, context)
+  context['openAliasResolver'] = new OpenAliasResolver({
+    txtRecordResolver: txtRecordResolver
+  }, context)
+  context['themeController'] = new ThemeController({}, context)
+  context['passwordController'] = new PasswordController({}, context)
+  context['settingsController'] = new SettingsController({}, context)
+  context['userIdleInWindowController'] = new UserIdleInWindowController({}, context)
+  context['walletsListController'] = new WalletsListController({}, context)
+  context['walletAppCoordinator'] = new WalletAppCoordinator({}, context)
+  context['exceptionAlerting'] = new ExceptionAlerting({}, context)
+
+  const contextKeys = Object.keys(context)
+  for (const i in contextKeys) {
+    const contextKey = contextKeys[i]
+    const instance = context[contextKey]
     // This calls an optional function that classes can implement to get control after the whole context is set up
     const postWholeContextInit_setup__fn = instance.RuntimeContext_postWholeContextInit_setup
     if (typeof postWholeContextInit_setup__fn !== 'undefined') {

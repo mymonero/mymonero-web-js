@@ -34,10 +34,10 @@ const commonComponents_hoverableCells = require('./hoverableCells.web')
 const ActionButton_h = 32
 const ActionButton_rightMargin = 9
 //
-const ActionButtonsContainerView_h = ActionButton_h
+const ActionButtonsContainerView_h = 32
 const ActionButtonsContainerView_bottomMargin = 8
-exports.ActionButtonsContainerView_bottomMargin = ActionButtonsContainerView_bottomMargin
-exports.ActionButtonsContainerView_h = ActionButtonsContainerView_h
+exports.ActionButtonsContainerView_bottomMargin = 8
+exports.ActionButtonsContainerView_h = 32
 //
 function New_ActionButtonsContainerView (
   margin_fromWindowLeft,
@@ -46,13 +46,11 @@ function New_ActionButtonsContainerView (
 ) {
   const view = new View({}, context)
   const layer = view.layer
-  {
-    layer.style.position = 'fixed'
-    layer.style.top = `calc(100% - ${ActionButtonsContainerView_h}px - ${ActionButtonsContainerView_bottomMargin}px - ${context.rootViewFooterHeight}px)`
-    layer.style.width = `calc(100% - ${margin_fromWindowLeft}px - ${margin_fromWindowRight}px)`
-    layer.style.height = ActionButtonsContainerView_h + 'px'
-    layer.style.zIndex = 1000
-  }
+  layer.style.position = 'fixed'
+  layer.style.top = 'calc(100% - 32px - 8px - 32px)'
+  layer.style.width = `calc(100% - ${margin_fromWindowLeft}px - ${margin_fromWindowRight}px)`
+  layer.style.height = '32px'
+  layer.style.zIndex = 1000
   return view
 }
 exports.New_ActionButtonsContainerView = New_ActionButtonsContainerView

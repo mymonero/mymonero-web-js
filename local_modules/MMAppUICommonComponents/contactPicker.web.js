@@ -119,7 +119,7 @@ function New_contactPickerLayer (
         // always search, even if no query, as long as focused
         _searchForAndDisplaySearchResults()
         //
-        if (context.CommonComponents_Forms_scrollToInputOnFocus == true) {
+        if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
           inputLayer.Component_ScrollIntoViewInFormContainerParent()
         }
       }

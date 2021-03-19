@@ -33,7 +33,7 @@
 window.BootApp = function () { // encased in a function to prevent scope being lost/freed on mobile
   const isDebug = false
   const app =
-	{ // implementing some methods to provide same API as electron
+  { // implementing some methods to provide same API as electron
 	  getVersion: function () {
 	    return '1.1.19' // TODO: read from config.. don't want to ship package.json with app though
 	  },
@@ -41,13 +41,12 @@ window.BootApp = function () { // encased in a function to prevent scope being l
 	    return 'MyMonero'
 	  },
 	  getDeviceManufacturer: function () {
-	    throw 'app.getDeviceManufacturer(): Unsupported platform'
+	    throw Error('app.getDeviceManufacturer(): Unsupported platform')
 	  },
 	  getPath: function (pathType) {
-	    throw 'app.getPath(): Unsupported platform'
+	    throw Error('app.getPath(): Unsupported platform')
 	  }
 	}
-	//
   const isTouchDevice = ('ontouchstart' in document.documentElement)
   const isMobile = isTouchDevice // an approximation for 'mobile'
   //
@@ -56,66 +55,53 @@ window.BootApp = function () { // encased in a function to prevent scope being l
     appVersion: app.getVersion(),
     reporting_processName: 'BrowserWindow'
   })
-  //
   // context
-  const isHorizontalBar = isMobile
-  require('../../mymonero_libapp_js/libapp_js/MyMoneroLibAppBridge')({}).then(function (coreBridge_instance) // we can just use this directly in the browser version
-  {
+  require('../../mymonero_libapp_js/libapp_js/MyMoneroLibAppBridge')({}).then(function (coreBridge_instance) {
     const context = require('../Models/index_context.browser').NewHydratedContext({
       nettype: require('../../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/nettype').network_type.MAINNET, // critical setting
       app: app,
       isDebug: isDebug,
       isLiteApp: true, // used sparingly for to disable (but not redact) functionality
-      isRunningInBrowser: true, // categorically
       isMobile: isMobile,
-      Cordova_isMobile: false, // (this can be renamed or maybe deprecated)
-      crossPlatform_appBundledIndexRelativeAssetsRootPath: '',
-      crossPlatform_indexContextRelativeAssetsRootPathSuffix: '../../', // b/c index_context is in MainWindow/Views; must end up /
-      platformSpecific_RootTabBarAndContentView: require('./RootTabBarAndContentView.browser.web'), // slightly messy place to put this but it works
-      TabBarView_thickness: isHorizontalBar ? 48 : 79,
-      rootViewFooterHeight: 32,
-      TabBarView_isHorizontalBar: isHorizontalBar,
-      ThemeController_isMobileBrowser: isMobile == true,
-      Tooltips_nonHoveringBehavior: isMobile == true, // be able to dismiss on clicks etc
-      Emoji_renderWithNativeEmoji: isMobile == true, // b/c this is a browser, we could be on desktop, i.e. w/o guaranteed native emoji support
+      TabBarView_thickness: isMobile ? 48 : 79,
+      TabBarView_isHorizontalBar: isMobile,
+      ThemeController_isMobileBrowser: isMobile,
+      Tooltips_nonHoveringBehavior: isMobile, // be able to dismiss on clicks etc
+      Emoji_renderWithNativeEmoji: isMobile, // b/c this is a browser, we could be on desktop, i.e. w/o guaranteed native emoji support
       // TODO: detect if Mac … if so, render w/o native emoji (need holistic fallback solution though - see Gitlab post referenced by https://github.com/mymonero/mymonero-app-js/issues/194)
       //
       appDownloadLink_domainAndPath: 'mymonero.com',
-      Settings_shouldDisplayAboutAppButton: true, // special case - since we don't have a system menu to place it in
       HostedMoneroAPIClient_DEBUGONLY_mockSendTransactionSuccess: false,
-      Views_selectivelyEnableMobileRenderingOptimizations: isMobile === true,
-      CommonComponents_Forms_scrollToInputOnFocus: isMobile === true,
+      Views_selectivelyEnableMobileRenderingOptimizations: isMobile,
+      CommonComponents_Forms_scrollToInputOnFocus: isMobile,
       monero_utils: coreBridge_instance
     })
     window.MyMonero_context = context
     //
-    if (isMobile == false) { // then we don't have guaranteed native emoji support
-      { // since we're using emoji, now that we have the context, we can call PreLoadAndSetUpEmojiOne
-        const emoji_web = require('../../Emoji/emoji_web')
-        emoji_web.PreLoadAndSetUpEmojiOne(context)
-      }
+    if (isMobile === false) { // then we don't have guaranteed native emoji support
+      const emoji_web = require('../../Emoji/emoji_web') // since we're using emoji, now that we have the context, we can call PreLoadAndSetUpEmojiOne
+      emoji_web.PreLoadAndSetUpEmojiOne(context)
     }
-    { // configure native UI elements
-      document.addEventListener('touchstart', function () {}, true) // to allow :active styles to work in your CSS on a page in Mobile Safari:
+    // configure native UI elements
+    document.addEventListener('touchstart', function () {}, true) // to allow :active styles to work in your CSS on a page in Mobile Safari:
+    //
+    if (isMobile) {
+      // disable tap -> click delay on mobile browsers
+      const attachFastClick = require('fastclick')
+      attachFastClick.attach(document.body)
       //
-      if (isMobile) {
-        // disable tap -> click delay on mobile browsers
-        const attachFastClick = require('fastclick')
-        attachFastClick.attach(document.body)
-        //
-        // when window resized on mobile (i.e. possibly when device rotated -
-        // though we don't support that yet
-        // if(/Android/.test(navigator.appVersion)) {
-        const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
-        window.addEventListener('resize', function () {
-          console.log('💬  Window resized')
-          commonComponents_forms.ScrollCurrentFormElementIntoView()
-        })
-        // }
-      }
+      // when window resized on mobile (i.e. possibly when device rotated -
+      // though we don't support that yet
+      // if(/Android/.test(navigator.appVersion)) {
+      const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
+      window.addEventListener('resize', function () {
+        console.log('💬  Window resized')
+        commonComponents_forms.ScrollCurrentFormElementIntoView()
+      })
+      // }
     }
     { // root view
-      const RootView = require('../Views/RootView.Lite.web') // electron uses .web files as it has a web DOM
+      const RootView = require('../Views/RootView.web') // electron uses .web files as it has a web DOM
       const rootView = new RootView({}, context) // hang onto reference
       rootView.superview = null // just to be explicit; however we will set a .superlayer
       // manually attach the rootView to the DOM and specify view's usual managed reference(s)
