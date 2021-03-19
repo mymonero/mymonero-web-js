@@ -26,20 +26,18 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const RootTabBarAndContentView_Lite = require('./RootTabBarAndContentView.Lite.web')
 //
-class RootTabBarAndContentView extends RootTabBarAndContentView_Lite
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
-	_setup_startObserving()
-	{
-		const self = this
-		super._setup_startObserving()
-	}
+class RootTabBarAndContentView extends RootTabBarAndContentView_Lite {
+  constructor (options, context) {
+    super(options, context)
+  }
+
+  _setup_startObserving () {
+    const self = this
+    super._setup_startObserving()
+  }
 }
 module.exports = RootTabBarAndContentView

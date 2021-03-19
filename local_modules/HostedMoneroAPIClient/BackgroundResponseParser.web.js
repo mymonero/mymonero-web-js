@@ -26,78 +26,77 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 // In the future this could implement web workers
 const response_parser_utils = require('../mymonero_libapp_js/mymonero-core-js/hostAPI/response_parser_utils')
 const monero_keyImage_cache_utils = require('../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_keyImage_cache_utils')
 //
-class BackgroundResponseParser
-{
-	constructor(options, context)
-	{
-		if (typeof options.coreBridge_instance == 'undefined' || options.coreBridge_instance == null) {
-			throw "BackgroundResponseParser.web expected options.coreBridge_instance"
-		}
-		const self = this
-		self.coreBridge_instance = options.coreBridge_instance
-	}
-	//
-	// Runtime - Accessors - Interface
-	//
-	Parsed_AddressInfo(
-		data,
-		address,
-		view_key__private,
-		spend_key__public,
-		spend_key__private,
-		fn //: (err?, returnValuesByKey?) -> Void
-	) {
-		const self = this
-		response_parser_utils.Parsed_AddressInfo__keyImageManaged(
-			data,
-			address,
-			view_key__private,
-			spend_key__public,
-			spend_key__private,
-			self.coreBridge_instance,
-			function(err, returnValuesByKey)
-			{
-				fn(err, returnValuesByKey)
-			}
-		)
-	}
-	Parsed_AddressTransactions(
-		data,
-		address,
-		view_key__private,
-		spend_key__public,
-		spend_key__private,
-		fn //: (err?, returnValuesByKey?) -> Void
-	) {
-		const self = this
-		response_parser_utils.Parsed_AddressTransactions__keyImageManaged(
-			data,
-			address,
-			view_key__private,
-			spend_key__public,
-			spend_key__private,
-			self.coreBridge_instance,
-			function(err, returnValuesByKey)
-			{
-				fn(err, returnValuesByKey)
-			}
-		)
-	}
-	//
-	DeleteManagedKeyImagesForWalletWith(
-		address,
-		fn // ((err) -> Void)? 
-	) {
-		monero_keyImage_cache_utils.DeleteManagedKeyImagesForWalletWith(address)
-		if (fn) {
-			setImmediate(fn)
-		}
-	}
+class BackgroundResponseParser {
+  constructor (options, context) {
+    if (typeof options.coreBridge_instance === 'undefined' || options.coreBridge_instance == null) {
+      throw 'BackgroundResponseParser.web expected options.coreBridge_instance'
+    }
+    const self = this
+    self.coreBridge_instance = options.coreBridge_instance
+  }
+
+  //
+  // Runtime - Accessors - Interface
+  //
+  Parsed_AddressInfo (
+    data,
+    address,
+    view_key__private,
+    spend_key__public,
+    spend_key__private,
+    fn // : (err?, returnValuesByKey?) -> Void
+  ) {
+    const self = this
+    response_parser_utils.Parsed_AddressInfo__keyImageManaged(
+      data,
+      address,
+      view_key__private,
+      spend_key__public,
+      spend_key__private,
+      self.coreBridge_instance,
+      function (err, returnValuesByKey) {
+        fn(err, returnValuesByKey)
+      }
+    )
+  }
+
+  Parsed_AddressTransactions (
+    data,
+    address,
+    view_key__private,
+    spend_key__public,
+    spend_key__private,
+    fn // : (err?, returnValuesByKey?) -> Void
+  ) {
+    const self = this
+    response_parser_utils.Parsed_AddressTransactions__keyImageManaged(
+      data,
+      address,
+      view_key__private,
+      spend_key__public,
+      spend_key__private,
+      self.coreBridge_instance,
+      function (err, returnValuesByKey) {
+        fn(err, returnValuesByKey)
+      }
+    )
+  }
+
+  //
+  DeleteManagedKeyImagesForWalletWith (
+    address,
+    fn // ((err) -> Void)?
+  ) {
+    monero_keyImage_cache_utils.DeleteManagedKeyImagesForWalletWith(address)
+    if (fn) {
+      setImmediate(fn)
+    }
+  }
 }
 module.exports = BackgroundResponseParser

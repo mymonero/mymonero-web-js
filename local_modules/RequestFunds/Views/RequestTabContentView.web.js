@@ -26,33 +26,31 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const RequestTabContentView_Base = require('./RequestTabContentView_Base.web')
 //
-class RequestTabContentView extends RequestTabContentView_Base
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
-	setup()
-	{
-		super.setup() // we must call on super
-		const self = this
-		{ // walletsListView
-			const options = {}
-			const FundsRequestsListView = require('./FundsRequestsListView.web')
-			const view = new FundsRequestsListView(options, self.context)
-			self.fundsRequestsListView = view
-		}
-		{
-			self.SetStackViews(
-				[
-					self.fundsRequestsListView
-				]
-			)
-		}
-	}
+class RequestTabContentView extends RequestTabContentView_Base {
+  constructor (options, context) {
+    super(options, context)
+  }
+
+  setup () {
+    super.setup() // we must call on super
+    const self = this
+    { // walletsListView
+      const options = {}
+      const FundsRequestsListView = require('./FundsRequestsListView.web')
+      const view = new FundsRequestsListView(options, self.context)
+      self.fundsRequestsListView = view
+    }
+    {
+      self.SetStackViews(
+        [
+          self.fundsRequestsListView
+        ]
+      )
+    }
+  }
 }
 module.exports = RequestTabContentView

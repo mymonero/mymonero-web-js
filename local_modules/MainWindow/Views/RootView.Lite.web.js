@@ -26,31 +26,29 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const RootView_Base = require('./RootView_Base.web')
 const RootFooterView = require('./RootFooterView.web')
 //
-class RootView extends RootView_Base
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
-	setup_tabBarAndContentView()
-	{
-		super.setup_tabBarAndContentView() // must call first
-		//
-		const self = this
-		const layer = self.tabBarViewAndContentView.layer
-		layer.style.height = `calc(100% - ${self.context.rootViewFooterHeight}px)`
-		//
-		const footerView = new RootFooterView({}, self.context)
-		self.footerView = footerView
-		self.addSubview(footerView)
-	}
-	setup_passwordEntryViewController()
-	{// overridden and not calling on super
-	}
+class RootView extends RootView_Base {
+  constructor (options, context) {
+    super(options, context)
+  }
+
+  setup_tabBarAndContentView () {
+    super.setup_tabBarAndContentView() // must call first
+    //
+    const self = this
+    const layer = self.tabBarViewAndContentView.layer
+    layer.style.height = `calc(100% - ${self.context.rootViewFooterHeight}px)`
+    //
+    const footerView = new RootFooterView({}, self.context)
+    self.footerView = footerView
+    self.addSubview(footerView)
+  }
+
+  setup_passwordEntryViewController () { // overridden and not calling on super
+  }
 }
 module.exports = RootView

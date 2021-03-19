@@ -26,31 +26,28 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const SendFundsView_Base = require('./SendFundsView_Base.web')
 const commonComponents_contactPicker_Lite = require('../../MMAppUICommonComponents/contactPicker.Lite.web')
 //
-class SendFundsView extends SendFundsView_Base
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
-	//
-	// Overrides - Required
-	_new_required_contactPickerLayer()
-	{
-		const self = this
-		const layer = commonComponents_contactPicker_Lite.New_contactPickerLayer_Lite(
-			self.context,
-			"Email, domain, or Monero address",
-			function(event)
-			{ // didFinishTypingInInput_fn
-				self._didFinishTypingInContactPickerInput(event)
-			}
-		)
-		return layer
-	}
+class SendFundsView extends SendFundsView_Base {
+  constructor (options, context) {
+    super(options, context)
+  }
+
+  //
+  // Overrides - Required
+  _new_required_contactPickerLayer () {
+    const self = this
+    const layer = commonComponents_contactPicker_Lite.New_contactPickerLayer_Lite(
+      self.context,
+      'Email, domain, or Monero address',
+      function (event) { // didFinishTypingInInput_fn
+        self._didFinishTypingInContactPickerInput(event)
+      }
+    )
+    return layer
+  }
 }
 module.exports = SendFundsView

@@ -26,77 +26,74 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
 const ExchangeContentView = require('./ExchangeContentView.web')
 
-class ExchangeTabContentView extends StackAndModalNavigationView
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
-	setup()
-	{
-		super.setup() // we must call on super
-		const self = this
-		{ 
-			const options = {}
+class ExchangeTabContentView extends StackAndModalNavigationView {
+  constructor (options, context) {
+    super(options, context)
+  }
 
-			const view = new ExchangeContentView(options, self.context)
-			console.log(view);
-			self.exchangeContentView = view
-		}
-		self.SetStackViews(
-			[
-				self.exchangeContentView
-			]
-		)
-	}
+  setup () {
+    super.setup() // we must call on super
+    const self = this
+    {
+      const options = {}
 
-	TabBarItem_layer_customStyle()
-	{
-		return {}
-	}
-	TabBarItem_icon_customStyle()
-	{
-		const self = this
-		return {
-			backgroundImage: "url(Exchange/Resources/XMRtoBTCInactive.svg)",
-			backgroundPosition: "center",
-			backgroundRepeat: "no-repeat",
-			backgroundSize: "39px"
-		}
-	}
-	TabBarItem_icon_selected_customStyle()
-	{
-		const self = this
-		return {
-			backgroundImage: "url(Exchange/Resources/XMRtoBTCActive.svg)",
-			backgroundPosition: "center",
-			backgroundRepeat: "no-repeat",
-			backgroundSize: "39px"
-		}
-	}
-	// interactivity
-	TabBarItem_shallDisable()
-	{
-		const self = this
-		const passwordController = self.context.passwordController
-		if (passwordController.hasUserSavedAPassword !== true) {
-			return true // no existing data - do disable
-		}
-		if (passwordController.HasUserEnteredValidPasswordYet() !== true) { // has data but not unlocked app
-			return true // because the app needs to be unlocked before they can use it
-		}
-		if (passwordController.IsUserChangingPassword() === true) {
-			return true // changing pw - prevent jumping around
-		}
-		const wallets = self.context.walletsListController.records // figure it's ready by this point
-		const numberOf_wallets = wallets.length
-		const walletsExist = numberOf_wallets !== 0
-		const shallDisable = walletsExist == false // no wallets? disable
-		return shallDisable
-	}
+      const view = new ExchangeContentView(options, self.context)
+      console.log(view)
+      self.exchangeContentView = view
+    }
+    self.SetStackViews(
+      [
+        self.exchangeContentView
+      ]
+    )
+  }
+
+  TabBarItem_layer_customStyle () {
+    return {}
+  }
+
+  TabBarItem_icon_customStyle () {
+    const self = this
+    return {
+      backgroundImage: 'url(Exchange/Resources/XMRtoBTCInactive.svg)',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: '39px'
+    }
+  }
+
+  TabBarItem_icon_selected_customStyle () {
+    const self = this
+    return {
+      backgroundImage: 'url(Exchange/Resources/XMRtoBTCActive.svg)',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: '39px'
+    }
+  }
+
+  // interactivity
+  TabBarItem_shallDisable () {
+    const self = this
+    const passwordController = self.context.passwordController
+    if (passwordController.hasUserSavedAPassword !== true) {
+      return true // no existing data - do disable
+    }
+    if (passwordController.HasUserEnteredValidPasswordYet() !== true) { // has data but not unlocked app
+      return true // because the app needs to be unlocked before they can use it
+    }
+    if (passwordController.IsUserChangingPassword() === true) {
+      return true // changing pw - prevent jumping around
+    }
+    const wallets = self.context.walletsListController.records // figure it's ready by this point
+    const numberOf_wallets = wallets.length
+    const walletsExist = numberOf_wallets !== 0
+    const shallDisable = walletsExist == false // no wallets? disable
+    return shallDisable
+  }
 }
 module.exports = ExchangeTabContentView

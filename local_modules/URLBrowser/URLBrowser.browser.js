@@ -26,20 +26,18 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const URLBrowser_Abstract = require('./URLBrowser_Abstract')
 //
-class URLBrowser extends URLBrowser_Abstract
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
-	OpenURLInSystemBrowser(urlString)
-	{
-		const self = this
-		window.open(urlString, '_blank') // _system..?
-	}
+class URLBrowser extends URLBrowser_Abstract {
+  constructor (options, context) {
+    super(options, context)
+  }
+
+  OpenURLInSystemBrowser (urlString) {
+    const self = this
+    window.open(urlString, '_blank') // _system..?
+  }
 }
 module.exports = URLBrowser

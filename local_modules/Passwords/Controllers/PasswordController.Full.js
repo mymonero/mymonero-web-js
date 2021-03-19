@@ -26,15 +26,13 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"use strict"
+'use strict'
 //
 const PasswordController_Base = require('./PasswordController_Base')
 //
-class PasswordController extends PasswordController_Base
-{
-	constructor(options, context)
-	{
-		super(options, context)
-	}
+class PasswordController extends PasswordController_Base {
+  constructor (options, context) {
+    super(options, context)
+  }
 }
 module.exports = PasswordController

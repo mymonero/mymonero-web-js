@@ -26,16 +26,15 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const renderer_setup_utils = require('./renderer_setup_utils')
 //
-module.exports = function(params)
-{
-	params = params || {}
-	//
-	renderer_setup_utils.HardenRuntime({
-		isBrowserBuild: true
-	})
-	renderer_setup_utils.IdentifyRuntime("IsBrowserRendererProcess") // set key-value to `true` on `window` -- not really using this under Cordova
+module.exports = function (params) {
+  params = params || {}
+  //
+  renderer_setup_utils.HardenRuntime({
+    isBrowserBuild: true
+  })
+  renderer_setup_utils.IdentifyRuntime('IsBrowserRendererProcess') // set key-value to `true` on `window` -- not really using this under Cordova
 }

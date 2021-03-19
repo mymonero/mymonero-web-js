@@ -26,29 +26,27 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
-class URLBrowser_Abstract
-{
-	//
-	// Lifecycle - Init
-	constructor(options, context)
-	{
-		const self = this
-		self.options = options
-		self.context = context
-		self.setup()
-	}
-	setup()
-	{
-		const self = this
-	}
-	//
-	// Imperatives - Override these
-	OpenURLInSystemBrowser(urlString)
-	{
-		const self = this
-		throw `Implement OpenURLInSystemBrowser(url) in ${self.constructor.name}`
-	}
+class URLBrowser_Abstract {
+  //
+  // Lifecycle - Init
+  constructor (options, context) {
+    const self = this
+    self.options = options
+    self.context = context
+    self.setup()
+  }
+
+  setup () {
+    const self = this
+  }
+
+  //
+  // Imperatives - Override these
+  OpenURLInSystemBrowser (urlString) {
+    const self = this
+    throw `Implement OpenURLInSystemBrowser(url) in ${self.constructor.name}`
+  }
 }
 module.exports = URLBrowser_Abstract

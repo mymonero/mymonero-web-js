@@ -32,9 +32,15 @@
     "babel-minify": "0.5.1",
     "eslint": "5.6.0",
     "request": "2.88.0",
+    "standard": "^16.0.3",
     "webpack": "^4.41.6",
     "webpack-cli": "3.3.12",
     "webpack-merge": "4.2.2",
     "worker-loader": "2.0.0"
+  },
+  "standard": {
+    "ignore": [
+      "local_modules/mymonero_libapp_js"
+    ]
   }
 }

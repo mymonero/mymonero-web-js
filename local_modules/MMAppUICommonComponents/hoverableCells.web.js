@@ -26,12 +26,12 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const Views__cssRules = require('../Views/cssRules.web')
 //
-const NamespaceName = "hoverableCell"
-const haveCSSRulesBeenInjected_documentKey = "__haveCSSRulesBeenInjected_"+NamespaceName
+const NamespaceName = 'hoverableCell'
+const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
 const cssRules =
 [
 	`.hoverable-cell {
@@ -51,33 +51,27 @@ const cssRules =
 	 	opacity: 0.5;
 	}`
 ]
-function __injectCSSRules_ifNecessary()
-{
-	Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules)
+function __injectCSSRules_ifNecessary () {
+  Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules)
 }
 
-exports.ClassFor_HoverableCell = function()
-{
-	__injectCSSRules_ifNecessary() 
-	return "hoverable-cell"
+exports.ClassFor_HoverableCell = function () {
+  __injectCSSRules_ifNecessary()
+  return 'hoverable-cell'
 }
-exports.ClassFor_GreyCell = function()
-{
-	__injectCSSRules_ifNecessary()
-	return "utility"
+exports.ClassFor_GreyCell = function () {
+  __injectCSSRules_ifNecessary()
+  return 'utility'
 }
-exports.ClassFor_BlueCell = function()
-{
-	__injectCSSRules_ifNecessary()
-	return "action"
+exports.ClassFor_BlueCell = function () {
+  __injectCSSRules_ifNecessary()
+  return 'action'
 }
-exports.ClassFor_RedCell = function()
-{
-	__injectCSSRules_ifNecessary()
-	return "destructive"
+exports.ClassFor_RedCell = function () {
+  __injectCSSRules_ifNecessary()
+  return 'destructive'
 }
-exports.ClassFor_Disableable = function()
-{
-	__injectCSSRules_ifNecessary() 
-	return "disableable"
+exports.ClassFor_Disableable = function () {
+  __injectCSSRules_ifNecessary()
+  return 'disableable'
 }

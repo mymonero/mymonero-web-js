@@ -26,100 +26,94 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const View = require('../../Views/View.web')
 //
-class RootFooterView extends View
-{
-	constructor(options, context)
-	{
-		super(options, context)
+class RootFooterView extends View {
+  constructor (options, context) {
+    super(options, context)
 
-		const self = this
-		self.setup()
-	}
-	setup()
-	{
-		const self = this
-		const layer = self.layer
-		layer.style.height = `${self.context.rootViewFooterHeight}px`
-		layer.style.backgroundColor = "#171416"
-		//
-		const primaryUtilityLink_colorValue = "rgb(250, 246, 250)"
-		const utilityLink_colorValue = "rgb(140, 136, 140)"
-		const importantLink_colorValue = "#11bbec"
-		const table = document.createElement("table")
-		table.style.border = "none"
-		table.style.padding = "0"
-		table.style.margin = "0"
-		table.style.width = "100%"
-		table.style.maxWidth = "400px"
-		const tr = document.createElement("tr")
-		table.appendChild(tr)
-		layer.appendChild(table)
-		//
-		tr.appendChild(self._new_linkButtonLayerElement("Home", primaryUtilityLink_colorValue, function(e)
-		{
-			e.preventDefault()
-			window.open('https://www.mymonero.com/', '_blank') // new tab
-			return false;
-		}))
-		tr.appendChild(self._new_linkButtonLayerElement("Privacy", utilityLink_colorValue, function(e)
-		{
-			e.preventDefault()
-			window.open('https://www.mymonero.com/privacy', '_blank') // new tab
-			return false;
-		}))
-		tr.appendChild(self._new_linkButtonLayerElement("Terms", utilityLink_colorValue, function(e)
-		{
-			e.preventDefault()
-			window.open('https://www.mymonero.com/terms', '_blank') // new tab
-			return false;
-		}))
-		tr.appendChild(self._new_linkButtonLayerElement("Support", importantLink_colorValue, function(e)
-		{
-			e.preventDefault()
-			window.open("https://mymonero.com/?open_support=1", "_blank")
-			// shift to this when support can be brought directly back in:
-			// window.Intercom('show')
-			// previous:
-			// window.Intercom('update', {
-			// 	hide_default_launcher: false
-			// })
-			return false;
-		}))
-	}
-	_new_linkButtonLayerElement(title, colorValue, click_handler_fn)
-	{
-		const self = this
-		//
-		const td = document.createElement("td")
-		td.style.maxWdth = "80px"
-		td.width = "25%"
-		td.align = "center"
-		//
-		const a = document.createElement("a")
-		a.innerHTML = `<span>${title}</span>`
-		a.style.color = colorValue
-		a.style.cursor = "pointer"
-		a.style.webkitUserSelect = "none" // disable selection
-		a.style.MozUserSelect = "none"
-		a.style.msUserSelect = "none"
-		a.style.userSelect = "none"
-		self.context.themeController.StyleLayer_FontAsSmallRegularSansSerif(a)
-		a.style.webkitTapHighlightColor = "rgba(0,0,0,0)" 
-		a.style.margin = "0"
-		a.style.width = "auto"
-		a.style.maxWidth = "82px"
-		a.style.lineHeight = "28px"
-		a.style.height = "32px"
-		a.style.display = "inline-block"
-		a.style.padding = "0"
-		a.addEventListener("click", click_handler_fn)
-		td.appendChild(a)
-		//
-		return td
-	}
+    const self = this
+    self.setup()
+  }
+
+  setup () {
+    const self = this
+    const layer = self.layer
+    layer.style.height = `${self.context.rootViewFooterHeight}px`
+    layer.style.backgroundColor = '#171416'
+    //
+    const primaryUtilityLink_colorValue = 'rgb(250, 246, 250)'
+    const utilityLink_colorValue = 'rgb(140, 136, 140)'
+    const importantLink_colorValue = '#11bbec'
+    const table = document.createElement('table')
+    table.style.border = 'none'
+    table.style.padding = '0'
+    table.style.margin = '0'
+    table.style.width = '100%'
+    table.style.maxWidth = '400px'
+    const tr = document.createElement('tr')
+    table.appendChild(tr)
+    layer.appendChild(table)
+    //
+    tr.appendChild(self._new_linkButtonLayerElement('Home', primaryUtilityLink_colorValue, function (e) {
+      e.preventDefault()
+      window.open('https://www.mymonero.com/', '_blank') // new tab
+      return false
+    }))
+    tr.appendChild(self._new_linkButtonLayerElement('Privacy', utilityLink_colorValue, function (e) {
+      e.preventDefault()
+      window.open('https://www.mymonero.com/privacy', '_blank') // new tab
+      return false
+    }))
+    tr.appendChild(self._new_linkButtonLayerElement('Terms', utilityLink_colorValue, function (e) {
+      e.preventDefault()
+      window.open('https://www.mymonero.com/terms', '_blank') // new tab
+      return false
+    }))
+    tr.appendChild(self._new_linkButtonLayerElement('Support', importantLink_colorValue, function (e) {
+      e.preventDefault()
+      window.open('https://mymonero.com/?open_support=1', '_blank')
+      // shift to this when support can be brought directly back in:
+      // window.Intercom('show')
+      // previous:
+      // window.Intercom('update', {
+      // 	hide_default_launcher: false
+      // })
+      return false
+    }))
+  }
+
+  _new_linkButtonLayerElement (title, colorValue, click_handler_fn) {
+    const self = this
+    //
+    const td = document.createElement('td')
+    td.style.maxWdth = '80px'
+    td.width = '25%'
+    td.align = 'center'
+    //
+    const a = document.createElement('a')
+    a.innerHTML = `<span>${title}</span>`
+    a.style.color = colorValue
+    a.style.cursor = 'pointer'
+    a.style.webkitUserSelect = 'none' // disable selection
+    a.style.MozUserSelect = 'none'
+    a.style.msUserSelect = 'none'
+    a.style.userSelect = 'none'
+    self.context.themeController.StyleLayer_FontAsSmallRegularSansSerif(a)
+    a.style.webkitTapHighlightColor = 'rgba(0,0,0,0)'
+    a.style.margin = '0'
+    a.style.width = 'auto'
+    a.style.maxWidth = '82px'
+    a.style.lineHeight = '28px'
+    a.style.height = '32px'
+    a.style.display = 'inline-block'
+    a.style.padding = '0'
+    a.addEventListener('click', click_handler_fn)
+    td.appendChild(a)
+    //
+    return td
+  }
 }
 module.exports = RootFooterView

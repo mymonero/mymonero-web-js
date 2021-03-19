@@ -26,7 +26,7 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict"
+'use strict'
 //
 const merge = require('webpack-merge')
 const common = require('./webpack.config.browser.common.js')
@@ -34,11 +34,11 @@ const common = require('./webpack.config.browser.common.js')
 // const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 //
 module.exports = merge(common, {
-	// plugins: [
-	// 	new UglifyJSPlugin({
-	// 		compress: {
-	// 			drop_console: true,
-	// 		}
-	// 	})
-	// ]
+  // plugins: [
+  // 	new UglifyJSPlugin({
+  // 		compress: {
+  // 			drop_console: true,
+  // 		}
+  // 	})
+  // ]
 })

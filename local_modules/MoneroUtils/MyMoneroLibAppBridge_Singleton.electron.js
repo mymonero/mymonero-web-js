@@ -26,12 +26,12 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-"use strict";
+'use strict'
 //
-const globalObject = global;
-const globalPromiseKey = "MyMoneroLibAppBridge_Singleton.electron"
+const globalObject = global
+const globalPromiseKey = 'MyMoneroLibAppBridge_Singleton.electron'
 if (typeof globalObject[globalPromiseKey] === 'undefined' || !globalObject[globalPromiseKey]) {
-	globalObject[globalPromiseKey] = require('../mymonero_libapp_js/libapp_js/MyMoneroLibAppBridge')({asmjs: false})
+  globalObject[globalPromiseKey] = require('../mymonero_libapp_js/libapp_js/MyMoneroLibAppBridge')({ asmjs: false })
 }
 //
-module.exports = globalObject[globalPromiseKey];
+module.exports = globalObject[globalPromiseKey]
