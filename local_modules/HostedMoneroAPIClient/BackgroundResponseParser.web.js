@@ -35,7 +35,7 @@ const monero_keyImage_cache_utils = require('../mymonero_libapp_js/mymonero-core
 class BackgroundResponseParser {
   constructor (options, context) {
     if (typeof options.coreBridge_instance === 'undefined' || options.coreBridge_instance == null) {
-      throw 'BackgroundResponseParser.web expected options.coreBridge_instance'
+      throw Error('BackgroundResponseParser.web expected options.coreBridge_instance')
     }
     const self = this
     self.coreBridge_instance = options.coreBridge_instance
@@ -95,7 +95,8 @@ class BackgroundResponseParser {
   ) {
     monero_keyImage_cache_utils.DeleteManagedKeyImagesForWalletWith(address)
     if (fn) {
-      setImmediate(fn)
+      setTimeout(fn, 0)
+      // setImmediate(fn)
     }
   }
 }

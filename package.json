@@ -6,11 +6,11 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": "https://github.com/mymonero/mymonero-web-js",
   "scripts": {
-    "dev": "(webpack --mode=development) & python2 -m SimpleHTTPServer 9101",
+    "dev": "(webpack --mode=development) & python2 -m SimpleHTTPServer 9110",
     "build": "webpack --mode=development",
     "start": "bin/start_dev_browser",
     "postinstall": "bin/update_submodules",
-    "watch": "(webpack --mode=development --watch) & python2 -m SimpleHTTPServer 9101"
+    "watch": "(webpack --mode=development --watch) & python2 -m SimpleHTTPServer 9110"
   },
   "engines": {
     "node": "12.4.0"
@@ -26,6 +26,7 @@
     "mymonero-exchange": "^0.1.5",
     "path-browserify": "^1.0.1",
     "qrcode": "^1.4.4",
+    "safe-buffer": "^5.2.1",
     "stream-browserify": "^3.0.0",
     "util": "^0.12.3",
     "uuid": "3.3.2",
@@ -43,7 +44,7 @@
     "webpack": "^5.27.0",
     "webpack-cli": "^4.5.0",
     "webpack-merge": "4.2.2",
-    "worker-loader": "2.0.0"
+    "worker-loader": "^3.0.0"
   },
   "standard": {
     "ignore": [
