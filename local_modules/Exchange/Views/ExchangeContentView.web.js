@@ -40,7 +40,6 @@ const commonComponents_navigationBarButtons = require('../../MMAppUICommonCompon
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_tooltips = require('../../MMAppUICommonComponents/tooltips.web')
 const WalletsSelectView = require('../../WalletsList/Views/WalletsSelectView.web')
-const fs = require('fs')
 // const commonComponents_contactPicker = require('../../MMAppUICommonComponents/contactPicker.web')
 const jsQR = require('jsqr')
 const monero_requestURI_utils = require('../../MoneroUtils/monero_requestURI_utils')

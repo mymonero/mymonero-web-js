@@ -27,10 +27,7 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 'use strict'
-//
-const animationDuration_s = 0.5
-const displayDelay_s = 20
-//
+
 const Views__cssRules = require('../../Views/cssRules.web')
 const NamespaceName = 'ExceptionAlerting'
 const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
@@ -73,8 +70,8 @@ function cssRules_generatorFn (context) {
 		}`,
 		`.exceptiontoast.show {
 			visibility: visible;
-			-webkit-animation: fadein_exceptiontoast ${animationDuration_s}s, fadeout_exceptiontoast ${animationDuration_s}s ${displayDelay_s}s;
-			animation: fadein_exceptiontoast ${animationDuration_s}s, fadeout_exceptiontoast ${animationDuration_s}s ${displayDelay_s}s;
+			-webkit-animation: fadein_exceptiontoast 0.5s, fadeout_exceptiontoast 0.5s 20s;
+			animation: fadein_exceptiontoast 0.5s, fadeout_exceptiontoast 0.5s 20s;
 		}`,
 		`@-webkit-keyframes fadein_exceptiontoast {
 			from {bottom: 0; opacity: 0;} 
@@ -156,11 +153,10 @@ class ExceptionAlerting {
     document.body.appendChild(el)
     setTimeout(function () {
       el.classList.add('show')
-      const finalRemoveDelay_s = animationDuration_s + displayDelay_s
       setTimeout(function () {
         el.classList.remove('show') // just so we can get the visibility:hidden in place -- probably not necessary
         el.parentNode.removeChild(el)
-      }, finalRemoveDelay_s * 1000)
+      }, 20.5 * 1000)
     })
     setTimeout(function () {
       window.ga('send', 'exception', {

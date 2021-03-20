@@ -1,55 +1,25 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-/* global StatusBar, device */
-//
 'use strict'
-//
+
 window.BootApp = function () { // encased in a function to prevent scope being lost/freed on mobile
   const isDebug = false
   const app =
   { // implementing some methods to provide same API as electron
-	  getVersion: function () {
-	    return '1.1.19' // TODO: read from config.. don't want to ship package.json with app though
-	  },
-	  getName: function () {
-	    return 'MyMonero'
-	  },
-	  getDeviceManufacturer: function () {
-	    throw Error('app.getDeviceManufacturer(): Unsupported platform')
-	  },
-	  getPath: function (pathType) {
-	    throw Error('app.getPath(): Unsupported platform')
-	  }
-	}
+    getVersion: function () {
+      return '1.1.19' // TODO: read from config.. don't want to ship package.json with app though
+    },
+    getName: function () {
+      return 'MyMonero'
+    },
+    getDeviceManufacturer: function () {
+      throw Error('app.getDeviceManufacturer(): Unsupported platform')
+    },
+    getPath: function (pathType) {
+      throw Error('app.getPath(): Unsupported platform')
+    }
+  }
   const isTouchDevice = ('ontouchstart' in document.documentElement)
   const isMobile = isTouchDevice // an approximation for 'mobile'
-  //
+
   const setup_utils = require('../../MMAppRendererSetup/renderer_setup.browser')
   setup_utils({
     appVersion: app.getVersion(),
@@ -69,7 +39,6 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       Tooltips_nonHoveringBehavior: isMobile, // be able to dismiss on clicks etc
       Emoji_renderWithNativeEmoji: isMobile, // b/c this is a browser, we could be on desktop, i.e. w/o guaranteed native emoji support
       // TODO: detect if Mac … if so, render w/o native emoji (need holistic fallback solution though - see Gitlab post referenced by https://github.com/mymonero/mymonero-app-js/issues/194)
-      //
       appDownloadLink_domainAndPath: 'mymonero.com',
       HostedMoneroAPIClient_DEBUGONLY_mockSendTransactionSuccess: false,
       Views_selectivelyEnableMobileRenderingOptimizations: isMobile,
@@ -101,7 +70,7 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       // }
     }
     { // root view
-      const RootView = require('../Views/RootView.web') // electron uses .web files as it has a web DOM
+      const RootView = require('../Views/RootView.web')
       const rootView = new RootView({}, context) // hang onto reference
       rootView.superview = null // just to be explicit; however we will set a .superlayer
       // manually attach the rootView to the DOM and specify view's usual managed reference(s)

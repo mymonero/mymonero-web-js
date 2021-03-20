@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-bin/_build_browser_dev; 
-cd browser_build && python2 -m SimpleHTTPServer 9101;
+#bin/_build_browser_dev; 
+cd local_modules && python2 -m SimpleHTTPServer 9101;

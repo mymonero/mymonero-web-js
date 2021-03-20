@@ -29,44 +29,12 @@
 'use strict'
 //
 const commonComponents_navigationBarButtons = require('../MMAppUICommonComponents/navigationBarButtons.web')
-//
-const Views__cssRules = require('../Views/cssRules.web')
-const NamespaceName = 'ThemeController'
-const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
-function cssRules_generatorFn (context) {
-  const assetsPath = '../../' + ('../../')
-  const cssRules =
-	[
-		`@font-face {
-			font-family: Native-Regular;
-			src: url("${assetsPath}assets/font/Native-Regular.otf") format("opentype");
-		}`,
-		`@font-face {
-			font-family: Native-Light;
-			src: url("${assetsPath}assets/font/Native-Light.otf") format("opentype");
-		}`,
-		`@font-face {
-			font-family: Native-Bold;
-			src: url("${assetsPath}assets/font/Native-Bold.otf") format("opentype");
-		}`
-	]
-  return cssRules
-}
-function __injectCSSRules_ifNecessary (context) {
-  Views__cssRules.InjectCSSRules_ifNecessary(
-    haveCSSRulesBeenInjected_documentKey,
-    cssRules_generatorFn,
-    context
-  )
-}
 
-//
 class ThemeController {
   constructor (options, context) {
     const self = this
     self.options = options
     self.context = context
-    __injectCSSRules_ifNecessary(context)
   }
 
   //

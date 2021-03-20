@@ -1,147 +1,8 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const View = require('../Views/View.web')
-const Views__cssRules = require('../Views/cssRules.web')
-//
-const k_knobWidth = 12
-const k_visibleTrackHeight = 2
-const k_runnableTrackHeight = k_knobWidth + 2
-//
-// CSS rules
-const NamespaceName = 'labeledRangeInputs'
-const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
 
-const thumbCSS = `-webkit-appearance: none;
-	-moz-appearance: none;
-	-ms-appearance: none;
-	appearance: none;
-	
-	height: ${k_knobWidth}px;
-	width: ${k_knobWidth}px;
-	border-radius:100%;
-	margin-top: 1px; /* minor visual */
-
-	background:#494749;
-	cursor: pointer;
-	box-shadow:0 2px 4px 0 rgba(0,0,0,0.50), 0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #6b696b;
-`
-const active_thumbCSS = `background:#404040;
-	box-shadow:0 1px 1px 0 rgba(0,0,0,0.50), 0 0.5px 0.5px 0 #161416, inset 0 0.5px 0 0 #505050;
-`
-const runnableTrackCSS = `-webkit-appearance: none;
-	-moz-appearance: none;
-	-ms-appearance: none;
-	appearance: none;
-
-	cursor: pointer;
-
-	width:100%;
-	height: ${k_runnableTrackHeight}px;
-`
-const cssRules =
-[
-	`.labeledRangeInput-container {
-		background: none;
-	}`,
-	`.labeledRangeInput-container.disabled {
-		opacity: 0.5;
-	}`,
-	`.labeledRangeInput-container input[type=range] {
-		-webkit-appearance: none;
-		background: none;
-		position: relative;
-		z-index: 100; /* above custom track */
-	}`,
-	`.labeledRangeInput-container input[type=range]:focus {
-		-webkit-appearance: none;
-		outline: none;
-	}`,
-	`.labeledRangeInput-container input[type=range]::-webkit-slider-thumb {
-		${thumbCSS}
-	}`,
-	`.labeledRangeInput-container input[type=range]::-moz-range-thumb {
-		${thumbCSS}
-	}`,
-	`.labeledRangeInput-container input[type=range]::-ms-thumb {
-		${thumbCSS}
-	}`,
-	// :active
-	`.labeledRangeInput-container:not(.disabled) input[type=range]:active::-webkit-slider-thumb {
-		${active_thumbCSS}
-	}`,
-	`.labeledRangeInput-container:not(.disabled) input[type=range]:active::-moz-range-thumb {
-		${active_thumbCSS}
-	}`,
-	`.labeledRangeInput-container:not(.disabled) input[type=range]:active::-ms-thumb {
-		${active_thumbCSS}
-	}`,
-	`.labeledRangeInput-container input[type=range]::-webkit-slider-runnable-track {
-		${runnableTrackCSS}
-	}`,
-	`.labeledRangeInput-container input[type=range]::-moz-range-track {
-		${runnableTrackCSS}
-	}`,
-	`.labeledRangeInput-container input[type=range]::-ms-track {
-		${runnableTrackCSS}
-	}`,
-	`.labeledRangeInput-container .slider-runnable-track {		
-		position: absolute;
-		z-index: 1;
-		left: ${k_knobWidth / 2}px;
-		right: ${k_knobWidth / 2}px;
-		bottom: ${k_runnableTrackHeight / 2 - k_visibleTrackHeight / 2 + 3}px;
-		background:#1d1b1d;
-		box-shadow:0 0 0 0 rgba(56,54,56,0.50), inset 0 0 0 0 #161416;
-		border-radius:${k_visibleTrackHeight / 2}px;
-		height:${k_visibleTrackHeight}px;
-	}`,
-	`.labeledRangeInput-container.disabled input[type=range]::-webkit-slider-thumb,
-	 .labeledRangeInput-container.disabled input[type=range]::-webkit-slider-runnable-track {
-		cursor: default !important;
-	}`,
-	`.labeledRangeInput-container.disabled input[type=range]::-moz-range-thumb,
-	 .labeledRangeInput-container.disabled input[type=range]::-moz-range-track {
-		cursor: default !important;
-	}`,
-	`.labeledRangeInput-container.disabled input[type=range]::-ms-thumb,
-	 .labeledRangeInput-container.disabled input[type=range]::-ms-track {
-		cursor: default !important;
-	}`
-]
-function __injectCSSRules_ifNecessary () {
-  Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules)
-}
-//
 function New_fieldValue_labeledRangeInputView (params, context) {
-  __injectCSSRules_ifNecessary()
   //
   const changed_fn = params.changed_fn || function (value) {}
   const finalized_labelText_fn = params.finalized_labelText_fn || function (float_inputValue) { return '' + float_inputValue }
@@ -279,7 +140,7 @@ function New_fieldValue_labeledRangeInputView (params, context) {
       knob_next_x_pct = 1
     }
     const knob_x_px = offsetWidth * knob_next_x_pct
-    const next_x_px = knob_x_px - (labelLayer_width / 2) - k_knobWidth * (knob_next_x_pct - 0.5) // this -knobWidth*pct-.5 is to offset the label in relation to the knob's displacement from the center as knob ends never move past track ends
+    const next_x_px = knob_x_px - (labelLayer_width / 2) - 12 * (knob_next_x_pct - 0.5) // this -knobWidth*pct-.5 is to offset the label in relation to the knob's displacement from the center as knob ends never move past track ends
     labelLayer.style.left = next_x_px + 'px'
   }
   view._updateAndLayoutLabel() // initial

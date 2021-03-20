@@ -34,7 +34,7 @@ const TabBarItemButtonView = require('./TabBarItemButtonView.web')
 class TabBarAndContentView extends View {
   constructor (options, context) {
     super(options, context)
-    
+
     const self = this
     self.setup()
   }

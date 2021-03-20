@@ -1,6 +1,6 @@
 // import function for Bitcoin address checking
 import validate from 'bitcoin-address-validation'
-console.log(validate)
+//console.log(validate)
 
 function sendFunds (wallet, xmr_amount, xmr_send_address, sweep_wallet, validation_status_fn, handle_response_fn) {
   return new Promise((resolve, reject) => {

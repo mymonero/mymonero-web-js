@@ -31,9 +31,6 @@ const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAn
 const ExchangeContentView = require('./ExchangeContentView.web')
 
 class ExchangeTabContentView extends StackAndModalNavigationView {
-  constructor (options, context) {
-    super(options, context)
-  }
 
   setup () {
     super.setup() // we must call on super
@@ -42,7 +39,7 @@ class ExchangeTabContentView extends StackAndModalNavigationView {
       const options = {}
 
       const view = new ExchangeContentView(options, self.context)
-      console.log(view)
+      //console.log(view)
       self.exchangeContentView = view
     }
     self.SetStackViews(
@@ -59,7 +56,7 @@ class ExchangeTabContentView extends StackAndModalNavigationView {
   TabBarItem_icon_customStyle () {
     const self = this
     return {
-      backgroundImage: 'url(Exchange/Resources/XMRtoBTCInactive.svg)',
+      backgroundImage: 'url(assets/img/XMRtoBTCInactive.svg)',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: '39px'
@@ -69,7 +66,7 @@ class ExchangeTabContentView extends StackAndModalNavigationView {
   TabBarItem_icon_selected_customStyle () {
     const self = this
     return {
-      backgroundImage: 'url(Exchange/Resources/XMRtoBTCActive.svg)',
+      backgroundImage: 'url(assets/img//XMRtoBTCActive.svg)',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: '39px'

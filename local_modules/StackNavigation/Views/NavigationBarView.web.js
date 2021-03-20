@@ -27,50 +27,28 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 'use strict'
-//
+
 const Animate = require('velocity-animate')
-//
 const View = require('../../Views/View.web')
-const BarButtonBaseView = require('./BarButtonBaseView.web')
-//
 const emoji_web = require('../../Emoji/emoji_web')
-//
-// CSS rules
-const Views__cssRules = require('../../Views/cssRules.web')
-const NamespaceName = 'NavigationBarView'
-const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
-const cssRules =
-[
-	`.${NamespaceName} .title-label {
-	}`,
-	`.${NamespaceName} .title-label .emojione {
-		transform: scale(.5);
-		margin: 7px 0 0 -16px;
-		position: absolute; 
-	}`
-]
-function __injectCSSRules_ifNecessary () { Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules) }
-//
+
 class NavigationBarView extends View {
   constructor (options, context) {
     super(options, context)
     //
     const self = this
-    {
-      self.navigationController = options.navigationController
-      if (typeof self.navigationController === 'undefined' || self.navigationController === null) {
-        throw 'NavigationBarView self.navigationController nil'
-      }
+    self.navigationController = options.navigationController
+    if (typeof self.navigationController === 'undefined' || self.navigationController === null) {
+      throw Error('NavigationBarView self.navigationController nil')
     }
     self.setup()
   }
 
   setup () {
     const self = this
-    __injectCSSRules_ifNecessary()
     { // self.layer
       const layer = self.layer
-      layer.classList.add(NamespaceName)
+      layer.classList.add('NavigationBarView')
       layer.style.position = 'absolute' // https://developers.google.com/web/updates/2016/12/position-sticky
       layer.style.top = '0%'
       layer.style.zIndex = '9'
@@ -209,13 +187,7 @@ class NavigationBarView extends View {
   //
   // Runtime - Imperatives - Public
   //
-  SetTopStackView (
-    stackView,
-    old_topStackView,
-    isAnimated,
-    ifAnimated_isFromRightNotLeft,
-    trueIfPoppingToRoot
-  ) {
+  SetTopStackView (stackView, old_topStackView, isAnimated, ifAnimated_isFromRightNotLeft, trueIfPoppingToRoot) {
     const self = this
     //
     self.__stopObserving_old_topStackView(old_topStackView)
@@ -239,7 +211,7 @@ class NavigationBarView extends View {
     }
     if (typeof stackView.Navigation_Title !== 'function') {
       console.error("Error: stackView didn't define Navigation_Title()", stackView)
-      throw 'stackView.Navigation_Title() not a function'
+      throw Error('stackView.Navigation_Title() not a function')
     }
     //
     let titleTextColor = self.defaultNavigationBarTitleColor
@@ -264,13 +236,7 @@ class NavigationBarView extends View {
     self.titleLayer.style.paddingLeft = extra_paddingLeft + 'px'
   }
 
-  SetTitleFromTopStackView (
-    stackView,
-    old_topStackView,
-    isAnimated,
-    ifAnimated_isFromRightNotLeft,
-    trueIfPoppingToRoot
-  ) {
+  SetTitleFromTopStackView (stackView, old_topStackView, isAnimated, ifAnimated_isFromRightNotLeft, trueIfPoppingToRoot) {
     const self = this
     if (typeof stackView === 'undefined' || stackView === null) {
       self.titleLayer.innerHTML = '' // clear
@@ -278,7 +244,7 @@ class NavigationBarView extends View {
     }
     if (typeof stackView.Navigation_Title !== 'function') {
       console.error("Error: stackView didn't define Navigation_Title()", stackView)
-      throw 'stackView.Navigation_Title() not a function'
+      throw Error('stackView.Navigation_Title() not a function')
     }
     //
     let titleTextColor = self.defaultNavigationBarTitleColor
@@ -382,7 +348,7 @@ class NavigationBarView extends View {
       }
     }
     if (idxOfThisStackView === -1) {
-      throw 'stackView is not currently in navigation stack.'
+      throw Error('stackView is not currently in navigation stack.')
       // return false
     }
     let mocked__old_topStackView = null
@@ -390,7 +356,7 @@ class NavigationBarView extends View {
       mocked__old_topStackView = null
     } else {
       if (numberOf_stackViews <= 1) {
-        throw 'expected more than one stack view here. code fault?'
+        throw Error('expected more than one stack view here. code fault?')
         // return false
       }
       mocked__old_topStackView = stackViews[idxOfThisStackView - 1]
@@ -513,7 +479,7 @@ class NavigationBarView extends View {
           const toOpacity = opacity !== '' && opacity !== null && typeof opacity !== undefined ? opacity : '1' // read instead of hardcode
           const toOpacity_float = parseFloat(toOpacity)
           if (isNaN(toOpacity_float)) {
-            throw 'toOpacity is NaN'
+            throw Error('toOpacity is NaN')
           }
           layer.style.opacity = '0' // first make invisible
           layer.style.left = ifAnimated_isFromRightNotLeft ? buttonOffsetForTransition_incomingButtons_fromRight : '-' + buttonOffsetForTransition_incomingButtons_fromLeft
@@ -555,7 +521,7 @@ class NavigationBarView extends View {
           const toOpacity = opacity !== '' && opacity !== null && typeof opacity !== undefined ? opacity : '1' // read instead of hardcode
           const toOpacity_float = parseFloat(toOpacity)
           if (isNaN(toOpacity_float)) {
-            throw 'toOpacity is NaN'
+            throw Error('toOpacity is NaN')
           }
           layer.style.opacity = '0' // first make invisible
           layer.style.right = ifAnimated_isFromRightNotLeft ? '-' + buttonOffsetForTransition_incomingButtons_fromRight : buttonOffsetForTransition_incomingButtons_fromLeft

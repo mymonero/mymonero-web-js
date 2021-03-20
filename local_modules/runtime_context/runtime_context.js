@@ -1,4 +1,3 @@
-
 'use strict'
 
 const TXTRecordResolver = require('../OpenAlias/TXTResolver.web')
@@ -26,32 +25,32 @@ const ExceptionAlerting = require('../MainWindow/Controllers/ExceptionAlerting.b
 function NewHydratedContext (initialContext_orNilForNew) {
   const context = initialContext_orNilForNew != null ? initialContext_orNilForNew : {}
 
-  context['pasteboard'] = new Pasteboard({}, context)
-  context['urlBrowser'] = new UrlBrowser({}, context)
-  context['filesystemUI'] = new FilesystemUI({}, context)
-  context['windowDialogs'] = new WindowDialogs({}, context)
-  context['CcyConversionRates_Controller_shared'] = new CCyConversionRates({}, context)
-  context['locale'] = new Locale({}, context)
-  context['string_cryptor__background'] = new StringCryptor({}, context)
-  context['persister'] = new Persister({}, context)
-  context['backgroundAPIResponseParser'] = new BackgroundAPIResponseParser({
+  context.pasteboard = new Pasteboard({}, context)
+  context.urlBrowser = new UrlBrowser({}, context)
+  context.filesystemUI = new FilesystemUI({}, context)
+  context.windowDialogs = new WindowDialogs({}, context)
+  context.CcyConversionRates_Controller_shared = new CCyConversionRates({}, context)
+  context.locale = new Locale({}, context)
+  context.string_cryptor__background = new StringCryptor({}, context)
+  context.persister = new Persister({}, context)
+  context.backgroundAPIResponseParser = new BackgroundAPIResponseParser({
     coreBridge_instance: context.monero_utils // the same as coreBridge_instance
   }, context)
-  context['hostedMoneroAPIClient'] = new HostedMoneroAPIClient({
+  context.hostedMoneroAPIClient = new HostedMoneroAPIClient({
     appUserAgent_product: context.app.getName(),
     appUserAgent_version: context.app.getVersion(),
     request_conformant_module: require('xhr')
   }, context)
-  context['openAliasResolver'] = new OpenAliasResolver({
+  context.openAliasResolver = new OpenAliasResolver({
     txtRecordResolver: txtRecordResolver
   }, context)
-  context['themeController'] = new ThemeController({}, context)
-  context['passwordController'] = new PasswordController({}, context)
-  context['settingsController'] = new SettingsController({}, context)
-  context['userIdleInWindowController'] = new UserIdleInWindowController({}, context)
-  context['walletsListController'] = new WalletsListController({}, context)
-  context['walletAppCoordinator'] = new WalletAppCoordinator({}, context)
-  context['exceptionAlerting'] = new ExceptionAlerting({}, context)
+  context.themeController = new ThemeController({}, context)
+  context.passwordController = new PasswordController({}, context)
+  context.settingsController = new SettingsController({}, context)
+  context.userIdleInWindowController = new UserIdleInWindowController({}, context)
+  context.walletsListController = new WalletsListController({}, context)
+  context.walletAppCoordinator = new WalletAppCoordinator({}, context)
+  context.exceptionAlerting = new ExceptionAlerting({}, context)
 
   const contextKeys = Object.keys(context)
   for (const i in contextKeys) {

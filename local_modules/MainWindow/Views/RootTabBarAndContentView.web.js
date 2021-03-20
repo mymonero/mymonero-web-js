@@ -84,7 +84,7 @@ class RootTabBarAndContentView extends TabBarAndContentView {
       self.SetTabBarItemButtonsInteractivityNeedsUpdateFromProviders()
     } else {
       self.DisableTabBarItemButtons(true) // true: force-disable all while booting
-      passwordController._executeWhenBooted(function () {self.SetTabBarItemButtonsInteractivityNeedsUpdateFromProviders() })
+      passwordController._executeWhenBooted(function () { self.SetTabBarItemButtonsInteractivityNeedsUpdateFromProviders() })
     }
   }
 
