@@ -35,7 +35,7 @@ const commonComponents_tables = require('./tables.web')
 const commonComponents_forms = require('./forms.web')
 const commonComponents_ccySelect = require('./ccySelect.web')
 //
-const monero_config = require('../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_config')
+const monero_config = require('@mymonero/mymonero-monero-config')
 //
 const NamespaceName = 'Forms.Amounts'
 const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName

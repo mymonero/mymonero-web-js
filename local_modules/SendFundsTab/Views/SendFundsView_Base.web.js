@@ -35,28 +35,20 @@ const commonComponents_amounts = require('../../MMAppUICommonComponents/amounts.
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tooltips = require('../../MMAppUICommonComponents/tooltips.web')
 const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
-//
 const WalletsSelectView = require('../../WalletsList/Views/WalletsSelectView.web')
-//
 const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const commonComponents_actionButtons = require('../../MMAppUICommonComponents/actionButtons.web')
-//
 const JustSentTransactionDetailsView = require('./JustSentTransactionDetailsView.web')
-//
 const monero_sendingFunds_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_sendingFunds_utils')
 const monero_openalias_utils = require('../../OpenAlias/monero_openalias_utils')
-const monero_paymentID_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_paymentID_utils')
-const monero_config = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_config')
+const monero_config = require('@mymonero/mymonero-monero-config')
 const monero_amount_format_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
-//
 const jsQR = require('jsqr')
 const monero_requestURI_utils = require('../../MoneroUtils/monero_requestURI_utils')
-//
 const Currencies = require('../../CcyConversionRates/Currencies')
-const JSBigInt = require('../../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/biginteger').BigInteger // important: grab defined export
-//
+const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger // important: grab defined export
 const rateServiceDomainText = 'cryptocompare.com'
-//
+
 class SendFundsView extends View {
   constructor (options, context) {
     super(options, context) // call super before `this`
@@ -140,9 +132,7 @@ class SendFundsView extends View {
     layer.style.height = '100%'
     layer.style.padding = '0' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
     layer.style.overflowY = 'auto'
-    layer.classList.add( // so that we get autoscroll to form field inputs on mobile platforms
-      commonComponents_forms.ClassNameForScrollingAncestorOfScrollToAbleElement()
-    )
+    layer.classList.add('ClassNameForScrollingAncestorOfScrollToAbleElement')
     // layer.style.webkitOverflowScrolling = "touch"
     //
     layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view

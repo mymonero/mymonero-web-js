@@ -276,41 +276,39 @@ class WalletCellContentsView extends View {
       return
     }
     self.titleLayer.innerHTML = wallet.walletLabel
-    let descriptionLayer_innerHTML
-    {
-      if (wallet.isLoggingIn === true) {
-        descriptionLayer_innerHTML = 'Logging in…'
-      } else if (wallet.didFailToInitialize_flag === true) { // unlikely but possible
-        descriptionLayer_innerHTML = 'Load error'
-      } else if (wallet.didFailToBoot_flag === true) { // possible when server incorrect
-        descriptionLayer_innerHTML = 'Login error'
-      } else if (wallet.HasEverFetched_accountInfo() === false) {
-        descriptionLayer_innerHTML = 'Loading…'
+    let descriptionLayerInnerHTML
+    if (wallet.isLoggingIn === true) {
+      descriptionLayerInnerHTML = 'Logging in…'
+    } else if (wallet.didFailToInitialize_flag === true) { // unlikely but possible
+      descriptionLayerInnerHTML = 'Load error'
+    } else if (wallet.didFailToBoot_flag === true) { // possible when server incorrect
+      descriptionLayerInnerHTML = 'Login error'
+    } else if (wallet.HasEverFetched_accountInfo() === false) {
+      descriptionLayerInnerHTML = 'Loading…'
+    } else {
+      if (self.wantsNoSecondaryBalances) {
+        descriptionLayerInnerHTML = self.__primaryBalanceLabelText()
       } else {
-        if (self.wantsNoSecondaryBalances) {
-          descriptionLayer_innerHTML = self.__primaryBalanceLabelText()
-        } else {
-          descriptionLayer_innerHTML = ''
-          //
-          const hasLockedFunds = wallet.HasLockedFunds()
-          const amountPending_JSBigInt = wallet.AmountPending_JSBigInt()
-          const hasPendingFunds = wallet.hasPendingFunds()
-          if (hasPendingFunds) {
-            const displayStrComponents = Currencies.displayStringComponentsFrom(self.context.CcyConversionRates_Controller_shared, amountPending_JSBigInt, self.context.settingsController.displayCcySymbol)
-            descriptionLayer_innerHTML += `${displayStrComponents.amt_str}&nbsp;${displayStrComponents.ccy_str}&nbsp;pending`
-          }
-          if (hasLockedFunds) {
-            const displayStrComponents = Currencies.displayStringComponentsFrom(self.context.CcyConversionRates_Controller_shared, wallet.LockedBalance_JSBigInt(), self.context.settingsController.displayCcySymbol)
-            descriptionLayer_innerHTML += (descriptionLayer_innerHTML != '' ? '; ' : '') + `${displayStrComponents.amt_str}&nbsp;${displayStrComponents.ccy_str}&nbsp;locked`
-          }
-          const hasAnySecondaryBalances = hasPendingFunds || hasLockedFunds
-          if (hasAnySecondaryBalances === false) {
-            descriptionLayer_innerHTML = self.__primaryBalanceLabelText()
-          }
+        descriptionLayerInnerHTML = ''
+        //
+        const hasLockedFunds = wallet.HasLockedFunds()
+        const amountPendingJSBigInt = wallet.AmountPending_JSBigInt()
+        const hasPendingFunds = wallet.HasPendingFunds()
+        if (hasPendingFunds) {
+          const displayStrComponents = Currencies.displayStringComponentsFrom(self.context.CcyConversionRates_Controller_shared, amountPendingJSBigInt, self.context.settingsController.displayCcySymbol)
+          descriptionLayerInnerHTML += `${displayStrComponents.amt_str}&nbsp;${displayStrComponents.ccy_str}&nbsp;pending`
+        }
+        if (hasLockedFunds) {
+          const displayStrComponents = Currencies.displayStringComponentsFrom(self.context.CcyConversionRates_Controller_shared, wallet.LockedBalance_JSBigInt(), self.context.settingsController.displayCcySymbol)
+          descriptionLayerInnerHTML += (descriptionLayerInnerHTML !== '' ? '; ' : '') + `${displayStrComponents.amt_str}&nbsp;${displayStrComponents.ccy_str}&nbsp;locked`
+        }
+        const hasAnySecondaryBalances = hasPendingFunds || hasLockedFunds
+        if (hasAnySecondaryBalances === false) {
+          descriptionLayerInnerHTML = self.__primaryBalanceLabelText()
         }
       }
     }
-    self.descriptionLayer.innerHTML = descriptionLayer_innerHTML
+    self.descriptionLayer.innerHTML = descriptionLayerInnerHTML
   }
 
   _configureUIWithWallet__color () {

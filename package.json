@@ -7,7 +7,7 @@
   "repository": "https://github.com/mymonero/mymonero-web-js",
   "scripts": {
     "dev": "(webpack --mode=development) & python2 -m SimpleHTTPServer 9110",
-    "build": "webpack --mode=development",
+    "build": "webpack --mode=production",
     "start": "bin/start_dev_browser",
     "postinstall": "bin/update_submodules",
     "watch": "(webpack --mode=development --watch) & python2 -m SimpleHTTPServer 9110"
@@ -16,6 +16,10 @@
     "node": "12.4.0"
   },
   "dependencies": {
+    "@mymonero/mymonero-bigint": "^1.0.5",
+    "@mymonero/mymonero-locales": "^1.0.5",
+    "@mymonero/mymonero-monero-config": "^1.0.5",
+    "@mymonero/mymonero-nettype": "^1.0.5",
     "async": "3.1.0",
     "bitcoin-address-validation": "^1.0.2",
     "buffer": "^6.0.3",

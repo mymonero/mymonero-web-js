@@ -43,8 +43,7 @@ class PickCreateOrUseExisting_Landing_View extends BaseView_AWalletWizardScreen 
     self._setup_actionButtonsContainerView()
     { // update empty state message container to accommodate
       const margin_v = self.emptyStateMessageContainerView.__EmptyStateMessageContainerView_margin_v
-      self.emptyStateMessageContainerView.layer.style.height =
-				`calc(100% - ${2 * margin_v}px + 3px - ${self.actionButtonsContainerView.layer.style.height/* no'px' */})`
+      self.emptyStateMessageContainerView.layer.style.height = `calc(100% - ${2 * margin_v}px + 3px - ${self.actionButtonsContainerView.layer.style.height/* no'px' */})`
     }
   }
 
@@ -74,10 +73,8 @@ class PickCreateOrUseExisting_Landing_View extends BaseView_AWalletWizardScreen 
       self.context
     )
     self.actionButtonsContainerView = view
-    {
-      self._setup_actionButton_useExistingWallet()
-      self._setup_actionButton_createNewWallet()
-    }
+    self._setup_actionButton_useExistingWallet()
+    self._setup_actionButton_createNewWallet()
     self.addSubview(view)
   }
 
@@ -118,7 +115,6 @@ class PickCreateOrUseExisting_Landing_View extends BaseView_AWalletWizardScreen 
   }
 
   _setup_startObserving () {
-    const self = this
     super._setup_startObserving()
   }
 
@@ -127,7 +123,6 @@ class PickCreateOrUseExisting_Landing_View extends BaseView_AWalletWizardScreen 
   // Lifecycle - Teardown
   //
   TearDown () {
-    const self = this
     super.TearDown()
   }
 
@@ -143,16 +138,11 @@ class PickCreateOrUseExisting_Landing_View extends BaseView_AWalletWizardScreen 
     const self = this
     const view = commonComponents_navigationBarButtons.New_LeftSide_CancelButtonView(self.context)
     const layer = view.layer
-    { // observe
-      layer.addEventListener(
-        'click',
-        function (e) {
-          e.preventDefault()
-          self.wizardController._fromScreen_userPickedCancel()
-          return false
-        }
-      )
-    }
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      self.wizardController._fromScreen_userPickedCancel()
+      return false
+    })
     return view
   }
   //

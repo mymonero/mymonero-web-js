@@ -108,16 +108,12 @@ function New_fieldTitle_rightSide_accessoryLayer (labelText, context) {
   return layer
 }
 exports.New_fieldTitle_rightSide_accessoryLayer = New_fieldTitle_rightSide_accessoryLayer
-//
-function ClassNameForScrollingAncestorOfScrollToAbleElement () {
-  return 'ClassNameForScrollingAncestorOfScrollToAbleElement'
-}
-exports.ClassNameForScrollingAncestorOfScrollToAbleElement = ClassNameForScrollingAncestorOfScrollToAbleElement
+
 function ScrollCurrentFormElementIntoView () { // not a factory but a convenience function for call, e.g.. on window resize
   const activeElement = document.activeElement
   if (activeElement) {
     const tagName = activeElement.tagName
-    if (tagName == 'INPUT' || tagName == 'TEXTAREA') {
+    if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
       const scrollToView_fn = activeElement.Component_ScrollIntoViewInFormContainerParent
       // does it conform to informal 'protocol'?
       // doing it this way instead of just calling _shared_scrollElementIntoView…
@@ -132,7 +128,7 @@ exports.ScrollCurrentFormElementIntoView = ScrollCurrentFormElementIntoView
 
 let LocalVendor_ScrollPositionEndFixed_Animate = null
 function _shared_scrollConformingElementIntoView (inputLayer) {
-  const selector = `.${ClassNameForScrollingAncestorOfScrollToAbleElement()}`
+  const selector = `.'ClassNameForScrollingAncestorOfScrollToAbleElement'`
   const scrollingAncestor = inputLayer.closest(selector)
   if (!scrollingAncestor || typeof scrollingAncestor === 'undefined') {
     console.warn('⚠️  Asked to _shared_scrollConformingElementIntoView but no scrollingAncestor found')

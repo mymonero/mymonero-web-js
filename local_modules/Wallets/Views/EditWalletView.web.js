@@ -34,9 +34,7 @@ class EditWalletView extends View {
       layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view
       layer.style.color = '#c0c0c0' // temporary
       layer.style.overflowY = 'auto'
-      layer.classList.add( // so that we get autoscroll to form field inputs on mobile platforms
-        commonComponents_forms.ClassNameForScrollingAncestorOfScrollToAbleElement()
-      )
+      layer.classList.add('ClassNameForScrollingAncestorOfScrollToAbleElement')
       // layer.style.webkitOverflowScrolling = "touch"
       layer.style.padding = '0 0 40px 0' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
       layer.style.wordBreak = 'break-all' // to get the text to wrap

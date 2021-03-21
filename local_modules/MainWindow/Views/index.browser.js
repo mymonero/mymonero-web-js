@@ -28,7 +28,7 @@ window.BootApp = function () { // encased in a function to prevent scope being l
   // context
   require('../../mymonero_libapp_js/libapp_js/MyMoneroLibAppBridge')({}).then(function (coreBridge_instance) {
     const context = require('../Models/index_context.browser').NewHydratedContext({
-      nettype: require('../../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/nettype').network_type.MAINNET, // critical setting
+      nettype: require('@mymonero/mymonero-nettype').network_type.MAINNET, // critical setting
       app: app,
       isDebug: isDebug,
       isLiteApp: true, // used sparingly for to disable (but not redact) functionality

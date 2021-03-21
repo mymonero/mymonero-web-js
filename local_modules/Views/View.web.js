@@ -1,38 +1,10 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const EventEmitter = require('events')
 const uuidV1 = require('uuid/v1')
-//
+
 const web_debug_utils = require('./web_debug_utils')
-//
+
 class View extends EventEmitter {
   //
   //
@@ -40,26 +12,21 @@ class View extends EventEmitter {
   //
   constructor (options, context) {
     super() // must call before can access `this`
-    //
+
     const self = this
+    self.options = options
+    self.context = context
     {
-      self.options = options
-      self.context = context
-    }
-    {
-      const options_tag = options.tag
-      if (typeof options_tag === 'string' && options_tag !== null && options_tag.length > 0) {
-        self.tag = options_tag
+      const optionsTag = options.tag
+      if (typeof optionsTag === 'string' && optionsTag !== null && optionsTag.length > 0) {
+        self.tag = optionsTag
       } else {
         self.tag = 'div'
       }
     }
-    {
-      self.__view_uuid = uuidV1() // set a UUID so we can do equality checks
-    }
-    { // proceed to setup for runtime:
-      self.__View_setup_views() // namespacing to avoid subclass collision
-    }
+    self.__view_uuid = uuidV1() // set a UUID so we can do equality checks
+    // proceed to setup for runtime:
+    self.__View_setup_views() // namespacing to avoid subclass collision
   }
 
   __View_setup_views () {
@@ -151,7 +118,7 @@ class View extends EventEmitter {
   addSubview (view) {
     const self = this
     if (!view || typeof view === 'undefined') {
-      throw self.constructor.name + ' asked to `addSubview` but passed nil `view`.'
+      throw Error(self.constructor.name + ' asked to `addSubview` but passed nil `view`.')
     }
     const toLayer = self.layer
     self.addSubview_appendingToLayer(view, toLayer)
@@ -160,18 +127,13 @@ class View extends EventEmitter {
   addSubview_appendingToLayer (view, superlayer) { // this is exposed so you can inject subviews into manually created children elements of your choice
     const self = this
     if (!view || typeof view === 'undefined') {
-      throw self.constructor.name + ' asked to `addSubview` but passed nil `view`.'
+      throw Error(self.constructor.name + ' asked to `addSubview` but passed nil `view`.')
     }
     view.viewWillAppear()
-    { // state:
-      // local:
-      self.subviews.push(view)
-      // subview:
-      self._configureViewStateForInsertionIntoHierarchy(view, superlayer)
-    }
-    { // DOM:
-      superlayer.appendChild(view.layer)
-    }
+    self.subviews.push(view)
+    self._configureViewStateForInsertionIntoHierarchy(view, superlayer)
+    // DOM:
+    superlayer.appendChild(view.layer)
     view.viewDidAppear()
   }
 
@@ -188,12 +150,8 @@ class View extends EventEmitter {
     const superlayer = toLayer
     //
     view.viewWillAppear()
-    { // state:
-      // local:
-      self.subviews.splice(atIndex, 0, view)
-      // subview:
-      self._configureViewStateForInsertionIntoHierarchy(view, superlayer)
-    }
+    self.subviews.splice(atIndex, 0, view)
+    self._configureViewStateForInsertionIntoHierarchy(view, superlayer)
     { // DOM
       const numberOf_subviews = self.subviews.length
       // console.log(`numberOf_subviews (${numberOf_subviews}) > atIndex + 1 (${atIndex + 1})`)
@@ -203,7 +161,7 @@ class View extends EventEmitter {
         const layerOf_subviewAbove = subviewAbove_view_atIndex.layer
         // console.log("layerOf_subviewAbove" , layerOf_subviewAbove)
         if (layerOf_subviewAbove.parentNode !== superlayer) {
-          throw 'View hierarchy error - layerOf_subviewAbove.parentNode !== superlayer'
+          throw Error('View hierarchy error - layerOf_subviewAbove.parentNode !== superlayer')
         }
         superlayer.insertBefore(
           view.layer,
@@ -221,10 +179,10 @@ class View extends EventEmitter {
   removeFromSuperview () { // throws
     const self = this
     if (typeof self.superview === 'undefined' || self.superview === null) {
-      throw 'no superview'
+      throw Error('no superview')
     }
     if (typeof self.superlayer === 'undefined' || self.superlayer === null) {
-      throw 'no superlayer'
+      throw Error('no superlayer')
     }
     //
     self.viewWillDisappear()
@@ -237,7 +195,7 @@ class View extends EventEmitter {
       // we must manage the superview's subview list
       const superview_indexOf_self = self.superview.subviews.indexOf(self)
       if (superview_indexOf_self === -1) {
-        throw "superview didn't have self as subview"
+        throw Error("superview didn't have self as subview")
       }
       // console.log("self.superview.subviews was", self.superview.subviews)
       self.superview.subviews.splice(superview_indexOf_self, 1)
@@ -346,10 +304,10 @@ class View extends EventEmitter {
     const self = this
     const layer = self.layer
     self.scrollOffsetsUponTransitionedFrom =
-		{
-		  Left: layer.scrollLeft,
-		  Top: layer.scrollTop
-		}
+    {
+      Left: layer.scrollLeft,
+      Top: layer.scrollTop
+    }
   }
 
   _restoreAnyCachedUIStateFromHavingBeenRemovedFromHierarchy () {

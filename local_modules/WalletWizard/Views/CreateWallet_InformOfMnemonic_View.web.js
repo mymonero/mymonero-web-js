@@ -33,7 +33,7 @@ const commonComponents_navigationBarButtons = require('../../MMAppUICommonCompon
 const commonComponents_walletMnemonicBox = require('../../MMAppUICommonComponents/walletMnemonicBox.web')
 const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
 //
-const mnemonic_languages = require('../../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/mnemonic_languages')
+const mnemonic_languages = require('@mymonero/mymonero-locales')
 //
 const BaseView_AWalletWizardScreen = require('./BaseView_AWalletWizardScreen.web')
 //
@@ -105,12 +105,12 @@ class CreateWallet_InformOfMnemonic_View extends BaseView_AWalletWizardScreen {
       //
       const selectLayer = document.createElement('select')
       {
-        const currentValue = mnemonic_languages.compatible_code_from_locale(self.wizardController.currentWalletUsedLocaleCode)
+        const currentValue = mnemonic_languages.compatibleCodeFromLocale(self.wizardController.currentWalletUsedLocaleCode)
         if (currentValue == null) {
           throw 'Expected to find compatible locale code'
         }
-        const values = mnemonic_languages.supported_short_codes
-        const descriptions = mnemonic_languages.mnemonic_languages
+        const values = mnemonic_languages.supportedShortCodes
+        const descriptions = mnemonic_languages.mnemonicLanguages
         const numberOf_values = values.length
         for (let i = 0; i < numberOf_values; i++) {
           const value = values[i]
@@ -286,9 +286,9 @@ class CreateWallet_InformOfMnemonic_View extends BaseView_AWalletWizardScreen {
 
   _reconfigureLanguageSelect () {
     const self = this
-    const currentValue = mnemonic_languages.compatible_code_from_locale(self.wizardController.currentWalletUsedLocaleCode)
+    const currentValue = mnemonic_languages.compatibleCodeFromLocale(self.wizardController.currentWalletUsedLocaleCode)
     if (currentValue == null) {
-      throw 'Expected to find compatible locale code'
+      throw Error('Expected to find compatible locale code')
     }
     self.languageSelectLayer.value = currentValue
   }
