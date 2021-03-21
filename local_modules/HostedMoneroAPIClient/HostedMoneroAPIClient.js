@@ -1,7 +1,7 @@
 'use strict'
 
 const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger // important: grab defined export
-const net_service_utils = require('../mymonero_libapp_js/mymonero-core-js/hostAPI/net_service_utils')
+const net_service_utils = require('@mymonero/mymonero-net-service-utils')
 const config__MyMonero = require('./config__MyMonero')
 
 class HostedMoneroAPIClient {

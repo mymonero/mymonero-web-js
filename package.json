@@ -8,18 +8,25 @@
   "scripts": {
     "dev": "(webpack --mode=development) & python2 -m SimpleHTTPServer 9110",
     "build": "webpack --mode=production",
-    "start": "bin/start_dev_browser",
-    "postinstall": "bin/update_submodules",
+    "start": "(webpack --mode=development) & python2 -m SimpleHTTPServer 9110",
     "watch": "(webpack --mode=development --watch) & python2 -m SimpleHTTPServer 9110"
   },
   "engines": {
     "node": "12.4.0"
   },
   "dependencies": {
+    "@mymonero/mymonero-app-bridge": "^1.0.9",
     "@mymonero/mymonero-bigint": "^1.0.5",
+    "@mymonero/mymonero-keyimage-cache": "^1.0.5",
     "@mymonero/mymonero-locales": "^1.0.5",
     "@mymonero/mymonero-monero-config": "^1.0.5",
+    "@mymonero/mymonero-money-format": "^1.0.5",
+    "@mymonero/mymonero-net-service-utils": "^1.0.5",
     "@mymonero/mymonero-nettype": "^1.0.5",
+    "@mymonero/mymonero-paymentid-utils": "^1.0.5",
+    "@mymonero/mymonero-response-parser-utils": "^1.0.5",
+    "@mymonero/mymonero-sendfunds-utils": "^1.0.5",
+    "@mymonero/mymonero-tx-parsing-utils": "^1.0.6",
     "async": "3.1.0",
     "bitcoin-address-validation": "^1.0.2",
     "buffer": "^6.0.3",

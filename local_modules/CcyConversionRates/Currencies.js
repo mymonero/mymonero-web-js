@@ -6,7 +6,7 @@
 'use strict'
 
 const monero_config = require('@mymonero/mymonero-monero-config')
-const monero_amount_format_utils = require('../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
+const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger
 
 const ccySymbolsByCcy = exports.ccySymbolsByCcy =

@@ -16,7 +16,7 @@ const TransactionDetailsView = require('./TransactionDetailsView.web')
 const ImportTransactionsModalView = require('./ImportTransactionsModalView.web')
 const FundsRequestQRDisplayView = require('../../RequestFunds/Views/FundsRequestQRDisplayView.web')
 const Currencies = require('../../CcyConversionRates/Currencies')
-const monero_amount_format_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
+const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 
 class WalletDetailsView extends View {
   constructor (options, context) {

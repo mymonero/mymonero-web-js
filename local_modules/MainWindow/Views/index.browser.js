@@ -26,7 +26,7 @@ window.BootApp = function () { // encased in a function to prevent scope being l
     reporting_processName: 'BrowserWindow'
   })
   // context
-  require('../../mymonero_libapp_js/libapp_js/MyMoneroLibAppBridge')({}).then(function (coreBridge_instance) {
+  require('@mymonero/mymonero-app-bridge')({}).then(function (coreBridge_instance) {
     const context = require('../Models/index_context.browser').NewHydratedContext({
       nettype: require('@mymonero/mymonero-nettype').network_type.MAINNET, // critical setting
       app: app,

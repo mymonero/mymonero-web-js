@@ -3,7 +3,7 @@
 const View = require('../../Views/View.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger // important: grab defined export
-const monero_amount_format_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
+const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 
 class ExchangeContentView extends View {
   constructor (options, context) {

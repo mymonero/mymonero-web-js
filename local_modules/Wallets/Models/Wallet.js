@@ -33,10 +33,10 @@ const EventEmitter = require('events')
 const extend = require('util')._extend
 const uuidV1 = require('uuid/v1')
 //
-const monero_txParsing_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_txParsing_utils')
-const monero_sendingFunds_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_sendingFunds_utils')
+const monero_txParsing_utils = require('@mymonero/mymonero-tx-parsing-utils')
+const monero_sendingFunds_utils = require('@mymonero/mymonero-sendfunds-utils')
 const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger
-const monero_amount_format_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
+const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 const monero_config = require('@mymonero/mymonero-monero-config')
 const mnemonic_languages = require('@mymonero/mymonero-locales')
 //
