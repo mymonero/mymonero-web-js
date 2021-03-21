@@ -1,49 +1,18 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const View = require('../../Views/View.web')
-const JSBigInt = require('../../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/biginteger').BigInteger
 const commonComponents_walletIcons = require('../../MMAppUICommonComponents/walletIcons.web')
 const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
-//
 const Currencies = require('../../CcyConversionRates/Currencies')
-const monero_amount_format_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
-//
+
 class WalletCellContentsView extends View {
   constructor (options, context) {
     super(options, context)
-    //
+
     const self = this
     self.wantsHoverable = self.options.wantsHoverable !== false // default true
-    self.wantsNoSecondaryBalances = self.options.wantsNoSecondaryBalances == true // default false
-    self.wantsOnlySpendableBalance = self.options.wantsOnlySpendableBalance != false // default true
+    self.wantsNoSecondaryBalances = self.options.wantsNoSecondaryBalances === true // default false
+    self.wantsOnlySpendableBalance = self.options.wantsOnlySpendableBalance !== false // default true
     self.icon_sizeClass = self.options.icon_sizeClass || commonComponents_walletIcons.SizeClasses.Large48
     self.setup()
   }
@@ -93,7 +62,7 @@ class WalletCellContentsView extends View {
       case commonComponents_walletIcons.SizeClasses.Medium32:
         return 16
     }
-    throw 'Unhandled sef.icon_sizeClass in _lookup_walletIconLayer_left'
+    throw Error('Unhandled sef.icon_sizeClass in _lookup_walletIconLayer_left')
     // return 15
   }
 
@@ -107,7 +76,7 @@ class WalletCellContentsView extends View {
       case commonComponents_walletIcons.SizeClasses.Medium32:
         return 66
     }
-    throw 'Unhandled sef.icon_sizeClass in _lookup_labelsPaddingLeft'
+    throw Error('Unhandled sef.icon_sizeClass in _lookup_labelsPaddingLeft')
     // return 80
   }
 
@@ -121,7 +90,7 @@ class WalletCellContentsView extends View {
       case commonComponents_walletIcons.SizeClasses.Medium32:
         return 15
     }
-    throw 'Unhandled sef.icon_sizeClass in _lookup_titlelabelPaddingTop'
+    throw Error('Unhandled sef.icon_sizeClass in _lookup_titlelabelPaddingTop')
     // return 20
   }
 
@@ -285,18 +254,13 @@ class WalletCellContentsView extends View {
 
   __primaryBalanceLabelText () {
     const self = this
-    let amount_JSBigInt
-    if (self.options.wantsOnlySpendableBalance == true) {
-      amount_JSBigInt = self.wallet.UnlockedBalance_JSBigInt() // TODO: once actual spendable balance can be obtained, show that here instead
-    } else {
-      amount_JSBigInt = self.wallet.Balance_JSBigInt()
+    let amountJSBigInt = self.wallet.Balance_JSBigInt()
+    if (self.options.wantsOnlySpendableBalance === true) {
+      amountJSBigInt = self.wallet.UnlockedBalance_JSBigInt() // TODO: once actual spendable balance can be obtained, show that here instead
     }
     const balance_displayStrComponents = Currencies.displayStringComponentsFrom( // this converts to whatever ccy they have selected
-      self.context.CcyConversionRates_Controller_shared,
-      amount_JSBigInt,
-      self.context.settingsController.displayCcySymbol
-    )
-    if (self.options.wantsOnlySpendableBalance == true && self.wallet.HasLockedFunds()) {
+      self.context.CcyConversionRates_Controller_shared, amountJSBigInt, self.context.settingsController.displayCcySymbol)
+    if (self.options.wantsOnlySpendableBalance === true && self.wallet.HasLockedFunds()) {
       return balance_displayStrComponents.amt_str + '&nbsp;' + balance_displayStrComponents.ccy_str + ' unlocked'
     } else {
       return balance_displayStrComponents.amt_str + '&nbsp;' + balance_displayStrComponents.ccy_str
@@ -314,11 +278,11 @@ class WalletCellContentsView extends View {
     self.titleLayer.innerHTML = wallet.walletLabel
     let descriptionLayer_innerHTML
     {
-      if (wallet.isLoggingIn == true) {
+      if (wallet.isLoggingIn === true) {
         descriptionLayer_innerHTML = 'Logging in…'
-      } else if (wallet.didFailToInitialize_flag == true) { // unlikely but possible
+      } else if (wallet.didFailToInitialize_flag === true) { // unlikely but possible
         descriptionLayer_innerHTML = 'Load error'
-      } else if (wallet.didFailToBoot_flag == true) { // possible when server incorrect
+      } else if (wallet.didFailToBoot_flag === true) { // possible when server incorrect
         descriptionLayer_innerHTML = 'Login error'
       } else if (wallet.HasEverFetched_accountInfo() === false) {
         descriptionLayer_innerHTML = 'Loading…'
@@ -330,25 +294,17 @@ class WalletCellContentsView extends View {
           //
           const hasLockedFunds = wallet.HasLockedFunds()
           const amountPending_JSBigInt = wallet.AmountPending_JSBigInt()
-          const hasPendingFunds = amountPending_JSBigInt.compare(0) > 0
+          const hasPendingFunds = wallet.hasPendingFunds()
           if (hasPendingFunds) {
-            const displayStrComponents = Currencies.displayStringComponentsFrom(
-              self.context.CcyConversionRates_Controller_shared,
-              amountPending_JSBigInt,
-              self.context.settingsController.displayCcySymbol
-            )
+            const displayStrComponents = Currencies.displayStringComponentsFrom(self.context.CcyConversionRates_Controller_shared, amountPending_JSBigInt, self.context.settingsController.displayCcySymbol)
             descriptionLayer_innerHTML += `${displayStrComponents.amt_str}&nbsp;${displayStrComponents.ccy_str}&nbsp;pending`
           }
           if (hasLockedFunds) {
-            const displayStrComponents = Currencies.displayStringComponentsFrom(
-              self.context.CcyConversionRates_Controller_shared,
-              wallet.LockedBalance_JSBigInt(),
-              self.context.settingsController.displayCcySymbol
-            )
+            const displayStrComponents = Currencies.displayStringComponentsFrom(self.context.CcyConversionRates_Controller_shared, wallet.LockedBalance_JSBigInt(), self.context.settingsController.displayCcySymbol)
             descriptionLayer_innerHTML += (descriptionLayer_innerHTML != '' ? '; ' : '') + `${displayStrComponents.amt_str}&nbsp;${displayStrComponents.ccy_str}&nbsp;locked`
           }
           const hasAnySecondaryBalances = hasPendingFunds || hasLockedFunds
-          if (hasAnySecondaryBalances == false) {
+          if (hasAnySecondaryBalances === false) {
             descriptionLayer_innerHTML = self.__primaryBalanceLabelText()
           }
         }
@@ -376,7 +332,7 @@ class WalletCellContentsView extends View {
       return
     }
     if (typeof self.wallet === 'undefined' || self.wallet === null) {
-      throw 'wallet undefined in start observing'
+      throw Error('wallet undefined in start observing')
     }
     // here, we're going to store a bunch of functions as instance properties
     // because if we need to stopObserving we need to have access to the listener fns

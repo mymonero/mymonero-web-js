@@ -1,45 +1,17 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const View = require('../../Views/View.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_amounts = require('../../MMAppUICommonComponents/amounts.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tooltips = require('../../MMAppUICommonComponents/tooltips.web')
-//
+
 const WalletsSelectView = require('../../WalletsList/Views/WalletsSelectView.web')
-//
+
 const monero_amount_format_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
 const monero_sendingFunds_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_sendingFunds_utils')
-//
+
 class ImportTransactionsModalView extends View {
   constructor (options, context) {
     super(options, context) // call super before `this`
@@ -47,7 +19,7 @@ class ImportTransactionsModalView extends View {
     const self = this
     self.wallet = options.wallet
     if (!self.wallet) {
-      throw `${self.constructor.name} requires options.wallet`
+      throw Error(`${self.constructor.name} requires options.wallet`)
     }
     self.setup()
   }
@@ -56,7 +28,7 @@ class ImportTransactionsModalView extends View {
     const self = this
     self.isSubmitButtonDisabled = false
     const specificAPIAddressURLAuthority = self.context.settingsController.specificAPIAddressURLAuthority
-    self.approximate_importOAAddress = specificAPIAddressURLAuthority != null && specificAPIAddressURLAuthority != '' && typeof specificAPIAddressURLAuthority !== 'undefined'
+    self.approximate_importOAAddress = specificAPIAddressURLAuthority != null && specificAPIAddressURLAuthority !== '' && typeof specificAPIAddressURLAuthority !== 'undefined'
       ? `import.${specificAPIAddressURLAuthority}` // this is obvs 'approximate' and only meant to be used as an example…… if specificAPIAddressURLAuthority contains a port or a subdomain then this will appear to be obviously wrong but still server its purpose as an example to the power user who is entering a custom server address
       : 'import.mymonero.com' // TODO: possibly get this from a shared config file
     //
@@ -77,7 +49,6 @@ class ImportTransactionsModalView extends View {
     const self = this
     const layer = self.layer
     layer.style.webkitUserSelect = 'none' // disable selection here but enable selectively
-    //
     layer.style.position = 'relative'
     layer.style.boxSizing = 'border-box'
     layer.style.width = '100%'
@@ -85,11 +56,8 @@ class ImportTransactionsModalView extends View {
     layer.style.padding = '0' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
     layer.style.overflowY = 'auto'
     // layer.style.webkitOverflowScrolling = "touch"
-    //
     layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view
-    //
     layer.style.color = '#c0c0c0' // temporary
-    //
     layer.style.wordBreak = 'break-all' // to get the text to wrap
   }
 
@@ -159,7 +127,6 @@ class ImportTransactionsModalView extends View {
   }
 
   __styleInputAsDisabled (inputLayer) {
-    const self = this
     inputLayer.style.boxShadow = 'none'
     inputLayer.style.backgroundColor = '#383638'
     inputLayer.style.color = '#7c7a7c'
@@ -226,13 +193,6 @@ class ImportTransactionsModalView extends View {
     }
     div.appendChild(commonComponents_tables.New_clearingBreakLayer())
 
-    // {
-    // 	const tooltipText = ""
-    // 	const view = commonComponents_tooltips.New_TooltipSpawningButtonView(tooltipText, self.context)
-    // 	const layer = view.layer
-    // 	labelLayer.appendChild(layer) // we can append straight to labelLayer as we don't ever change its innerHTML
-    // }
-    //
     const layer = commonComponents_forms.New_fieldValue_textInputLayer(
       self.context,
       {
@@ -308,7 +268,6 @@ class ImportTransactionsModalView extends View {
 
   //
   startObserving () {
-    const self = this
   }
 
   //
@@ -333,7 +292,6 @@ class ImportTransactionsModalView extends View {
   }
 
   stopObserving () {
-    const self = this
   }
 
   //
@@ -513,7 +471,7 @@ class ImportTransactionsModalView extends View {
     const self = this
     super.viewDidAppear()
     //
-    if (self.hasDoneRequest == true) {
+    if (self.hasDoneRequest === true) {
       return
     }
     self.hasDoneRequest = true
@@ -555,11 +513,11 @@ class ImportTransactionsModalView extends View {
             }
             //
             let amountStr = raw_formattedMoney
-            if (amountStr.indexOf('.') == -1) {
+            if (amountStr.indexOf('.') === -1) {
               amountStr += '.00'
             }
             const firstChar_String = amountStr.substr(0, 1)
-            if (firstChar_String != '0') {
+            if (firstChar_String !== '0') {
               amountStr = '0' + amountStr
             }
             self.amountInputLayer.value = amountStr

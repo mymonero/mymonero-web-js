@@ -1,38 +1,8 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const monero_config = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_config')
 const JSBigInt = require('../../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/biginteger').BigInteger
-//
 const View = require('../../Views/View.web')
-//
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
@@ -41,36 +11,32 @@ const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emp
 const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
 const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const InfoDisclosingView = require('../../InfoDisclosingView/Views/InfoDisclosingView.web')
-//
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
 const TransactionDetailsView = require('./TransactionDetailsView.web')
 const ImportTransactionsModalView = require('./ImportTransactionsModalView.web')
 const FundsRequestQRDisplayView = require('../../RequestFunds/Views/FundsRequestQRDisplayView.web')
-//
 const Currencies = require('../../CcyConversionRates/Currencies')
 const monero_amount_format_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
-//
+
 class WalletDetailsView extends View {
   constructor (options, context) {
     super(options, context)
     //
     const self = this
-    {
-      self.wallet = options.record // will keep it `record` in the interface
-      if (self.wallet === null || typeof self.wallet === 'undefined') {
-        throw 'options.wallet nil but required for ' + self.constructor.name
-      }
+    self.wallet = options.record // will keep it `record` in the interface
+    if (self.wallet === null || typeof self.wallet === 'undefined') {
+      throw Error('options.wallet nil but required for ' + self.constructor.name)
     }
     self.setup()
   }
 
   setup () {
     const self = this
-    { // zeroing / initialization
-      self.current_transactionDetailsView = null
-      self.currentlyPresented_AddContactView = null // zeroing
-      self.currentlyPresented_qrDisplayView = null
-    }
+    // zeroing / initialization
+    self.current_transactionDetailsView = null
+    self.currentlyPresented_AddContactView = null // zeroing
+    self.currentlyPresented_qrDisplayView = null
+
     self._setup_views()
     self._setup_startObserving()
     //
@@ -101,8 +67,7 @@ class WalletDetailsView extends View {
     layer.style.height = '100%'
     layer.style.overflowY = 'auto'
     // layer.style.webkitOverflowScrolling = "touch"
-    const margin_h = 16
-    layer.style.padding = `0 ${margin_h}px 0px ${margin_h}px` // actually going to change paddingTop in self.viewWillAppear() if navigation controller
+    layer.style.padding = '0 16px 0px 16px' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
     layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view
     layer.style.color = '#c0c0c0' // temporary
     layer.style.wordBreak = 'break-all' // to get the text to wrap
@@ -178,12 +143,12 @@ class WalletDetailsView extends View {
       const displayCcySymbol = amount_displayStringComponents.ccy_str
       const amt_str = amount_displayStringComponents.amt_str
       // now check if the ccy is /still/ XMR…
-      if (displayCcySymbol == Currencies.ccySymbolsByCcy.XMR) {
+      if (displayCcySymbol === Currencies.ccySymbolsByCcy.XMR) {
         // NOTE: checking if ccy is XMR again to catch displayCurrencyAmountDouble_orNull=null fallthrough case from alt display ccy
         const raw_balanceString = wallet.Balance_FormattedString()
         const coinUnitPlaces = monero_config.coinUnitPlaces
         const raw_balanceString__components = raw_balanceString.split('.')
-        if (raw_balanceString__components.length == 1) {
+        if (raw_balanceString__components.length === 1) {
           const balance_aspect_integer = raw_balanceString__components[0]
           if (balance_aspect_integer === '0') {
             finalized_main_string = ''
@@ -192,7 +157,7 @@ class WalletDetailsView extends View {
             finalized_main_string = balance_aspect_integer + '.0'
             finalized_secondarySection_string = Array(coinUnitPlaces - 1/* for ".0" */).join('0')
           }
-        } else if (raw_balanceString__components.length == 2) {
+        } else if (raw_balanceString__components.length === 2) {
           finalized_main_string = raw_balanceString
           const decimalComponent = raw_balanceString__components[1]
           const decimalComponent_length = decimalComponent.length
@@ -200,7 +165,7 @@ class WalletDetailsView extends View {
             finalized_secondarySection_string = Array(coinUnitPlaces - decimalComponent_length + 2).join('0')
           }
         } else {
-          throw "Couldn't parse formatted balance string."
+          throw Error("Couldn't parse formatted balance string.")
         }
       } else {
         finalized_main_string = amt_str
@@ -238,7 +203,7 @@ class WalletDetailsView extends View {
       '',
       self.context.pasteboard,
       'N/A',
-      isTruncatedPreviewForm == true,
+      isTruncatedPreviewForm === true,
       false // isSecretData - NOTE: I have re-enabled copy on secret data for usability purposes
     )
     layer.appendChild(fieldContainerLayer)
@@ -334,10 +299,8 @@ class WalletDetailsView extends View {
       self.context
     )
     self.actionButtonsContainerView = view
-    {
-      self._setup_actionButton_receive()
-      self._setup_actionButton_send()
-    }
+    self._setup_actionButton_receive()
+    self._setup_actionButton_send()
     self.addSubview(view)
   }
 
@@ -350,10 +313,10 @@ class WalletDetailsView extends View {
       false,
       function (layer, e) {
         const requestForWallet = self.context.fundsRequestsListController.records.find(function (r) { // we'll just assume this is booted as well by now
-          return r.is_displaying_local_wallet == true && r.to_address === self.wallet.public_address
+          return r.is_displaying_local_wallet === true && r.to_address === self.wallet.public_address
         })
         if (typeof requestForWallet === 'undefined') {
-          throw 'Expected requestForWallet to be non nil'
+          throw Error('Expected requestForWallet to be non nil')
         }
         //
         // hook into existing push functionality to get stuff like reference tracking
@@ -414,7 +377,7 @@ class WalletDetailsView extends View {
   _setup_startObserving_wallet () {
     const self = this
     if (typeof self.wallet === 'undefined' || self.wallet === null) {
-      throw 'wallet undefined in start observing'
+      throw Error('wallet undefined in start observing')
     }
     //
     // login events
@@ -475,26 +438,17 @@ class WalletDetailsView extends View {
       self.wallet.EventName_transactionsChanged(),
       self.wallet_EventName_transactionsChanged_listenerFunction
     )
-    //
-    // self.wallet_EventName_isFetchingUpdatesChanged_listenerFunction = function()
-    // {
-    // 	self._configureUIWithWallet__heightsAndImportAndFetchingState()
-    // }
-    // self.wallet.on(
-    // 	self.wallet.EventName_isFetchingUpdatesChanged(),
-    // 	self.wallet_EventName_isFetchingUpdatesChanged_listenerFunction
-    // )
-    //
+
     // deletion
     self._wallet_EventName_willBeDeleted_fn = function () { // ^-- we observe /will/ instead of /did/ because if we didn't, self.navigationController races to get freed
       const current_topStackView = self.navigationController.topStackView
-      const isOnTop = current_topStackView.IsEqualTo(self) == true
+      const isOnTop = current_topStackView.IsEqualTo(self) === true
       if (isOnTop) {
         setTimeout(function () {
           self.navigationController.PopView(true) // animated
         }, 500) // because we want to wait until whatever UI deleted it settles down or we will get a refusal to pop while dismissing a modal
       } else { // or, we're not on top, so let's just remove self from the list of views
-        throw 'A Wallet details view expected to be on top of navigation stack when its wallet was deleted.'
+        throw Error('A Wallet details view expected to be on top of navigation stack when its wallet was deleted.')
         // which means the following line should be uncommented and the method ImmediatelyExtractStackView needs to be implemented (which will w/o animation snatch self out of the stack)
         // self.navigationController.ImmediatelyExtractStackView(self)
       }
@@ -600,13 +554,7 @@ class WalletDetailsView extends View {
       self.wallet_EventName_transactionsChanged_listenerFunction
     )
     self.wallet_EventName_transactionsChanged_listenerFunction = null
-    //
-    // self.wallet.removeListener(
-    // 	self.wallet.EventName_isFetchingUpdatesChanged(),
-    // 	self.wallet_EventName_isFetchingUpdatesChanged_listenerFunction
-    // )
-    // self.wallet_EventName_isFetchingUpdatesChanged_listenerFunction = null
-    //
+
     self.wallet.removeListener(
       self.wallet.EventName_willBeDeleted(),
       self._wallet_EventName_willBeDeleted_fn
@@ -644,7 +592,7 @@ class WalletDetailsView extends View {
   Navigation_New_RightBarButtonView () {
     const self = this
     const view = commonComponents_navigationBarButtons.New_RightSide_EditButtonView(self.context)
-    if (self.context.isLiteApp == true) {
+    if (self.context.isLiteApp === true) {
       view.layer.innerHTML = 'Log&nbsp;Out'
       view.layer.style.width = '64px'
     }
@@ -653,7 +601,7 @@ class WalletDetailsView extends View {
       'click',
       function (e) {
         e.preventDefault()
-        if (self.context.isLiteApp == true) {
+        if (self.context.isLiteApp === true) {
           self.context.windowDialogs.PresentQuestionAlertDialogWith(
             'Log out?',
             'Are you sure you want to log out?',
@@ -691,7 +639,7 @@ class WalletDetailsView extends View {
   _wallet_bootFailed () {
     const self = this
     const wallet = self.wallet
-    const bootFailed = wallet.didFailToInitialize_flag == true || wallet.didFailToBoot_flag == true
+    const bootFailed = wallet.didFailToInitialize_flag === true || wallet.didFailToBoot_flag === true
     //
     return bootFailed
   }
@@ -704,7 +652,7 @@ class WalletDetailsView extends View {
     if (self.wallet.HasEverFetched_transactions() !== true) {
       return false
     }
-    if (self.wallet.New_StateCachedTransactions().length == 0) {
+    if (self.wallet.New_StateCachedTransactions().length === 0) {
       return false
     }
     return true
@@ -714,7 +662,7 @@ class WalletDetailsView extends View {
     const self = this
     const wallet = self.wallet
     const wallet_bootFailed = self._wallet_bootFailed()
-    let shouldShow_importTxsBtn = wallet.shouldDisplayImportAccountOption == true && wallet_bootFailed == false
+    let shouldShow_importTxsBtn = wallet.shouldDisplayImportAccountOption === true && wallet_bootFailed === false
     if (wallet.HasEverFetched_transactions() !== false) {
       const stateCachedTransactions = wallet.New_StateCachedTransactions()
       if (stateCachedTransactions.length > 0) {
@@ -743,7 +691,7 @@ class WalletDetailsView extends View {
       self.mnemonicSeed_fieldView.SetValue(null)
       return
     }
-    if (wallet.didFailToBoot_flag == true) {
+    if (wallet.didFailToBoot_flag === true) {
       // in this state, we should still have enough info to display
     }
     self.preview__address_fieldView.SetValue(addr)
@@ -756,12 +704,10 @@ class WalletDetailsView extends View {
   _configureUIWithWallet__balance () {
     const self = this
     const wallet = self.wallet
-    {
-      self.balanceLabelView.SetWalletThemeColor(wallet.swatch)
-    }
-    if (wallet.didFailToInitialize_flag == true) {
+    self.balanceLabelView.SetWalletThemeColor(wallet.swatch)
+    if (wallet.didFailToInitialize_flag === true) {
       self.balanceLabelView.SetPlainString('LOAD ERROR')
-    } else if (wallet.didFailToBoot_flag == true) {
+    } else if (wallet.didFailToBoot_flag === true) {
       self.balanceLabelView.SetPlainString('LOGIN ERROR')
     } else if (wallet.HasEverFetched_accountInfo() === false) {
       self.balanceLabelView.SetPlainString('LOADING…')
@@ -769,12 +715,11 @@ class WalletDetailsView extends View {
       self.balanceLabelView.SetBalanceWithWallet(wallet)
     }
     // hopefully these will be able to handle small enough values .. maybe switch to BigInt w/o doubles .. but fwiw they are just for display
-    const XMR = Currencies.ccySymbolsByCcy.XMR
     const amountPending_JSBigInt = wallet.AmountPending_JSBigInt()
     const hasPendingAmount = amountPending_JSBigInt.compare(0) > 0
     const amountLocked_JSBigInt = wallet.locked_balance || new JSBigInt(0)
     const hasLockedAmount = amountLocked_JSBigInt.compare(0) > 0
-    const secondaryBalancesLabelVisible = hasPendingAmount == true || hasLockedAmount == true
+    const secondaryBalancesLabelVisible = hasPendingAmount === true || hasLockedAmount === true
     if (secondaryBalancesLabelVisible) {
       let secondaryBalancesLabelText = ''
       if (hasPendingAmount) {
@@ -786,7 +731,7 @@ class WalletDetailsView extends View {
         secondaryBalancesLabelText += amount_displayStringComponents.amt_str + '&nbsp;' + 'pending'
       }
       if (hasLockedAmount) {
-        if (secondaryBalancesLabelText != '') {
+        if (secondaryBalancesLabelText !== '') {
           secondaryBalancesLabelText += '; '
         }
         const amount_displayStringComponents = Currencies.displayStringComponentsFrom( // this converts to whatever ccy they have selected
@@ -797,7 +742,7 @@ class WalletDetailsView extends View {
         secondaryBalancesLabelText += amount_displayStringComponents.amt_str + '&nbsp;' + 'locked'
       }
       if (secondaryBalancesLabelText === '') {
-        throw 'Expected non zero secondaryBalancesLabelText by this point'
+        throw Error('Expected non zero secondaryBalancesLabelText by this point')
       }
       self.secondaryBalancesLabelLayer.innerHTML = secondaryBalancesLabelText
       self.secondaryBalancesLabelLayer.style.display = 'block'
@@ -827,7 +772,7 @@ class WalletDetailsView extends View {
       return
     }
     const stateCachedTransactions = wallet.New_StateCachedTransactions()
-    if (stateCachedTransactions.length == 0) {
+    if (stateCachedTransactions.length === 0) {
       const view = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
         '😴',
         "You don't have any<br/>transactions yet.",
@@ -861,17 +806,14 @@ class WalletDetailsView extends View {
           // console.log("tx", JSON.stringify(tx, null, '	'))
           const listItemLayer = document.createElement('div')
           listContainerLayer.appendChild(listItemLayer)
-          {
-            const layer = listItemLayer
-            listItemLayer.style.position = 'relative'
-            listItemLayer.style.left = '0'
-            listItemLayer.style.top = '0'
-            listItemLayer.style.width = '100%'
-            listItemLayer.style.height = '74px'
-            //
-            listItemLayer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
-            listItemLayer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
-          }
+          listItemLayer.style.position = 'relative'
+          listItemLayer.style.left = '0'
+          listItemLayer.style.top = '0'
+          listItemLayer.style.width = '100%'
+          listItemLayer.style.height = '74px'
+
+          listItemLayer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
+          listItemLayer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
           listItemLayer.addEventListener(
             'click',
             function (e) {
@@ -894,18 +836,15 @@ class WalletDetailsView extends View {
             layer1.appendChild(div)
             div.style.verticalAlign = 'top'
             div.style.textAlign = 'left'
-
             div.style.fontSize = '12px' // design says 13px but looks too big in actual app
             div.style.fontWeight = '400'
             div.style.letterSpacing = '0.5px'
-
             div.style.float = 'left'
             div.style.height = '34px'
             div.style.boxSizing = 'border-box'
             div.style.padding = '21px 0 0 16px'
             div.style.fontFamily = self.context.themeController.FontFamily_monospaceRegular()
             div.style.color = tx.approx_float_amount < 0 ? '#F97777' : '#FCFBFC'
-            //
             // div.style.webkitUserSelect = "all" // decided to comment this because it interferes with cell click
             const received_JSBigInt = tx.total_received ? (typeof tx.total_received === 'string' ? new JSBigInt(tx.total_received) : tx.total_received) : new JSBigInt('0')
             const sent_JSBigInt = tx.total_sent ? (typeof tx.total_sent === 'string' ? new JSBigInt(tx.total_sent) : tx.total_sent) : new JSBigInt('0')
@@ -1020,34 +959,30 @@ class WalletDetailsView extends View {
       }
     }
     const shouldShowActivityIndicator =
-			wallet.isBooted && // rule out still-logging-in (for now)
-			wallet.HasEverFetched_accountInfo() && // rule out still loading (for now)
-			wallet_bootFailed == false &&
-			(wallet.IsScannerCatchingUp()/* || wallet.IsFetchingAnyUpdates() */)
+    wallet.isBooted && // rule out still-logging-in (for now)
+    wallet.HasEverFetched_accountInfo() && // rule out still loading (for now)
+    wallet_bootFailed === false &&
+    (wallet.IsScannerCatchingUp()/* || wallet.IsFetchingAnyUpdates() */)
     if (shouldShowActivityIndicator) {
       if (!self.catchingUpProgressAndActivityIndicatorView || typeof self.catchingUpProgressAndActivityIndicatorView === 'undefined') {
         const view = new View({}, self.context)
         view.ConfigureWithProgress = function () {
           function __blocksBehindMsg (nBlocks) {
             if (nBlocks > 0) {
-              return `${nBlocks} block${nBlocks != 1 ? 's' : ''} behind`
+              return `${nBlocks} block${nBlocks !== 1 ? 's' : ''} behind`
             } else {
-              return shouldShow_importTxsBtn != true ? 'Scanner up-to-date' : ''
+              return shouldShow_importTxsBtn !== true ? 'Scanner up-to-date' : ''
             }
           }
           let messageText
           let progressLabelLayer_innerHTMLStr = '' // default
           const nBlocks = self.wallet.NBlocksBehind()
-          /*					if (wallet.IsFetchingAnyUpdates()) {
-						messageText = self.context.isMobile == true
-							? "FETCHING…"
-							: "FETCHING UPDATES…"
-					} else */if (wallet.IsScannerCatchingUp()) {
-            messageText = self.context.isMobile == true
+          if (wallet.IsScannerCatchingUp()) {
+            messageText = self.context.isMobile === true
               ? 'SCANNING…'
               : 'SCANNING BLOCKCHAIN…'
           } else {
-            throw 'Illegal: !wallet.IsFetchingAnyUpdates() && !wallet.IsScannerCatchingUp()'
+            throw Error('Illegal: !wallet.IsFetchingAnyUpdates() && !wallet.IsScannerCatchingUp()')
           }
           progressLabelLayer_innerHTMLStr = __blocksBehindMsg(nBlocks)
           self.catchingUp_activityIndicatorLayer.Component_setMessageText(messageText)
@@ -1063,7 +998,7 @@ class WalletDetailsView extends View {
         layer.style.height = '18px'
         layer.style.padding = '0 14px 0 19px'
         self.catchingUpProgressAndActivityIndicatorView = view
-        //
+
         const activityIndicatorLayer = commonComponents_activityIndicators.New_GraphicAndLabel_ActivityIndicatorLayer(
           '',
           self.context
@@ -1143,7 +1078,7 @@ class WalletDetailsView extends View {
       if (self._wallet_shouldShowImportTxsBtn()) {
         self.hasEverAutomaticallyDisplayedImportModal = true // immediately, in case login and viewDidAppear race
         setTimeout(function () {
-          if (self.wallet.hasBeenTornDown != true) {
+          if (self.wallet.hasBeenTornDown !== true) {
             self._present_importTransactionsModal()
           }
         }, afterS * 1000)
@@ -1172,24 +1107,24 @@ class WalletDetailsView extends View {
       // throw "Asked to " + _cmd + " while self.current_transactionDetailsView !== null"
       return
     }
-    { // validate wallet and tx
-      if (typeof self.wallet === 'undefined' || self.wallet === null) {
-        throw self.constructor.name + ' requires self.wallet to ' + _cmd
-      }
-      if (typeof transaction === 'undefined' || transaction === null) {
-        throw self.constructor.name + ' requires transaction to ' + _cmd
-      }
+    // validate wallet and tx
+    if (typeof self.wallet === 'undefined' || self.wallet === null) {
+      throw Error(self.constructor.name + ' requires self.wallet to ' + _cmd)
     }
+    if (typeof transaction === 'undefined' || transaction === null) {
+      throw Error(self.constructor.name + ' requires transaction to ' + _cmd)
+    }
+
     const navigationController = self.navigationController
     if (typeof navigationController === 'undefined' || navigationController === null) {
-      throw self.constructor.name + ' requires navigationController to ' + _cmd
+      throw Error(self.constructor.name + ' requires navigationController to ' + _cmd)
     }
     {
       const options =
-			{
-			  wallet: self.wallet,
-			  transaction: transaction
-			}
+      {
+        wallet: self.wallet,
+        transaction: transaction
+      }
       const view = new TransactionDetailsView(options, self.context)
       navigationController.PushView(
         view,
@@ -1204,9 +1139,7 @@ class WalletDetailsView extends View {
 
   _present_importTransactionsModal () {
     const self = this
-    const view = new ImportTransactionsModalView({
-      wallet: self.wallet
-    }, self.context)
+    const view = new ImportTransactionsModalView({ wallet: self.wallet }, self.context)
     self.currentlyPresented_ImportTransactionsModalView = view
     const navigationView = new StackAndModalNavigationView({}, self.context)
     navigationView.SetStackViews([view])
@@ -1219,14 +1152,14 @@ class WalletDetailsView extends View {
     const self = this
     const wallet_bootFailed = self._wallet_bootFailed()
     if (wallet_bootFailed) {
-      throw 'Expected !wallet_bootFailed'
+      throw Error('Expected !wallet_bootFailed')
     }
     if (self.wallet.HasEverFetched_transactions() !== true) {
-      throw 'Expected true HasEverFetched_transactions'
+      throw Error('Expected true HasEverFetched_transactions')
     }
     const stateCachedTransactions = self.wallet.New_StateCachedTransactions()
-    if (stateCachedTransactions.length == 0) {
-      throw 'Expected non-zero num transactions'
+    if (stateCachedTransactions.length === 0) {
+      throw Error('Expected non-zero num transactions')
     }
     const headers = ['date', 'amount', 'status', 'tx id', 'payment_id']
     let csvContent = ''
@@ -1286,7 +1219,7 @@ class WalletDetailsView extends View {
     super.viewDidAppear()
     //
     if (typeof self.wallet === 'undefined' || self.wallet === null) {
-      throw 'WalletDetailsView/viewDidAppear: self.wallet=nil'
+      throw Error('WalletDetailsView/viewDidAppear: self.wallet=nil')
     }
     self.wallet.requestFromUI_manualRefresh()
     //
@@ -1325,7 +1258,6 @@ class WalletDetailsView extends View {
     self._ifNecessary_autoPresent_importTxsModal_afterS(1)
   }
 
-  //
   _wallet_failedToLogIn () {
     const self = this
     self._configureUIWithWallet__accountInfo()
@@ -1335,7 +1267,6 @@ class WalletDetailsView extends View {
     self.hasEverAutomaticallyDisplayedImportModal = undefined // think we might as well un-set this here - i.e. on a 'log out'
   }
 
-  //
   wallet_EventName_walletLabelChanged () {
     const self = this
     self.navigationController.SetNavigationBarTitleNeedsUpdate()

@@ -1,39 +1,9 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 'use strict'
 
-const JSBigInt = require('../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/biginteger').BigInteger // important: grab defined export
-const monero_config = require('../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_config')
+const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger // important: grab defined export
 const net_service_utils = require('../mymonero_libapp_js/mymonero-core-js/hostAPI/net_service_utils')
-//
 const config__MyMonero = require('./config__MyMonero')
-//
+
 class HostedMoneroAPIClient {
   //
   // Lifecycle - Initialization
@@ -41,12 +11,10 @@ class HostedMoneroAPIClient {
     const self = this
     self.options = options
     self.context = context
-    //
     self.request = options.request_conformant_module
     if (!self.request) {
       throw Error(`${self.constructor.name} requires an options.request_conformant_module such as require('request' / 'xhr')`)
     }
-    //
     self.setup()
   }
 
@@ -103,13 +71,7 @@ class HostedMoneroAPIClient {
 
   //
   // Syncing
-  AddressInfo_returningRequestHandle (
-    address,
-    view_key__private,
-    spend_key__public,
-    spend_key__private,
-    fn
-  ) { // -> RequestHandle
+  AddressInfo_returningRequestHandle (address, view_key__private, spend_key__public, spend_key__private, fn) { // -> RequestHandle
     const self = this
     const endpointPath = 'get_address_info'
     const parameters = net_service_utils.New_ParametersForWalletRequest(address, view_key__private)
@@ -184,13 +146,7 @@ class HostedMoneroAPIClient {
     return requestHandle
   }
 
-  AddressTransactions_returningRequestHandle (
-    address,
-    view_key__private,
-    spend_key__public,
-    spend_key__private,
-    fn
-  ) { // -> RequestHandle
+  AddressTransactions_returningRequestHandle (address, view_key__private, spend_key__public, spend_key__private, fn) { // -> RequestHandle
     const self = this
     const endpointPath = 'get_address_txs'
     const parameters = net_service_utils.New_ParametersForWalletRequest(address, view_key__private)
@@ -248,11 +204,7 @@ class HostedMoneroAPIClient {
 
   //
   // Getting wallet txs import info
-  ImportRequestInfoAndStatus (
-    address,
-    view_key__private,
-    fn
-  ) { // -> RequestHandle
+  ImportRequestInfoAndStatus (address, view_key__private, fn) { // -> RequestHandle
     const self = this
     const endpointPath = 'import_wallet_request'
     const parameters = net_service_utils.New_ParametersForWalletRequest(address, view_key__private)
@@ -341,7 +293,7 @@ class HostedMoneroAPIClient {
         fn(null, {})
         return
       } else {
-        throw `[${self.constructor.name}/SubmitSerializedSignedTransaction]: context.HostedMoneroAPIClient_DEBUGONLY_mockSendTransactionSuccess was true despite isDebug not being true. Set back to false for production build.`
+        throw Error(`[${self.constructor.name}/SubmitSerializedSignedTransaction]: context.HostedMoneroAPIClient_DEBUGONLY_mockSendTransactionSuccess was true despite isDebug not being true. Set back to false for production build.`)
       }
     }
     net_service_utils.AddUserAgentParamters(

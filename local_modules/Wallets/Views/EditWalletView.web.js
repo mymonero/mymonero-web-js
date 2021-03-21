@@ -1,51 +1,19 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const View = require('../../Views/View.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_walletColorPicker = require('../../MMAppUICommonComponents/walletColorPicker.web')
-//
-const emoji_selection = require('../../Emoji/emoji_selection')
-//
+
 class EditWalletView extends View {
   constructor (options, context) {
     super(options, context) // call super before `this`
-    //
+
     const self = this
-    { // options
-      self.wallet = self.options.wallet
-      if (!self.wallet) {
-        throw self.constructor.name + ' requires an options.wallet'
-      }
+    self.wallet = self.options.wallet
+    if (!self.wallet) {
+      throw Error(self.constructor.name + ' requires an options.wallet')
     }
     self.setup()
   }
@@ -60,23 +28,17 @@ class EditWalletView extends View {
     {
       const layer = self.layer
       layer.style.webkitUserSelect = 'none' // disable selection here but enable selectively
-      //
       layer.style.width = '100%'
       layer.style.height = '100%' // we're also set height in viewWillAppear when in a nav controller
       layer.style.boxSizing = 'border-box'
-      //
       layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view
-      //
       layer.style.color = '#c0c0c0' // temporary
-      //
       layer.style.overflowY = 'auto'
       layer.classList.add( // so that we get autoscroll to form field inputs on mobile platforms
         commonComponents_forms.ClassNameForScrollingAncestorOfScrollToAbleElement()
       )
-
       // layer.style.webkitOverflowScrolling = "touch"
       layer.style.padding = '0 0 40px 0' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
-      //
       layer.style.wordBreak = 'break-all' // to get the text to wrap
     }
     { // validation message
@@ -90,11 +52,9 @@ class EditWalletView extends View {
     { // form
       const containerLayer = document.createElement('div')
       self.form_containerLayer = containerLayer
-      {
-        self._setup_form_walletNameField()
-        self._setup_form_walletSwatchField()
-        self._setup_deleteRecordButtonLayer()
-      }
+      self._setup_form_walletNameField()
+      self._setup_form_walletSwatchField()
+      self._setup_deleteRecordButtonLayer()
       self.layer.appendChild(containerLayer)
     }
   }
@@ -153,7 +113,7 @@ class EditWalletView extends View {
       'wallet',
       self.context,
       'REMOVE',
-      self.context.isLiteApp == true ? 'LOG OUT…' : undefined
+      self.context.isLiteApp === true ? 'LOG OUT…' : undefined
     )
     const layer = view.layer
     function __proceedTo_deleteRecord () {
@@ -178,11 +138,11 @@ class EditWalletView extends View {
             return false
           }
           self.context.windowDialogs.PresentQuestionAlertDialogWith(
-            self.context.isLiteApp == true ? 'Log out?' : 'Logging out',
-            self.context.isLiteApp == true
+            self.context.isLiteApp === true ? 'Log out?' : 'Logging out',
+            self.context.isLiteApp === true
               ? 'Logging Out'
               : 'You are about to log out of a wallet.\n\nMake sure you saved your mnemonic! It can be found by clicking the arrow next to Address on the Wallet screen. You will need your mnemonic to recover access to this wallet.\n\nAre you sure you want to log out of this wallet?',
-            self.context.isLiteApp == true ? 'Log out' : 'Log out'/* used to be 'Remove' but that's confusing */,
+            self.context.isLiteApp === true ? 'Log out' : 'Log out'/* used to be 'Remove' but that's confusing */,
             'Cancel',
             function (err, didChooseYes) {
               if (err) {
@@ -208,8 +168,6 @@ class EditWalletView extends View {
   //
   TearDown () {
     super.TearDown()
-    //
-    const self = this
   }
 
   //
@@ -244,18 +202,11 @@ class EditWalletView extends View {
     const view = commonComponents_navigationBarButtons.New_RightSide_SaveButtonView(self.context)
     self.rightBarButtonView = view
     const layer = view.layer
-    { // observe
-      layer.addEventListener(
-        'click',
-        function (e) {
-          e.preventDefault()
-          {
-            self._saveButtonView_pressed()
-          }
-          return false
-        }
-      )
-    }
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      self._saveButtonView_pressed()
+      return false
+    })
     self.set_submitButtonNeedsUpdate()
     return view
   }
@@ -266,10 +217,10 @@ class EditWalletView extends View {
   //
   _canEnableSubmitButton () {
     const self = this
-    if (self.walletNameInputLayer.value.length == 0) {
+    if (self.walletNameInputLayer.value.length === 0) {
       return false
     }
-    if (self.isSaving == true) {
+    if (self.isSaving === true) {
       return false
     }
     return true

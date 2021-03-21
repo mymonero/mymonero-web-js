@@ -2146,3 +2146,34 @@ input#BTCcurrencyInput {
 .labeledRangeInput-container.disabled input[type="range"]::-ms-track {
   cursor: default !important;
 }
+
+.emptyScreens {
+  position: relative;
+  display: table; /* for valign */
+  border: 1px solid #373537;
+  border-radius: 5px;
+}
+
+.emptyScreens .content-container .message-label {
+  margin: 0 0 0 0;
+  width: 100%;
+  height: auto;
+  line-height: 19px;
+  color: #9e9c9e;
+  text-align: center;
+}
+
+.emptyScreens .content-container .emoji-label {
+  margin: 0 0 23px 0;
+  width: 100%;
+  height: 21px;
+  font-size: 13px;
+  text-align: center;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.emptyScreens .content-container .emoji-label .emojione {
+  transform: scale(.5);
+  margin-left: 0px;
+  margin-top: 1px;
+}

@@ -1,38 +1,9 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//
 const persistable_object_utils = require('../../DocumentPersister/persistable_object_utils')
-const JSBigInt = require('../../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/biginteger').BigInteger
-//
+const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger
+
 const CollectionName = 'Wallets'
 exports.CollectionName = CollectionName
-//
+
 // Utility functions
 function HydrateInstance (
   walletInstance,
@@ -82,17 +53,17 @@ function HydrateInstance (
       // the following has both parsing from string (correct) and migration from (incorrect) previous JSON serializations of the bigint obj from pre 1.1.0 rc3
       {
         const val = tx.total_sent
-        if (val != '' && val != null && typeof val !== 'undefined') {
+        if (val !== '' && val != null && typeof val !== 'undefined') {
           if (typeof val === 'string') {
             tx.total_sent = new JSBigInt(val)
           } else if (typeof val === 'object') {
             if (typeof val._d === 'undefined' || val._d == null ||
-							typeof val._s === 'undefined' || val._s == null) {
-              throw "Couldn't parse saved tx.total_sent: " + val
+              typeof val._s === 'undefined' || val._s == null) {
+              throw Error("Couldn't parse saved tx.total_sent: " + val)
             }
             tx.total_sent = new JSBigInt(val._d, val._s, JSBigInt.CONSTRUCT)
           } else {
-            throw "Couldn't parse saved tx.total_sent: " + tx.total_sent
+            throw Error("Couldn't parse saved tx.total_sent: " + tx.total_sent)
           }
         } else {
           tx.total_sent = new JSBigInt(0)
@@ -100,17 +71,17 @@ function HydrateInstance (
       }
       {
         const val = tx.total_received
-        if (val != '' && val != null && typeof val !== 'undefined') {
+        if (val !== '' && val != null && typeof val !== 'undefined') {
           if (typeof val === 'string') {
             tx.total_received = new JSBigInt(val)
           } else if (typeof val === 'object') {
             if (typeof val._d === 'undefined' || val._d == null ||
-							typeof val._s === 'undefined' || val._s == null) {
-              throw "Couldn't parse saved tx.total_sent: " + val
+              typeof val._s === 'undefined' || val._s == null) {
+              throw Error("Couldn't parse saved tx.total_sent: " + val)
             }
             tx.total_received = new JSBigInt(val._d, val._s, JSBigInt.CONSTRUCT)
           } else {
-            throw "Couldn't parse saved tx.total_sent: " + tx.total_sent
+            throw Error("Couldn't parse saved tx.total_sent: " + tx.total_sent)
           }
         } else {
           tx.total_received = new JSBigInt(0)
@@ -198,29 +169,29 @@ function SaveToDisk (
   )
   //
   const plaintextDocument =
-	{
-	  walletLabel: self.walletLabel,
-	  wallet_currency: self.wallet_currency,
-	  swatch: self.swatch,
-	  mnemonic_wordsetName: self.mnemonic_wordsetName,
-	  //
-	  account_seed: self.account_seed,
-	  private_keys: self.private_keys,
-	  public_address: self.public_address,
-	  public_keys: self.public_keys,
-	  //
-	  isLoggedIn: self.isLoggedIn,
-	  dateThatLast_fetchedAccountInfo: self.dateThatLast_fetchedAccountInfo ? self.dateThatLast_fetchedAccountInfo.toString() : undefined, // must convert to string else will get exception on encryption
-	  dateThatLast_fetchedAccountTransactions: self.dateThatLast_fetchedAccountTransactions ? self.dateThatLast_fetchedAccountTransactions.toString() : undefined, // must convert to string else will get exception on encryption
-	  dateWalletFirstSavedLocally: self.dateWalletFirstSavedLocally ? self.dateWalletFirstSavedLocally.toString() : undefined, // must convert to string else will get exception on encryption
-	  //
-	  isInViewOnlyMode: self.isInViewOnlyMode,
-	  //
-	  transactions: transactions,
-	  heights: heights,
-	  totals: totals,
-	  spent_outputs: self.spent_outputs || [] // maybe not fetched yet
-	}
+  {
+    walletLabel: self.walletLabel,
+    wallet_currency: self.wallet_currency,
+    swatch: self.swatch,
+    mnemonic_wordsetName: self.mnemonic_wordsetName,
+    //
+    account_seed: self.account_seed,
+    private_keys: self.private_keys,
+    public_address: self.public_address,
+    public_keys: self.public_keys,
+    //
+    isLoggedIn: self.isLoggedIn,
+    dateThatLast_fetchedAccountInfo: self.dateThatLast_fetchedAccountInfo ? self.dateThatLast_fetchedAccountInfo.toString() : undefined, // must convert to string else will get exception on encryption
+    dateThatLast_fetchedAccountTransactions: self.dateThatLast_fetchedAccountTransactions ? self.dateThatLast_fetchedAccountTransactions.toString() : undefined, // must convert to string else will get exception on encryption
+    dateWalletFirstSavedLocally: self.dateWalletFirstSavedLocally ? self.dateWalletFirstSavedLocally.toString() : undefined, // must convert to string else will get exception on encryption
+    //
+    isInViewOnlyMode: self.isInViewOnlyMode,
+    //
+    transactions: transactions,
+    heights: heights,
+    totals: totals,
+    spent_outputs: self.spent_outputs || [] // maybe not fetched yet
+  }
   if (typeof self.login__new_address !== 'undefined') {
     plaintextDocument.login__new_address = self.login__new_address
   }

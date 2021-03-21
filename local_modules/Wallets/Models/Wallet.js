@@ -1106,8 +1106,8 @@ class Wallet extends EventEmitter {
     for (let i = 0; i < transactions_length; i++) {
       const transaction = transactions[i]
       const isConfirmed = self.IsTransactionConfirmed(transaction)
-      if (isConfirmed != true) {
-        if (transaction.isFailed != true) { // just filtering these out
+      if (isConfirmed !== true) {
+        if (transaction.isFailed !== true) { // just filtering these out
           // now, adding both of these (positive) values to contribute to the total
           const sent = typeof transaction.total_sent === 'string' ? new JSBigInt(transaction.total_sent) : transaction.total_sent ? transaction.total_sent : new JSBigInt(0)
           const received = typeof transaction.total_received === 'string' ? new JSBigInt(transaction.total_received) : transaction.total_received ? transaction.total_received : new JSBigInt(0)
@@ -1121,9 +1121,8 @@ class Wallet extends EventEmitter {
 
   AmountPending_FormattedString () { // provided for convenience mainly so consumers don't have to require monero_utils
     const self = this
-    const balance_JSBigInt = self.AmountPending_JSBigInt()
-    //
-    return monero_amount_format_utils.formatMoney(balance_JSBigInt)
+
+    return monero_amount_format_utils.formatMoney(self.AmountPending_JSBigInt())
   }
 
   AmountPending_DoubleNumber () {
@@ -1133,15 +1132,25 @@ class Wallet extends EventEmitter {
 
   HasLockedFunds () {
     const self = this
-    const locked_balance_JSBigInt = self.locked_balance
-    if (typeof locked_balance_JSBigInt === 'undefined') {
+
+    if (typeof self.locked_balance === 'undefined') {
       return false
     }
-    if (locked_balance_JSBigInt === new JSBigInt(0)) {
+    if (self.locked_balance.compareAbs(0) === 0) {
       return false
     }
-    //
+
     return true
+  }
+
+  /**
+   * Checks whether there is pending incoming funds
+   * @returns boolean
+   */
+  HasPendingFunds () {
+    const self = this
+
+    return self.AmountPending_JSBigInt().compare(0) > 0
   }
 
   HumanReadable_walletCurrency () {

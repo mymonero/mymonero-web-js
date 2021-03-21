@@ -1,66 +1,32 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const View = require('../../Views/View.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const monero_amount_format_utils = require('../../mymonero_libapp_js/mymonero-core-js/monero_utils/monero_amount_format_utils')
 const JSBigInt = require('../../mymonero_libapp_js/mymonero-core-js/cryptonote_utils/biginteger').BigInteger
-//
+
 class TransactionDetailsView extends View {
   constructor (options, context) {
     super(options, context)
-    //
     const self = this
-    {
-      self.transaction = options.transaction
-      if (self.transaction === null || typeof self.transaction === 'undefined') {
-        throw 'options.transaction nil but required for ' + self.constructor.name
-      }
-      //
-      self.wallet = options.wallet
-      if (self.wallet === null || typeof self.wallet === 'undefined') {
-        throw 'options.wallet nil but required for ' + self.constructor.name
-      }
+    self.transaction = options.transaction
+    if (self.transaction === null || typeof self.transaction === 'undefined') {
+      throw Error('options.transaction nil but required for ' + self.constructor.name)
+    }
+
+    self.wallet = options.wallet
+    if (self.wallet === null || typeof self.wallet === 'undefined') {
+      throw Error('options.wallet nil but required for ' + self.constructor.name)
     }
     self.setup()
   }
 
   setup () {
     const self = this
-    { // zeroing / initialization
-    }
     self._setup_views()
     self._setup_startObserving()
-    //
     self._configureUIWithTransaction()
   }
 
@@ -68,22 +34,14 @@ class TransactionDetailsView extends View {
     const self = this
     self.setup_self_layer()
     {
-      const layer = commonComponents_tables.New_inlineMessageDialogLayer(
-        self.context,
-        '', // for now
-        false // for now
-      )
+      const layer = commonComponents_tables.New_inlineMessageDialogLayer(self.context, '', false)
       layer.style.width = 'calc(100% - 0px)'
       layer.style.marginLeft = '0px'
       self.validationMessageLayer__isLocked = layer
       self.layer.appendChild(layer)
     }
     {
-      const layer = commonComponents_tables.New_inlineMessageDialogLayer(
-        self.context,
-        'Your Monero is on its way.',
-        false // for now
-      )
+      const layer = commonComponents_tables.New_inlineMessageDialogLayer(self.context, 'Your Monero is on its way.', false)
       layer.style.width = 'calc(100% - 0px)'
       layer.style.marginLeft = '0px'
       self.validationMessageLayer__onItsWay = layer
@@ -125,19 +83,13 @@ class TransactionDetailsView extends View {
     const layer = self.layer
     layer.style.webkitUserSelect = 'none' // disable selection here but enable selectively
     layer.style.boxSizing = 'border-box'
-    //
-    const margin_h = 16
     layer.style.width = '100%'
     layer.style.height = '100%'
-    //
     layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view
-    //
     layer.style.color = '#c0c0c0' // temporary
-    //
     layer.style.overflowY = 'auto'
     // layer.style.webkitOverflowScrolling = "touch"
-    layer.style.padding = `0 ${margin_h}px 40px ${margin_h}px` // actually going to change paddingTop in self.viewWillAppear() if navigation controller
-    //
+    layer.style.padding = '0 16px 40px 16px' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
     layer.style.wordBreak = 'break-all' // to get the text to wrap
   }
 
@@ -162,9 +114,7 @@ class TransactionDetailsView extends View {
     valueLayer.style.marginTop = '-1px'
     valueLayer.style.maxWidth = '75%' // should wrap
     div.appendChild(valueLayer)
-    //
     div.appendChild(commonComponents_tables.New_clearingBreakLayer()) // preserve height; better way?
-    //
     div.Component_SetValue = function (value) {
       valueLayer.Component_SetValue(value)
     }
@@ -177,10 +127,7 @@ class TransactionDetailsView extends View {
   _addTableFieldLayer_date () {
     const self = this
     const title = 'Date'
-    const div = self.__new_tableFieldLayer_simpleValue(
-      '', // for now
-      title
-    )
+    const div = self.__new_tableFieldLayer_simpleValue('', title)
     self.tableFieldLayer__date = div
     self.tableSection_containerLayer.appendChild(div)
   }
@@ -188,10 +135,7 @@ class TransactionDetailsView extends View {
   _addTableFieldLayer_amountsFeesAndTotals () {
     const self = this
     const title = 'Total'
-    const div = self.__new_tableFieldLayer_simpleValue(
-      '', // for now
-      title
-    )
+    const div = self.__new_tableFieldLayer_simpleValue('', title)
     self.tableFieldLayer__amountsFeesAndTotals = div
     self.tableSection_containerLayer.appendChild(div)
   }
@@ -199,10 +143,7 @@ class TransactionDetailsView extends View {
   _addTableFieldLayer_ringsize () {
     const self = this
     const title = 'Ring size'
-    const div = self.__new_tableFieldLayer_simpleValue(
-      '', // for now
-      title
-    )
+    const div = self.__new_tableFieldLayer_simpleValue('', title)
     self.tableFieldLayer__ringsize = div
     self.tableSection_containerLayer.appendChild(div)
   }
@@ -286,7 +227,7 @@ class TransactionDetailsView extends View {
   _setup_startObserving_wallet () {
     const self = this
     if (typeof self.wallet === 'undefined' || self.wallet === null) {
-      throw 'nil self.wallet undefined in ' + self.constructor.name + '/' + '_setup_startObserving_wallet`'
+      throw Error('nil self.wallet undefined in ' + self.constructor.name + '/' + '_setup_startObserving_wallet`')
     }
     // here, we're going to store the listener functions as instance properties
     // because when we need to stopObserving we need to have access to the listener fns
@@ -390,7 +331,7 @@ class TransactionDetailsView extends View {
     const self = this
     const wallet = self.wallet
     if (wallet.didFailToInitialize_flag === true || wallet.didFailToBoot_flag === true) {
-      throw self.constructor.name + ' opened while wallet failed to init or boot.'
+      throw Error(self.constructor.name + ' opened while wallet failed to init or boot.')
     }
     const transaction = self.transaction
     if (transaction.isUnlocked !== true) {
@@ -405,7 +346,7 @@ class TransactionDetailsView extends View {
     } else {
       self.validationMessageLayer__isLocked.style.display = 'none'
     }
-    if (transaction.isFailed != true && (transaction.isJustSentTransaction === true || transaction.isConfirmed !== true)) {
+    if (transaction.isFailed !== true && (transaction.isJustSentTransaction === true || transaction.isConfirmed !== true)) {
       if (self.validationMessageLayer__onItsWay.userHasClosedThisLayer !== true) {
         self.validationMessageLayer__onItsWay.style.display = 'block'
       } else {
@@ -497,7 +438,7 @@ class TransactionDetailsView extends View {
       }
       self._configureUIWithTransaction() // updated - it might not be this one which updated but (a) it's quite possible and (b) configuring the UI isn't too expensive
     } else {
-      throw "Didn't find same transaction in already open details view. Probably a server bug."
+      throw Error("Didn't find same transaction in already open details view. Probably a server bug.")
     }
   }
 
@@ -508,15 +449,12 @@ class TransactionDetailsView extends View {
   viewWillAppear () {
     const self = this
     super.viewWillAppear()
-    {
-      if (typeof self.navigationController !== 'undefined' && self.navigationController !== null) {
-        self.layer.style.paddingTop = `${self.navigationController.NavigationBarHeight()}px`
-      }
+    if (typeof self.navigationController !== 'undefined' && self.navigationController !== null) {
+      self.layer.style.paddingTop = `${self.navigationController.NavigationBarHeight()}px`
     }
   }
 
   viewDidAppear () {
-    const self = this
     super.viewDidAppear()
   }
 }
