@@ -185,7 +185,7 @@ function New_ActionButtonView (
     }
     layer.style.textDecoration = 'none'
     layer.style.textAlign = 'center'
-    layer.style.fontFamily = context.themeController.FontFamily_sansSerif()
+    layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
     if (isRightmostButtonInContainer !== true) {
       layer.style.marginRight = ActionButton_rightMargin + 'px'
     }

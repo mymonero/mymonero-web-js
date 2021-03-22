@@ -1,33 +1,5 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const View = require('../../Views/View.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
@@ -38,9 +10,8 @@ const commonComponents_activityIndicators = require('../../MMAppUICommonComponen
 const commonComponents_ccySelect = require('../../MMAppUICommonComponents/ccySelect.web')
 const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
 const commonComponents_tooltips = require('../../MMAppUICommonComponents/tooltips.web')
-//
 const config__MyMonero = require('../../HostedMoneroAPIClient/config__MyMonero')
-//
+
 class SettingsView extends View {
   constructor (options, context) {
     super(options, context) // call super before `this`
@@ -57,9 +28,8 @@ class SettingsView extends View {
 
   setup_views () {
     const self = this
-    { // metrics / caches
-      self.margin_h = 0
-    }
+    // metrics / caches
+    self.margin_h = 0
     self._setup_self_layer()
     self._setup_form_containerLayer()
     // self.DEBUG_BorderChildLayers()
@@ -67,22 +37,17 @@ class SettingsView extends View {
 
   _setup_self_layer () {
     const self = this
-    //
+
     const layer = self.layer
     layer.style.webkitUserSelect = 'none' // disable selection here but enable selectively
-    //
     layer.style.position = 'relative'
     layer.style.boxSizing = 'border-box'
     layer.style.width = '100%'
     layer.style.height = '100%' // we're also set height in viewWillAppear when in a nav controller
     layer.style.padding = `0 ${self.margin_h}px 0px ${self.margin_h}px` // actually going to change paddingTop in self.viewWillAppear() if navigation controller
     layer.style.overflowY = 'auto'
-    // layer.style.webkitOverflowScrolling = "touch"
-    //
     layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view
-    //
     layer.style.color = '#c0c0c0' // temporary
-    //
     layer.style.wordBreak = 'break-all' // to get the text to wrap
   }
 
@@ -110,7 +75,7 @@ class SettingsView extends View {
         }
       }
       self._setup_deleteEverythingButton()
-      //
+
       containerLayer.style.paddingBottom = '64px'
     }
     self.layer.appendChild(containerLayer)
@@ -176,14 +141,11 @@ class SettingsView extends View {
         min: min,
         max: max,
         step: 15, // 15s at a time
-        //
         slideSideLabelFor_min: '15s',
         slideSideLabelStyleWidthFor_min: '20px',
         slideSideLabelFor_max: 'Never',
         slideSideLabelStyleWidthFor_max: '34px',
-        //
         displayAsMinutesAtXMin: 1,
-        //
         isMaxInfinity: true,
         labelForInfinity: 'Never',
         //

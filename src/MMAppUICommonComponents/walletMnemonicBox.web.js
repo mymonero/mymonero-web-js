@@ -115,7 +115,7 @@ function New_MnemonicTextDisplayView (mnemonicString, context) {
   layer.style.webkitUserSelect = 'all' // decided to allow copying
   layer.style.mozUserSelect = 'all' // decided to allow copying
   layer.style.msUserSelect = 'all' // decided to allow copying
-  layer.style.fontFamily = context.themeController.FontFamily_monospaceRegular()
+  layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
   layer.innerHTML = mnemonicString
   //
   return view

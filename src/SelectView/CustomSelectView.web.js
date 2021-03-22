@@ -1,37 +1,9 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const View = require('../Views/View.web')
 const Views__cssRules = require('../Views/cssRules.web')
 const dom_traversal = require('../Views/dom_traversal.web')
-//
+
 const NamespaceName = 'customSelect'
 const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
 const cssRules =
@@ -80,9 +52,7 @@ class CustomSelectView extends View {
 
   setup_views () { // overridable but call on super
     const self = this
-    {
-      self.layer.style.position = 'relative' // for the pos abs arrow
-    }
+    self.layer.style.position = 'relative' // for the pos abs arrow
     {
       const view = self.cellView_createAndReturnOne_fn(self)
       view.layer.classList.add('selectionDisplayCellView')
@@ -123,9 +93,7 @@ class CustomSelectView extends View {
       layer.style.pointerEvents = 'none' // definitely do not want to prevent or intercept pointer events
       layer.style.border = 'none'
       layer.style.position = 'absolute'
-      const w = 10
-      const h = 8
-      layer.style.width = w + 'px'
+      layer.style.width = '10px'
       layer.style.height = '100%'
       layer.style.right = '16px'
       layer.style.top = '0'
@@ -133,7 +101,7 @@ class CustomSelectView extends View {
       layer.style.backgroundImage = 'url(../../assets/img/dropdown-arrow-down@3x.png)'
       layer.style.backgroundRepeat = 'no-repeat'
       layer.style.backgroundPosition = 'center'
-      layer.style.backgroundSize = w + 'px ' + h + 'px'
+      layer.style.backgroundSize = '10px 8px'
       self.layer.appendChild(layer)
     }
   }

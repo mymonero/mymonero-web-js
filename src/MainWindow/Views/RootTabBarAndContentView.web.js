@@ -18,7 +18,6 @@ class RootTabBarAndContentView extends TabBarAndContentView {
 
   _setup_views () {
     const self = this
-    const context = self.context
     {
       const layer = self.tabBarView.layer
       layer.style.background = '#171416'

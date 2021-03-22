@@ -1,31 +1,3 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
 
 const Animate = require('velocity-animate')
@@ -52,12 +24,10 @@ class NavigationBarView extends View {
       layer.style.position = 'absolute' // https://developers.google.com/web/updates/2016/12/position-sticky
       layer.style.top = '0%'
       layer.style.zIndex = '9'
-      //
       layer.style.width = '100%'
-      layer.style.height = `${self.NavigationBarHeight()}px`
+      layer.style.height = `41px`
       layer.style.backgroundColor = '#272527'
       layer.style.transition = 'box-shadow 0.06 ease-in-out'
-      //
       layer.style.webkitAppRegion = 'drag' // make draggable
       layer.style.webkitUserSelect = 'none'
     }
@@ -66,7 +36,7 @@ class NavigationBarView extends View {
       const layer = view.layer
       layer.style.position = 'absolute'
       layer.style.width = '100%'
-      layer.style.height = `${self.NavigationBarHeight()}px`
+      layer.style.height = `41px`
       layer.style.backgroundColor = '#272527'
       self.backgroundView = view
       self.addSubview(view)
@@ -85,12 +55,11 @@ class NavigationBarView extends View {
       self.titleLayer_marginX_pctComponent = 0.15
       layer.style.boxSizing = 'border-box'
       layer.style.left = `calc(${100 * self.titleLayer_marginX_pctComponent}% + ${self.titleLayer_marginX_pxComponent}px)`
-      const extra_paddingLeft = 10
-      layer.style.width = self._new_titleLayer_styleWidth_withExtraPaddingLeft(extra_paddingLeft)
-      layer.style.paddingLeft = extra_paddingLeft + 'px' // not necessary but added for clarity
-      layer.style.height = `${self.NavigationBarHeight()}px`
+      layer.style.width = self._new_titleLayer_styleWidth_withExtraPaddingLeft(10)
+      layer.style.paddingLeft = '10px' // not necessary but added for clarity
+      layer.style.height = `41px`
       layer.style.textAlign = 'center'
-      layer.style.lineHeight = `${self.NavigationBarHeight()}px`
+      layer.style.lineHeight = `41px`
       layer.style.whiteSpace = 'nowrap'
       layer.style.overflow = 'hidden'
       layer.style.textOverflow = 'ellipsis'
@@ -104,8 +73,8 @@ class NavigationBarView extends View {
       layer.style.position = 'absolute'
       layer.style.left = '16px'
       layer.style.width = '15%'
-      layer.style.minWidth = `${self.NavigationBarHeight()}px`
-      layer.style.height = `${self.NavigationBarHeight()}px`
+      layer.style.minWidth = `41px`
+      layer.style.height = `41px`
       self.addSubview(view)
     }
     { // rightBarButtonHolderView
@@ -115,8 +84,8 @@ class NavigationBarView extends View {
       layer.style.position = 'absolute'
       layer.style.right = '16px'
       layer.style.width = '15%'
-      layer.style.minWidth = `${self.NavigationBarHeight()}px`
-      layer.style.height = `${self.NavigationBarHeight()}px`
+      layer.style.minWidth = `41px`
+      layer.style.height = `41px`
       self.addSubview(view)
     }
   }
@@ -170,15 +139,15 @@ class NavigationBarView extends View {
     }
     const themeController = self.context.themeController
     if (typeof themeController === 'undefined' || !themeController) {
-      throw self.constructor.name + " didn't find a context.themeController"
+      throw Error(self.constructor.name + " didn't find a context.themeController")
     }
     const _new_back_leftBarButtonView__fn = themeController.NavigationBarView__New_back_leftBarButtonView
     if (typeof _new_back_leftBarButtonView__fn !== 'function' || !_new_back_leftBarButtonView__fn) {
-      throw "themeController didn't implement NavigationBarView__New_back_leftBarButtonView"
+      throw Error("themeController didn't implement NavigationBarView__New_back_leftBarButtonView")
     }
     const view = _new_back_leftBarButtonView__fn.apply(themeController, [clicked_fn])
     if (view == null || typeof view === 'undefined') {
-      throw 'Got nil leftBarButtonView from themeController'
+      throw Error('Got nil leftBarButtonView from themeController')
     }
     return view
   }
@@ -228,10 +197,7 @@ class NavigationBarView extends View {
     }
     //
     self.titleLayer.style.color = titleTextColor
-    self.titleLayer.innerHTML = emoji_web.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(
-      self.context,
-      titleString
-    )
+    self.titleLayer.innerHTML = emoji_web.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(self.context, titleString)
     self.titleLayer.style.width = self._new_titleLayer_styleWidth_withExtraPaddingLeft(extra_paddingLeft)
     self.titleLayer.style.paddingLeft = extra_paddingLeft + 'px'
   }

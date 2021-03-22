@@ -124,7 +124,7 @@ class WalletCellContentsView extends View {
     const paddingLeft = self._lookup_labelsPaddingLeft()
     layer.style.padding = '0px 38px 4px ' + paddingLeft + 'px'
     layer.style.fontSize = '13px'
-    layer.style.fontFamily = self.context.themeController.FontFamily_monospaceLight()
+    layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
     layer.style.fontWeight = '100'
     layer.style.webkitFontSmoothing = 'subpixel-antialiased'
     layer.style.maxHeight = '32px'

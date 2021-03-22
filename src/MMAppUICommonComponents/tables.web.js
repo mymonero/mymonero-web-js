@@ -203,7 +203,7 @@ function New_fieldTitle_labelLayer (labelText, context) {
   layer.style.textAlign = 'left'
   context.themeController.StyleLayer_FontAsMiddlingSemiboldSansSerif(layer)
   layer.style.color = '#FFFFFF'
-  layer.style.fontFamily = context.themeController.FontFamily_sansSerif()
+  layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
   //
   return layer
 }
@@ -220,7 +220,7 @@ function New_fieldValue_labelLayer (labelText, context) {
   layer.style.fontSize = '13px'
   layer.style.color = '#9E9C9E'
   layer.style.fontWeight = '100'
-  layer.style.fontFamily = context.themeController.FontFamily_monospaceLight()
+  layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
   layer.Component_SetValue = function (value) {
     layer.innerHTML = value
   }
@@ -265,7 +265,7 @@ function New_customButton_aLayer (context, buttonTitleText, enabled_orTrue, clic
     layer.style.float = 'right'
     layer.style.textAlign = 'right'
     layer.style.fontSize = '15px'
-    layer.style.fontFamily = context.themeController.FontFamily_sansSerif()
+    layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
     layer.style.fontWeight = '500'
     layer.style.fontSize = '11px'
     layer.style.webkitFontSmoothing = 'subpixel-antialiased'
@@ -450,7 +450,7 @@ function New_inlineMessageDialogLayer (context, messageString, optl_immediatelyV
   __injectCSSRules_ifNecessary(context)
   const layer = document.createElement('div')
   layer.classList.add('inlineMessageDialogLayer')
-  layer.style.fontFamily = context.themeController.FontFamily_sansSerif()
+  layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
   layer.style.display = immediatelyVisible ? 'block' : 'none' // initial visibility
   //
   const messageLayer = document.createElement('span')
