@@ -49,6 +49,7 @@
     "babel-core": "6.26.3",
     "babel-loader": "8.0.6",
     "babel-minify": "0.5.1",
+    "copy-webpack-plugin": "^8.0.0",
     "process": "0.11.10",
     "request": "2.88.0",
     "standard": "^16.0.3",
@@ -56,10 +57,5 @@
     "webpack-cli": "^4.5.0",
     "webpack-merge": "4.2.2",
     "worker-loader": "^3.0.0"
-  },
-  "standard": {
-    "ignore": [
-      "local_modules/mymonero_libapp_js"
-    ]
   }
 }

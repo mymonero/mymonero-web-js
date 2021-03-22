@@ -1,17 +1,24 @@
 const path = require('path')
 const webpack = require('webpack')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: './local_modules/MainWindow/Views/index.browser.js',
+  entry: './src/MainWindow/Views/index.browser.js',
   output: {
-    path: path.resolve(__dirname, 'local_modules'),
+    path: path.resolve(__dirname, 'src'),
     filename: 'bundle.js',
-    publicPath: 'local_modules'
+    publicPath: 'src'
   },
   plugins: [
     new webpack.ProvidePlugin({
       process: 'process',
       Buffer: ['buffer', 'Buffer']
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: "node_modules/@mymonero/mymonero-app-bridge/MyMoneroLibAppCpp_WASM.js", to: "../assets/MyMoneroLibAppCpp_WASM.js" },
+        { from: "node_modules/@mymonero/mymonero-app-bridge/MyMoneroLibAppCpp_WASM.wasm", to: "../assets/MyMoneroLibAppCpp_WASM.wasm" }
+      ]
     })
   ],
   resolve: {
