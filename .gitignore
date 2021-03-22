@@ -1,5 +1,5 @@
 node_modules
-local_modules/bundle.js
-local_modules/bundle.js.LICENSE.txt
+src/bundle.js
+src/bundle.js.LICENSE.txt
 assets/MyMoneroLibAppCpp_WASM.js
 assets/MyMoneroLibAppCpp_WASM.wasm
