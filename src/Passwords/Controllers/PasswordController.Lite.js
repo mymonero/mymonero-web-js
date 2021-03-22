@@ -31,14 +31,10 @@
 const PasswordController_Base = require('./PasswordController_Base')
 //
 class PasswordController extends PasswordController_Base {
-  constructor (options, context) {
-    super(options, context)
-  }
-
   setupAndBoot () {
     const self = this
     if (self.context.isLiteApp != true) {
-      throw 'Expected self.context.isLiteApp=true'
+      throw Error('Expected self.context.isLiteApp=true')
     }
     setTimeout( // for effect / simulated synchronization
       function () {
@@ -62,7 +58,7 @@ class PasswordController extends PasswordController_Base {
   }
 
   _new_incorrectPasswordValidationErrorMessageString () {
-    throw 'Not available'
+    throw Error('Not available')
   }
 
   //
@@ -82,11 +78,11 @@ class PasswordController extends PasswordController_Base {
   }
 
   OnceBooted_GetNewPasswordAndTypeOrExistingPasswordFromUserAndEmitIt () {
-    throw 'Not available'
+    throw Error('Not available')
   }
 
   Initiate_ChangePassword () {
-    throw 'Not available'
+    throw Error('Not available')
   }
 
   Initiate_VerifyUserAuthenticationForAction (
@@ -100,15 +96,15 @@ class PasswordController extends PasswordController_Base {
   //
   // Runtime - Imperatives - Private - Overrides
   _getUserToEnterTheirExistingPassword (isForChangePassword, isForAuthorizingAppActionOnly, customNavigationBarTitle_orNull, fn) {
-    throw 'Not available'
+    throw Error('Not available')
   }
 
   _getUserToEnterNewPassword (isForChangePassword, fn) {
-    throw 'Not available'
+    throw Error('Not available')
   }
 
   obtainNewPasswordFromUser (isForChangePassword) {
-    throw 'Not available'
+    throw Error('Not available')
   }
 
   _executeWhenBooted (fn) {
@@ -116,13 +112,13 @@ class PasswordController extends PasswordController_Base {
   }
 
   saveToDisk (fn) {
-    throw 'Not available'
+    throw Error('Not available')
   }
 
   //
   // Runtime - Delegation - Overrides
   _didObtainPassword (password) {
-    throw 'Not available'
+    throw Error('Not available')
   }
 
   _didBecomeIdleAfterHavingPreviouslyEnteredPassword () { // special functionality here - we want to clear /all/ persisted data (i.e. clear sessionData)
