@@ -70,7 +70,7 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       // }
     }
     { // root view
-      const RootView = require('../Views/RootView.web')
+      const RootView = require('./RootView.web')
       const rootView = new RootView({}, context) // hang onto reference
       rootView.superview = null // just to be explicit; however we will set a .superlayer
       // manually attach the rootView to the DOM and specify view's usual managed reference(s)
