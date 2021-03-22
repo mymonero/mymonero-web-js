@@ -461,7 +461,7 @@ class ExchangeContentView extends View {
       if (typeof (loaderPage) === undefined) {
         return
       }
-      const Utils = require('../../Exchange/Javascript/ExchangeUtilityFunctions')
+      const Utils = require('../Javascript/ExchangeUtilityFunctions')
       const ExchangeLibrary = require('mymonero-exchange')
       const ExchangeFunctions = new ExchangeLibrary()
       const ExchangeUtils = require('../Javascript/ExchangeUtilityFunctions')

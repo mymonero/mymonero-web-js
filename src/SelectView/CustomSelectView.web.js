@@ -1,19 +1,8 @@
 'use strict'
 
 const View = require('../Views/View.web')
-const Views__cssRules = require('../Views/cssRules.web')
 const dom_traversal = require('../Views/dom_traversal.web')
 
-const NamespaceName = 'customSelect'
-const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
-const cssRules =
-[
-  'div.customSelect {}'
-]
-function __injectCSSRules_ifNecessary () {
-  Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules)
-}
-//
 class CustomSelectView extends View {
   // Lifecycle - Setup
   constructor (options, context) {
@@ -39,7 +28,6 @@ class CustomSelectView extends View {
 
   setup () {
     const self = this
-    __injectCSSRules_ifNecessary()
     { // zeroing / initializing
       self.CurrentlySelectedRowItem = null
       self.options_cellViews = []

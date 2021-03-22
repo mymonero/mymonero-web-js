@@ -1,76 +1,10 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const View = require('../Views/View.web')
-const Views__cssRules = require('../Views/cssRules.web')
-//
+
 const commonComponents_tables = require('./tables.web')
-//
-const NamespaceName = 'Forms'
-const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
-const cssRules =
-[
-	`.form_field {
-		padding: 0 24px 20px 24px;
-	}`,
-	`.form_field .field_title {
-	}`,
-	`.form_field .field_value {
-		-webkit-font-smoothing: subpixel-antialiased;
-	}`,
-	`.form_field .field_value::-webkit-input-placeholder {
-		-webkit-font-smoothing: subpixel-antialiased;
-		color: #6B696B;
-	}`,
-	// add/remove .placeholderAsValue if you want to display fixed input without making it the value
-	`.form_field .field_value.placeholderAsValue::-webkit-input-placeholder {
-		color: #dfdedf;
-	}`,
-	//
-	// .iconAndMessageLayer
-	`.iconAndMessageLayer {
-		padding: 7px 10px 7px 10px;
-	}`,
-	`.iconAndMessageLayer > img {
-		display: inline-block;
-		position: relative;
-		top: 1px;
-	}`,
-	`.iconAndMessageLayer > span {
-		display: inline-block;
-	}`
-]
-function __injectCSSRules_ifNecessary () { Views__cssRules.InjectCSSRules_ifNecessary(haveCSSRulesBeenInjected_documentKey, cssRules) }
-//
+
 function New_fieldContainerLayer (context) {
-  __injectCSSRules_ifNecessary()
   const layer = document.createElement('div')
   layer.className = 'form_field'
   return layer
@@ -78,7 +12,6 @@ function New_fieldContainerLayer (context) {
 exports.New_fieldContainerLayer = New_fieldContainerLayer
 //
 function New_fieldTitle_labelLayer (labelText, context) {
-  __injectCSSRules_ifNecessary()
   const layer = document.createElement('span')
   layer.className = 'field_title'
   layer.innerHTML = labelText
@@ -98,7 +31,6 @@ function New_fieldTitle_labelLayer (labelText, context) {
 exports.New_fieldTitle_labelLayer = New_fieldTitle_labelLayer
 //
 function New_fieldTitle_rightSide_accessoryLayer (labelText, context) {
-  __injectCSSRules_ifNecessary()
   const layer = New_fieldTitle_labelLayer('optional', context)
   layer.style.float = 'right'
   layer.style.color = '#6B696B'
@@ -162,7 +94,6 @@ function _shared_scrollConformingElementIntoView (inputLayer) {
 exports._shared_scrollConformingElementIntoView = _shared_scrollConformingElementIntoView
 //
 function New_fieldValue_textInputLayer (context, params) {
-  __injectCSSRules_ifNecessary()
   const layer = document.createElement('input')
   layer.className = 'field_value'
   layer.type = params.customInputType || 'text'
@@ -222,7 +153,6 @@ function New_fieldValue_textInputLayer (context, params) {
 exports.New_fieldValue_textInputLayer = New_fieldValue_textInputLayer
 //
 function New_fieldValue_textAreaView (params, context) {
-  __injectCSSRules_ifNecessary()
   const view = new View({ tag: 'textarea' }, context)
   const layer = view.layer
   layer.className = 'field_value'
@@ -292,7 +222,6 @@ function New_fieldValue_textAreaView (params, context) {
 exports.New_fieldValue_textAreaView = New_fieldValue_textAreaView
 //
 function New_fieldValue_selectLayer (params) {
-  __injectCSSRules_ifNecessary()
   const values = params.values || []
   const layer = document.createElement('select')
   {
@@ -327,7 +256,6 @@ function New_fieldValue_selectLayer (params) {
 exports.New_fieldValue_selectLayer = New_fieldValue_selectLayer
 //
 function New_fieldAccessory_messageLayer (context) {
-  __injectCSSRules_ifNecessary()
   const layer = document.createElement('p')
   context.themeController.StyleLayer_FontAsMessageBearingSmallLightMonospace(layer) // name needs improvement
   layer.style.lineHeight = '15px'
@@ -341,7 +269,6 @@ function New_fieldAccessory_messageLayer (context) {
 }
 exports.New_fieldAccessory_messageLayer = New_fieldAccessory_messageLayer
 function New_fieldAccessory_validationMessageLayer (context) {
-  __injectCSSRules_ifNecessary()
   const layer = New_fieldAccessory_messageLayer(context)
   layer.style.color = '#f97777'
   return layer
@@ -349,7 +276,6 @@ function New_fieldAccessory_validationMessageLayer (context) {
 exports.New_fieldAccessory_validationMessageLayer = New_fieldAccessory_validationMessageLayer
 //
 function New_NonEditable_ValueDisplayLayer (value, context) {
-  __injectCSSRules_ifNecessary()
   const layer = document.createElement('div')
   layer.value = value // setting this so there is a common interface with _textView above - some consumers rely on it. this should be standardized into a Value() method of a View
   layer.style.borderRadius = '3px'
@@ -383,7 +309,6 @@ function New_NonEditable_ValueDisplayLayer_BreakChar (value, context) {
 exports.New_NonEditable_ValueDisplayLayer_BreakChar = New_NonEditable_ValueDisplayLayer_BreakChar
 //
 function New_IconAndMessageLayer (iconPath, messageText, context, optl_imgW, optl_imgH) {
-  __injectCSSRules_ifNecessary()
   const layer = document.createElement('div')
   layer.classList.add('iconAndMessageLayer')
   layer.innerHTML = `<img src="${iconPath}" ${optl_imgW ? 'width="' + optl_imgW + '"' : ''} ${optl_imgH ? 'height="' + optl_imgH + '"' : ''} />&nbsp;<span>${messageText}</span>`

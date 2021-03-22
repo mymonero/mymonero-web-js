@@ -22,17 +22,6 @@ class ThemeController {
   }
 
   //
-  // Accessors - UI - Metrics - Fonts
-
-  FontFamily_monospaceRegular () {
-    return 'Native-Regular, input, menlo, monospace'
-  }
-
-  FontFamily_monospaceBold () {
-    return 'Native, input, menlo, monospace'
-  }
-
-  //
   // Accessors - Internal
   _shouldDisableChromeDesktopSpecificTextRendering () {
     const self = this
@@ -94,20 +83,6 @@ class ThemeController {
       layer.style.fontWeight = 'lighter'
     } else {
       layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
-      layer.style.fontWeight = '100' // instead of 500, cause this color, white, is rendered strong
-    }
-  }
-
-  StyleLayer_FontAsSmallLightMonospace (layer) {
-    const self = this
-    if (self.context.ThemeController_isMobileBrowser === true) {
-      layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
-      layer.style.fontSize = '11px'
-      layer.style.fontWeight = 'lighter'
-    } else {
-      layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
-      layer.style.fontSize = '10px' // design says 11 but chrome renders too strongly; simulating with 10/0.5/500
-      layer.style.letterSpacing = '0.5px'
       layer.style.fontWeight = '100' // instead of 500, cause this color, white, is rendered strong
     }
   }

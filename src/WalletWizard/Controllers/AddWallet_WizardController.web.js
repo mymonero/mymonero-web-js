@@ -277,7 +277,7 @@ class AddWallet_WizardController {
         } else if (opts.taskFinished === true) {
 
         } else {
-          throw '[' + self.constructor.name + '/DismissWizardModal]: unrecognized opts flag configuration: ' + JSON.stringify(opts)
+          throw Error('[' + self.constructor.name + '/DismissWizardModal]: unrecognized opts flag configuration: ' + JSON.stringify(opts))
         }
       }
     )

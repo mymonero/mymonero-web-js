@@ -1,4 +1,3 @@
-
 'use strict'
 
 const View = require('../../Views/View.web')
