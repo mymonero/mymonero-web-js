@@ -20,11 +20,7 @@ const cryptor_settings =
 }
 //
 // Encryption
-function New_EncryptedBase64String__Async (
-  plaintext_msg,
-  password,
-  fn
-) {
+function New_EncryptedBase64String__Async (plaintext_msg, password, fn) {
   if (typeof plaintext_msg === 'undefined') {
     return undefined
   }
@@ -65,13 +61,13 @@ function New_EncryptedBase64String__Async (
           }
           const iv = components.headers.iv
           if (Buffer.isBuffer(iv) == false) {
-            throw 'Expected Buffer.isBuffer(iv)'
+            throw Error('Expected Buffer.isBuffer(iv)')
           }
           if (Buffer.isBuffer(encryption_key) == false) {
-            throw 'Expected Buffer.isBuffer(encryption_key)'
+            throw Error('Expected Buffer.isBuffer(encryption_key)')
           }
           if (cryptor_settings.iv_length !== components.headers.iv.length) {
-            throw 'Expected cryptor_settings.iv_length == components.headers.iv.length'
+            throw Error('Expected cryptor_settings.iv_length == components.headers.iv.length')
           }
           const cipher = crypto.createCipheriv(
             cryptor_settings.algorithm,
@@ -103,11 +99,7 @@ function New_EncryptedBase64String__Async (
 module.exports.New_EncryptedBase64String__Async = New_EncryptedBase64String__Async
 //
 // Decryption
-function New_DecryptedString__Async (
-  encrypted_msg_base64_string,
-  password,
-  fn
-) {
+function New_DecryptedString__Async (encrypted_msg_base64_string, password, fn) {
   Buffer.isBuffer(password) || (password = new Buffer(password, 'utf8'))
 
   if (!encrypted_msg_base64_string || typeof encrypted_msg_base64_string === 'undefined') {
@@ -233,11 +225,7 @@ function _is_hmac_valid__async (
     }
   )
 }
-function _new_calculated_pbkdf2_key__async (
-  password,
-  salt,
-  fn
-) { // Apply pseudo-random function HMAC-SHA1 by default
+function _new_calculated_pbkdf2_key__async (password, salt, fn) { // Apply pseudo-random function HMAC-SHA1 by default
   crypto.pbkdf2(
     password,
     salt,
@@ -249,10 +237,7 @@ function _new_calculated_pbkdf2_key__async (
     }
   )
 }
-var _new_generated_hmac = function (
-  components,
-  hmac_key
-) {
+let _new_generated_hmac = function (components, hmac_key) {
   let hmac_message = new Buffer('')
   if (cryptor_settings.hmac.includes_header) {
     hmac_message = Buffer.concat([

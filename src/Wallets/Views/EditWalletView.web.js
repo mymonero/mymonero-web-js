@@ -35,7 +35,6 @@ class EditWalletView extends View {
       layer.style.color = '#c0c0c0' // temporary
       layer.style.overflowY = 'auto'
       layer.classList.add('ClassNameForScrollingAncestorOfScrollToAbleElement')
-      // layer.style.webkitOverflowScrolling = "touch"
       layer.style.padding = '0 0 40px 0' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
       layer.style.wordBreak = 'break-all' // to get the text to wrap
     }
@@ -244,20 +243,16 @@ class EditWalletView extends View {
     const self = this
     const walletColorHexString = self.walletColorPickerInputView.Component_Value()
     const walletName = self.walletNameInputLayer.value
-    {
-      self.isSaving = true
-      self.set_submitButtonNeedsUpdate()
-    }
+    self.isSaving = true
+    self.set_submitButtonNeedsUpdate()
     self.wallet.Set_valuesByKey(
       {
         walletLabel: walletName,
         swatch: walletColorHexString
       },
       function (err) {
-        {
-          self.isSaving = false
-          self.set_submitButtonNeedsUpdate()
-        }
+        self.isSaving = false
+        self.set_submitButtonNeedsUpdate()
         if (err) {
           console.error('Error while saving wallet', err)
           self.validationMessageLayer.SetValidationError(err.message)

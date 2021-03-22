@@ -1,10 +1,9 @@
 'use strict'
-//
+
 const uuidV1 = require('uuid/v1')
 const Animate = require('velocity-animate')
-//
 const View = require('../../Views/View.web')
-//
+
 class StackNavigationView extends View {
   constructor (options, context) {
     super(options, context)
@@ -292,10 +291,7 @@ class StackNavigationView extends View {
     )
   }
 
-  PopToRootView (
-    isAnimated_orTrue,
-    fn
-  ) {
+  PopToRootView (isAnimated_orTrue, fn) {
     fn = fn || function (err) {}
     const self = this
     if (self.stackViews.length == 0) {
@@ -311,20 +307,10 @@ class StackNavigationView extends View {
       fn()
       return // bail
     }
-    self.PopToView(
-      root_stackView,
-      0,
-      isAnimated_orTrue,
-      fn
-    )
+    self.PopToView(root_stackView, 0, isAnimated_orTrue, fn)
   }
 
-  PopToView (
-    to_stackView,
-    indexOf_to_stackView, // this is asked for so don't have to search the list
-    isAnimated_orTrue,
-    fn
-  ) {
+  PopToView (to_stackView, indexOf_to_stackView, isAnimated_orTrue, fn) {
     fn = fn || function (err) {}
     const self = this
     const isAnimated = isAnimated_orTrue != false
@@ -339,9 +325,7 @@ class StackNavigationView extends View {
       fn()
       return
     }
-    {
-      self.isCurrentlyTransitioningAManagedView__Stack = true
-    }
+    self.isCurrentlyTransitioningAManagedView__Stack = true
     function __trampolineFor_transitionEnded () {
       self.isCurrentlyTransitioningAManagedView__Stack = false
       fn()

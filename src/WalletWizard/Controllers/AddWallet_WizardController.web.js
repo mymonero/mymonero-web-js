@@ -1,35 +1,6 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 'use strict'
-//
+
 const mnemonic_languages = require('@mymonero/mymonero-locales')
-//
 const WizardTask_Modes =
 {
   FirstTime_CreateWallet: 'FirstTime_CreateWallet',
@@ -57,7 +28,7 @@ const StaticCacheForBundling_WizardTaskStepScreenViewModules_byViewFilename =
   'CreateWallet_InformOfMnemonic_View.web': require('../Views/CreateWallet_InformOfMnemonic_View.web'),
   'CreateWallet_ConfirmMnemonic_View.web': require('../Views/CreateWallet_ConfirmMnemonic_View.web')
 }
-//
+
 class AddWallet_WizardController {
   constructor (options, context) {
     const self = this
@@ -164,7 +135,7 @@ class AddWallet_WizardController {
   _current_wizardTaskMode_stepNamesByIdxStr () {
     const self = this
     if (self.current_wizardTaskModeName == null || typeof self.current_wizardTaskModeName === 'undefined') {
-      throw 'asked for _current_wizardTaskMode_stepNamesByIdxStr while self.current_wizardTaskModeName nil'
+      throw Error('asked for _current_wizardTaskMode_stepNamesByIdxStr while self.current_wizardTaskModeName nil')
     }
     const steps = self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName[self.current_wizardTaskModeName]
     //
@@ -174,10 +145,10 @@ class AddWallet_WizardController {
   _current_wizardTaskMode_stepName_orNilForEnd () {
     const self = this
     if (self.current_wizardTaskMode_stepNamesByIdxStr == null || typeof self.current_wizardTaskMode_stepNamesByIdxStr === 'undefined') {
-      throw 'asked for _current_wizardTaskMode_stepName while self.current_wizardTaskMode_stepNamesByIdxStr nil'
+      throw Error('asked for _current_wizardTaskMode_stepName while self.current_wizardTaskMode_stepNamesByIdxStr nil')
     }
     if (self.current_wizardTaskMode_stepIdx == null || typeof self.current_wizardTaskMode_stepIdx === 'undefined') {
-      throw 'asked for _current_wizardTaskMode_stepName while self.current_wizardTaskMode_stepIdx nil'
+      throw Error('asked for _current_wizardTaskMode_stepName while self.current_wizardTaskMode_stepIdx nil')
     }
     const stepName = self.current_wizardTaskMode_stepNamesByIdxStr['' + self.current_wizardTaskMode_stepIdx]
     if (typeof stepName === 'undefined' || stepName == null || stepName == '') {
@@ -196,7 +167,7 @@ class AddWallet_WizardController {
     // now we access the module not by dynamic inclusion but statically (see webpack)
     const viewConstructor = StaticCacheForBundling_WizardTaskStepScreenViewModules_byViewFilename[viewModuleFilename]
     if (!viewConstructor || typeof viewConstructor === 'undefined') {
-      throw 'Unable to find the file at ' + viewModuleFilename
+      throw Error('Unable to find the file at ' + viewModuleFilename)
     }
     const options =
 		{
@@ -251,7 +222,7 @@ class AddWallet_WizardController {
   PatchToDifferentWizardTaskMode_byPushingScreen (patchTo_wizardTaskMode, atIndex) {
     const self = this
     if (self.initial_wizardTaskModeName === null) {
-      throw 'Asked to PatchToDifferentWizardTaskMode_byPushingScreen but wizard not yet in a task mode.'
+      throw Error('Asked to PatchToDifferentWizardTaskMode_byPushingScreen but wizard not yet in a task mode.')
       // return
     }
     self._configureRuntimeStateForTaskModeName(patchTo_wizardTaskMode, atIndex)
@@ -269,7 +240,7 @@ class AddWallet_WizardController {
   PatchToDifferentWizardTaskMode_withoutPushingScreen (patchTo_wizardTaskMode, atIndex) {
     const self = this
     if (self.initial_wizardTaskModeName === null) {
-      throw 'Asked to PatchToDifferentWizardTaskMode_withoutPushingScreen but wizard not yet in a task mode.'
+      throw Error('Asked to PatchToDifferentWizardTaskMode_withoutPushingScreen but wizard not yet in a task mode.')
       // return
     }
     self._configureRuntimeStateForTaskModeName(patchTo_wizardTaskMode, atIndex)
@@ -314,10 +285,7 @@ class AddWallet_WizardController {
 
   //
   // Convenience - Generating new wallet
-  GenerateAndUseNewWallet (
-    fn,
-    optl_locale_code
-  ) {
+  GenerateAndUseNewWallet (fn, optl_locale_code) {
     const self = this
     function _with (raw__locale_code) {
       let compatibleLocaleCode = mnemonic_languages.compatibleCodeFromLocale(raw__locale_code)

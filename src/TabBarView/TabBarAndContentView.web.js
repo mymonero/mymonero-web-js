@@ -87,7 +87,7 @@ class TabBarAndContentView extends View {
     const self = this
     const index = self._tabBarContentViews.indexOf(tabBarContentView)
     if (index === -1) {
-      throw 'tabBarContentView not found in tabs'
+      throw Error('tabBarContentView not found in tabs')
     }
     return index
   }
