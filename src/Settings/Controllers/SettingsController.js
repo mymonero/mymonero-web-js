@@ -15,6 +15,7 @@ const k_defaults_record =
   authentication_requireWhenDisclosingWalletSecrets: true,
   autoDownloadUpdatesEnabled: true
 }
+ 
 //
 class SettingsController extends EventEmitter {
   constructor (options, context) {
@@ -98,7 +99,7 @@ class SettingsController extends EventEmitter {
   _setBooted () {
     const self = this
     if (self.hasBooted == true) {
-      throw 'code fault: _setBooted called while self.hasBooted=true'
+      throw Error('code fault: _setBooted called while self.hasBooted=true')
     }
     self.hasBooted = true
     const fns_length = self._whenBooted_fns.length
@@ -201,34 +202,19 @@ class SettingsController extends EventEmitter {
                 )
               }
               if (didUpdate_appTimeoutAfterS) {
-                self.emit(
-                  self.EventName_settingsChanged_appTimeoutAfterS(),
-                  self.appTimeoutAfterS
-                )
+                self.emit(self.EventName_settingsChanged_appTimeoutAfterS(), self.appTimeoutAfterS)
               }
               if (didUpdate_displayCcySymbol) {
-                self.emit(
-                  self.EventName_settingsChanged_displayCcySymbol(),
-                  self.displayCcySymbol
-                )
+                self.emit(self.EventName_settingsChanged_displayCcySymbol(), self.displayCcySymbol)
               }
               if (didUpdate_authentication_requireWhenSending) {
-                self.emit(
-                  self.EventName_settingsChanged_authentication_requireWhenSending(),
-                  self.authentication_requireWhenSending
-                )
+                self.emit(self.EventName_settingsChanged_authentication_requireWhenSending(), self.authentication_requireWhenSending)
               }
               if (didUpdate_authentication_requireWhenDisclosingWalletSecrets) {
-                self.emit(
-                  self.EventName_settingsChanged_authentication_requireWhenDisclosingWalletSecrets(),
-                  self.authentication_requireWhenDisclosingWalletSecrets
-                )
+                self.emit(self.EventName_settingsChanged_authentication_requireWhenDisclosingWalletSecrets(), self.authentication_requireWhenDisclosingWalletSecrets)
               }
               if (didUpdate_autoDownloadUpdatesEnabled) {
-                self.emit(
-                  self.EventName_settingsChanged_autoDownloadUpdatesEnabled(),
-                  self.autoDownloadUpdatesEnabled
-                )
+                self.emit(self.EventName_settingsChanged_autoDownloadUpdatesEnabled(), self.autoDownloadUpdatesEnabled)
               }
             }
             fn(err)

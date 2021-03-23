@@ -4,12 +4,8 @@ const View = require('../../Views/View.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_labeledRangeInputs = require('../../MMAppUICommonComponents/labeledRangeInputs.web')
-const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
-const commonComponents_switchToggles = require('../../MMAppUICommonComponents/switchToggles.web')
-const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const commonComponents_ccySelect = require('../../MMAppUICommonComponents/ccySelect.web')
 const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
-const commonComponents_tooltips = require('../../MMAppUICommonComponents/tooltips.web')
 const config__MyMonero = require('../../HostedMoneroAPIClient/config__MyMonero')
 
 class SettingsView extends View {
@@ -55,29 +51,12 @@ class SettingsView extends View {
     const self = this
     const containerLayer = document.createElement('div')
     self.form_containerLayer = containerLayer
-    {
-      self._setup_aboutAppButton()
-      if (self.context.isLiteApp != true) {
-        self._setup_form_field_changePasswordButton()
-      }
-      self._setup_form_field_appTimeoutSlider()
-      if (self.context.isLiteApp != true) {
-        self._setup_form_field_authentication() // no password protecting Lite app
-      }
-      self._setup_form_field_displayCcy()
-      if (self.context.isLiteApp != true) {
-        self._setup_form_field_serverURL()
-      }
-      if (self.context.isLiteApp != true) {
-        const isLinux = typeof process.platform !== 'undefined' && process.platform && /linux/.test(process.platform)
-        if (isLinux != true) { // because there is no software update support under linux (yet) .. TODO: possibly just encode this under a self.context.appHasSoftwareUpdateSupport so we can switch it in one place
-          self._setup_form_field_appUpdates()
-        }
-      }
-      self._setup_deleteEverythingButton()
+    self._setup_aboutAppButton()
+    self._setup_form_field_appTimeoutSlider()
+    self._setup_form_field_displayCcy()
+    self._setup_deleteEverythingButton()
 
-      containerLayer.style.paddingBottom = '64px'
-    }
+    containerLayer.style.paddingBottom = '64px'
     self.layer.appendChild(containerLayer)
   }
 
@@ -101,29 +80,6 @@ class SettingsView extends View {
     )
     buttonView.layer.style.margin = '0'
     div.appendChild(buttonView.layer)
-    self.form_containerLayer.appendChild(div)
-  }
-
-  _setup_form_field_changePasswordButton () {
-    const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
-    div.style.padding = '19px 24px 20px 24px'
-    {
-      const view = commonComponents_navigationBarButtons.New_GreyButtonView(self.context)
-      view.layer.style.display = 'inline-block'
-      view.layer.style.padding = '0 10px'
-      view.layer.style.margin = '0'
-      self.changePasswordButtonView = view
-      view.layer.addEventListener('click', function (e) {
-        e.preventDefault()
-        if (view.isEnabled !== false) {
-          self.context.passwordController.Initiate_ChangePassword() // this will throw if no pw has been entered yet
-        }
-        return false
-      })
-      // this will set its title on VWA
-      div.appendChild(view.layer)
-    }
     self.form_containerLayer.appendChild(div)
   }
 
@@ -166,9 +122,8 @@ class SettingsView extends View {
           )
         }
       }, self.context)
-      const margin_h = 5
-      view.layer.style.margin = `0 ${margin_h}px`
-      view.layer.style.width = `calc(100% - ${2 * margin_h}px)`
+      view.layer.style.margin = `0 5px`
+      view.layer.style.width = `calc(100% - 10px)`
       self.appTimeoutRangeInputView = view // NOTE: This must be torn down manually; see TearDown()
       div.appendChild(view.layer)
       //
@@ -180,202 +135,9 @@ class SettingsView extends View {
     self.form_containerLayer.appendChild(div)
   }
 
-  _setup_form_field_authentication () {
-    const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
-    {
-      const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('AUTHENTICATE', self.context)
-      {
-        const tooltipText = 'An extra layer of security<br/>for approving certain<br/>actions after you\'ve<br/>unlocked the app'
-        const view = commonComponents_tooltips.New_TooltipSpawningButtonView(tooltipText, self.context)
-        const layer = view.layer
-        labelLayer.appendChild(layer) // we can append straight to labelLayer as we don't ever change its innerHTML
-      }
-      div.appendChild(labelLayer)
-      {
-        const switchView = commonComponents_switchToggles.New_fieldValue_switchToggleView({
-          note: 'When sending',
-          border: true,
-          changed_fn: function (isChecked) {
-            self.context.settingsController.Set_settings_valuesByKey(
-              {
-                authentication_requireWhenSending: isChecked
-              },
-              function (err) {
-                if (err) {
-                  throw err
-                }
-              }
-            )
-          },
-          shouldToggle_fn: function (to_isSelected, async_shouldToggle_fn) {
-            if (to_isSelected == false) { // if it's being turned OFF
-              // then they need to authenticate
-              self.context.passwordController.Initiate_VerifyUserAuthenticationForAction(
-                'Authenticate',
-                function () {
-                  async_shouldToggle_fn(false) // disallowed
-                },
-                function () {
-                  setTimeout(
-                    function () {
-                      async_shouldToggle_fn(true) // allowed
-                    },
-                    400 // this delay is purely for visual effect, waiting for pw entry to dismiss
-                  )
-                }
-              )
-            } else {
-              async_shouldToggle_fn(true) // no auth needed
-            }
-          }
-        }, self.context)
-        div.appendChild(switchView.layer)
-        self.requireWhenSending_switchView = switchView
-      }
-      {
-        const switchView = commonComponents_switchToggles.New_fieldValue_switchToggleView({
-          note: 'To show wallet secrets',
-          border: true,
-          changed_fn: function (isChecked) {
-            self.context.settingsController.Set_settings_valuesByKey(
-              {
-                authentication_requireWhenDisclosingWalletSecrets: isChecked
-              },
-              function (err) {
-                if (err) {
-                  throw err
-                }
-              }
-            )
-          },
-          shouldToggle_fn: function (to_isSelected, async_shouldToggle_fn) {
-            if (to_isSelected == false) { // if it's being turned OFF
-              // then they need to authenticate
-              self.context.passwordController.Initiate_VerifyUserAuthenticationForAction(
-                'Authenticate',
-                function () {
-                  async_shouldToggle_fn(false) // disallowed
-                },
-                function () {
-                  setTimeout(
-                    function () {
-                      async_shouldToggle_fn(true) // allowed
-                    },
-                    400 // this delay is purely for visual effect, waiting for pw entry to dismiss
-                  )
-                }
-              )
-            } else {
-              async_shouldToggle_fn(true) // no auth needed
-            }
-          }
-        }, self.context)
-        div.appendChild(switchView.layer)
-        self.requireWhenDisclosingWalletSecrets_switchView = switchView
-      }
-    }
-    self.form_containerLayer.appendChild(div)
-  }
-
-  _setup_form_field_serverURL () {
-    const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
-    {
-      const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('SERVER ADDRESS', self.context)
-      div.appendChild(labelLayer)
-      //
-      const valueLayer = commonComponents_forms.New_fieldValue_textInputLayer(self.context, {
-        placeholderText: 'Leave blank to use mymonero.com'
-      })
-      valueLayer.autocomplete = 'off'
-      valueLayer.autocorrect = 'off'
-      valueLayer.autocapitalize = 'off'
-      valueLayer.spellcheck = 'false'
-      self.serverURLInputLayer = valueLayer
-      valueLayer.addEventListener(
-        'keyup',
-        function (event) {
-          self._serverURLInputLayer_did_keyUp()
-        }
-      )
-      div.appendChild(valueLayer)
-    }
-    {
-      const validationMessageLayer = commonComponents_forms.New_fieldAccessory_validationMessageLayer(self.context)
-      validationMessageLayer.style.display = 'none'
-      self.serverURL_validationMessageLayer = validationMessageLayer
-      div.appendChild(validationMessageLayer)
-    }
-    {
-      const layer = commonComponents_activityIndicators.New_GraphicAndLabel_ActivityIndicatorLayer( // will call `__inject…`
-        'CONNECTING…',
-        self.context
-      )
-      layer.style.display = 'none' // initial state
-      layer.style.paddingLeft = '7px'
-      self.serverURL_connecting_activityIndicatorLayer = layer
-      div.appendChild(layer)
-    }
-    self.form_containerLayer.appendChild(div)
-  }
-
-  _setup_form_field_appUpdates () {
-    const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
-    {
-      const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('SOFTWARE UPDATES', self.context)
-      div.appendChild(labelLayer)
-      {
-        const switchView = commonComponents_switchToggles.New_fieldValue_switchToggleView({
-          note: 'Download automatically',
-          border: true,
-          changed_fn: function (isChecked) {
-            self.context.settingsController.Set_settings_valuesByKey(
-              {
-                autoDownloadUpdatesEnabled: isChecked
-              },
-              function (err) {
-                if (err) {
-                  throw err
-                }
-              }
-            )
-          },
-          shouldToggle_fn: function (to_isSelected, async_shouldToggle_fn) {
-            if (to_isSelected == true) { // if it's being turned ON
-              // then they need to authenticate
-              self.context.passwordController.Initiate_VerifyUserAuthenticationForAction(
-                'Authenticate',
-                function () {
-                  async_shouldToggle_fn(false) // disallowed
-                },
-                function () {
-                  setTimeout(
-                    function () {
-                      async_shouldToggle_fn(true) // allowed
-                    },
-                    400 // this delay is purely for visual effect, waiting for pw entry to dismiss
-                  )
-                }
-              )
-            } else {
-              async_shouldToggle_fn(true) // no auth needed
-            }
-          }
-        }, self.context)
-        div.appendChild(switchView.layer)
-        self.autoDownloadUpdatesEnabled_switchView = switchView
-      }
-    }
-    self.form_containerLayer.appendChild(div)
-  }
-
   _setup_form_field_displayCcy () {
     const self = this
-    const selectLayer_w = 132 // disclosure arrow visual alignment with change pw content right edge
-    const selectLayer_h = 32
-    //
+
     const div = commonComponents_forms.New_fieldContainerLayer(self.context)
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('DISPLAY CURRENCY', self.context)
@@ -385,21 +147,19 @@ class SettingsView extends View {
       selectContainerLayer.style.position = 'relative' // to container pos absolute
       selectContainerLayer.style.left = '0'
       selectContainerLayer.style.top = '0'
-      selectContainerLayer.style.width = selectLayer_w + 'px'
-      selectContainerLayer.style.height = selectLayer_h + 'px'
+      selectContainerLayer.style.width = '132px'
+      selectContainerLayer.style.height = '32px'
       //
       const ccySelectLayer = commonComponents_ccySelect.new_selectLayer()
       self.displayCcySelectLayer = ccySelectLayer
       self._configure_displayCcySelectLayer_value()
       {
         const selectLayer = ccySelectLayer
-        // selectLayer.style.textAlign = "center"
-        // selectLayer.style.textAlignLast = "center"
         selectLayer.style.outline = 'none'
         selectLayer.style.color = '#FCFBFC'
         selectLayer.style.backgroundColor = '#383638'
-        selectLayer.style.width = selectLayer_w + 'px'
-        selectLayer.style.height = selectLayer_h + 'px'
+        selectLayer.style.width = '132px'
+        selectLayer.style.height = '32px'
         selectLayer.style.border = '0'
         selectLayer.style.padding = '0'
         selectLayer.style.borderRadius = '3px'
@@ -417,11 +177,10 @@ class SettingsView extends View {
         } else {
           selectLayer.style.textIndent = '11px'
         }
-        { // hover effects/classes
-          selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
-          selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
-          selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_Disableable())
-        }
+        // hover effects/classes
+        selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
+        selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
+        selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_Disableable())
         //
         // observation
         ccySelectLayer.addEventListener(
@@ -438,18 +197,15 @@ class SettingsView extends View {
         layer.style.pointerEvents = 'none' // mustn't intercept pointer events
         layer.style.border = 'none'
         layer.style.position = 'absolute'
-        const w = 10
-        const h = 8
-        const top = Math.ceil((selectLayer_h - h) / 2)
-        layer.style.width = w + 'px'
-        layer.style.height = h + 'px'
+        layer.style.width = '10px'
+        layer.style.height = '8px'
         layer.style.right = '13px'
-        layer.style.top = top + 'px'
+        layer.style.top = '12px'
         layer.style.zIndex = '100' // above options_containerView
         layer.style.backgroundImage = 'url(../../assets/img/dropdown-arrow-down@3x.png)' // borrowing this
         layer.style.backgroundRepeat = 'no-repeat'
         layer.style.backgroundPosition = 'center'
-        layer.style.backgroundSize = w + 'px ' + h + 'px'
+        layer.style.backgroundSize = '10px 8px'
         selectContainerLayer.appendChild(layer)
       }
       div.appendChild(selectContainerLayer)
@@ -465,52 +221,25 @@ class SettingsView extends View {
     const view = commonComponents_tables.New_redTextButtonView(titleText, self.context)
     self.deleteEverything_buttonView = view
     const layer = view.layer
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        if (self.deleteEverything_buttonView.isEnabled !== true) {
-          return false
-        }
-        let msg
-        if (self.context.isLiteApp != true) {
-          msg = 'Are you sure you want to delete all of your local data?\n\nAny wallets will remain permanently on the Monero blockchain but local data such as contacts will not be recoverable.'
-        } else {
-          msg = 'Are you sure you want to log out?'
-        }
-        self.context.windowDialogs.PresentQuestionAlertDialogWith(
-          self.context.isLiteApp != true ? 'Delete everything?' : 'Log out?',
-          msg,
-          self.context.isLiteApp != true ? 'Delete Everything' : 'Log Out',
-          'Cancel',
-          function (err, didChooseYes) {
-            if (err) {
-              throw err
-            }
-            if (didChooseYes) {
-              self.context.passwordController.InitiateDeleteEverything(
-                function (err) {
-                  /*
-									self.viewWillAppear()
-									self.viewDidAppear()
-									*/
-                  // ^- this is to cause the UI to update itself with new values/states
-                  // but is commented out here because we do not need to call it -
-                  // we have the tab bar select the walletsTab for us, and if the user
-                  // does come back to Settings, both of these will be called
-                }
-              )
-            }
-          }
-        )
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      if (self.deleteEverything_buttonView.isEnabled !== true) {
         return false
       }
-    )
+      self.context.windowDialogs.PresentQuestionAlertDialogWith('Log out?', 'Are you sure you want to log out?', 'Log Out', 'Cancel', function (err, didChooseYes) {
+        if (err) {
+          throw err
+        }
+        if (didChooseYes) {
+          self.context.passwordController.InitiateDeleteEverything(function (err) {})
+        }
+      })
+      return false
+    })
     div.appendChild(layer)
     self.form_containerLayer.appendChild(div)
   }
 
-  //
   startObserving () {
     const self = this
     self.registrantForDeleteEverything_token = self.context.passwordController.AddRegistrantForDeleteEverything(self)
@@ -623,118 +352,31 @@ class SettingsView extends View {
   viewWillAppear () {
     const self = this
     super.viewWillAppear()
-    {
-      if (typeof self.navigationController !== 'undefined' && self.navigationController !== null) {
-        self.layer.style.paddingTop = `${self.navigationController.NavigationBarHeight()}px`
-      }
+    if (typeof self.navigationController !== 'undefined' && self.navigationController !== null) {
+      self.layer.style.paddingTop = `${self.navigationController.NavigationBarHeight()}px`
     }
-    const passwordController = self.context.passwordController
-    { // config change pw btn text, app timeout slider, …
-      if (self.context.isLiteApp == true) {
-        if (self.changePasswordButtonView) {
-          throw 'Did not expect self.changePasswordButtonView'
-        }
-        self.appTimeoutSlider_messageLayer.innerHTML = 'Idle time before automatic log-out'
-      } else {
-        if (!self.changePasswordButtonView) {
-          throw 'Expected self.changePasswordButtonView'
-        }
-        const layer = self.changePasswordButtonView.layer
-        const userSelectedTypeOfPassword = passwordController.userSelectedTypeOfPassword
-        const passwordType_humanReadableString = passwordController.HumanReadable_AvailableUserSelectableTypesOfPassword()[userSelectedTypeOfPassword]
-        if (typeof passwordType_humanReadableString !== 'undefined') {
-          const capitalized_passwordType = passwordType_humanReadableString.charAt(0).toUpperCase() + passwordType_humanReadableString.slice(1)
-          layer.innerHTML = 'Change ' + capitalized_passwordType
-          self.appTimeoutSlider_messageLayer.innerHTML = 'Idle time before your ' + passwordType_humanReadableString + ' is required'
-        }
-      }
+    // config change pw btn text, app timeout slider, …
+    if (self.changePasswordButtonView) {
+      throw Error('Did not expect self.changePasswordButtonView')
     }
-    if (self.context.isLiteApp) {
-      if (self.changePasswordButtonView) {
-        throw 'Did not expect self.changePasswordButtonView'
-      }
-      if (self.serverURLInputLayer) {
-        throw 'Did not expect self.serverURLInputLayer'
-      }
-      const walletsExist = self.context.walletsListController.records.length > 0
-      self.appTimeoutRangeInputView.SetEnabled(true)
-      self.displayCcySelectLayer.disabled = false
-      self.displayCcySelectLayer.classList.remove('disabled')
-      self.deleteEverything_buttonView.SetEnabled(walletsExist) // cause this is actually the 'log out' btn
-    } else {
-      if (passwordController.hasUserSavedAPassword !== true) {
-        if (self.changePasswordButtonView) {
-          self.changePasswordButtonView.SetEnabled(false) // can't change til entered
-        }
-        if (self.serverURLInputLayer) {
-          self.serverURLInputLayer.disabled = false // enable - user may want to change URL before they add their first wallet
-        }
-        self.displayCcySelectLayer.disabled = true
-        self.displayCcySelectLayer.classList.add('disabled')
-        self.appTimeoutRangeInputView.SetEnabled(false)
-        self.requireWhenSending_switchView.SetEnabled(false) // cannot have them turn it off w/o pw because it should require a pw to de-escalate security measure
-        self.requireWhenDisclosingWalletSecrets_switchView.SetEnabled(false) // cannot have them turn it off w/o pw because it should require a pw to de-escalate security measure
-        self.deleteEverything_buttonView.SetEnabled(false)
-        // 'auto-install updates' this should remain enabled
-      } else if (passwordController.HasUserEnteredValidPasswordYet() !== true) { // has data but not unlocked app - prevent tampering
-        // however, user should never be able to see the settings view in this state
-        if (self.changePasswordButtonView) {
-          self.changePasswordButtonView.SetEnabled(false)
-        }
-        if (self.serverURLInputLayer) {
-          self.serverURLInputLayer.disabled = true
-        }
-        self.displayCcySelectLayer.disabled = true
-        self.displayCcySelectLayer.classList.add('disabled')
-        self.appTimeoutRangeInputView.SetEnabled(false)
-        self.requireWhenSending_switchView.SetEnabled(false) // "
-        self.requireWhenDisclosingWalletSecrets_switchView.SetEnabled(false) // "
-        self.deleteEverything_buttonView.SetEnabled(false)
-        // 'auto-install updates' this should remain enabled
-      } else { // has entered PW - unlock
-        if (self.changePasswordButtonView) {
-          self.changePasswordButtonView.SetEnabled(true)
-        }
-        if (self.serverURLInputLayer) {
-          self.serverURLInputLayer.disabled = false
-        }
-        self.displayCcySelectLayer.disabled = false
-        self.displayCcySelectLayer.classList.remove('disabled')
-        self.appTimeoutRangeInputView.SetEnabled(true)
-        self.requireWhenSending_switchView.SetEnabled(true)
-        self.requireWhenDisclosingWalletSecrets_switchView.SetEnabled(true)
-        self.deleteEverything_buttonView.SetEnabled(true)
-        // 'auto-install updates' this should remain enabled
-      }
-      // we only have password authentication in the Full app
-      self.requireWhenSending_switchView.setChecked(
-        self.context.settingsController.authentication_requireWhenSending,
-        true, // squelch_changed_fn_emit - or we'd get redundant saves
-        true // setWithoutShouldToggle - or we get asked to auth
-      )
-      self.requireWhenDisclosingWalletSecrets_switchView.setChecked(
-        self.context.settingsController.authentication_requireWhenDisclosingWalletSecrets,
-        true, // squelch_changed_fn_emit - or we'd get redundant saves
-        true // setWithoutShouldToggle - or we get asked to auth
-      )
-      if (typeof self.autoDownloadUpdatesEnabled_switchView !== 'undefined') { // since it might not be supported (Linux)
-        self.autoDownloadUpdatesEnabled_switchView.setChecked(
-          self.context.settingsController.autoDownloadUpdatesEnabled,
-          true, // squelch_changed_fn_emit - or we'd get redundant saves
-          true // setWithoutShouldToggle - or we get asked to auth
-        )
-      }
+    self.appTimeoutSlider_messageLayer.innerHTML = 'Idle time before automatic log-out'
+    if (self.changePasswordButtonView) {
+      throw Error('Did not expect self.changePasswordButtonView')
     }
-    {
-      if (self.serverURLInputLayer) {
-        self.serverURLInputLayer.value = self.context.settingsController.specificAPIAddressURLAuthority || ''
-      }
-      // and now that the value is set…
-      self._updateValidationErrorForAddressInputView() // so we get validation error from persisted but incorrect value, if necessary for user feedback
+    if (self.serverURLInputLayer) {
+      throw Error('Did not expect self.serverURLInputLayer')
     }
-    {
-      self._configure_displayCcySelectLayer_value()
+    const walletsExist = self.context.walletsListController.records.length > 0
+    self.appTimeoutRangeInputView.SetEnabled(true)
+    self.displayCcySelectLayer.disabled = false
+    self.displayCcySelectLayer.classList.remove('disabled')
+    self.deleteEverything_buttonView.SetEnabled(walletsExist) // cause this is actually the 'log out' btn
+    if (self.serverURLInputLayer) {
+      self.serverURLInputLayer.value = self.context.settingsController.specificAPIAddressURLAuthority || ''
     }
+    // and now that the value is set…
+    self._updateValidationErrorForAddressInputView() // so we get validation error from persisted but incorrect value, if necessary for user feedback
+    self._configure_displayCcySelectLayer_value()
   }
 
   viewDidAppear () {
