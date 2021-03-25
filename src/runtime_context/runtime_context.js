@@ -22,8 +22,8 @@ const WalletsListController = require('../WalletsList/Controllers/WalletsListCon
 const WalletAppCoordinator = require('../WalletAppCoordinator/WalletAppCoordinator')
 const ExceptionAlerting = require('../MainWindow/Controllers/ExceptionAlerting.browser.web.js')
 
-function NewHydratedContext (initialContextOrNil) {
-  const context = initialContextOrNil != null ? initialContextOrNil : {}
+function NewHydratedContext (initialContext) {
+  const context = initialContext != null ? initialContext : {}
 
   context.pasteboard = new Pasteboard({}, context)
   context.urlBrowser = new UrlBrowser({}, context)
