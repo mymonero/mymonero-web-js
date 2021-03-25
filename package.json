@@ -15,7 +15,7 @@
     "node": "12.4.0"
   },
   "dependencies": {
-    "@mymonero/mymonero-app-bridge": "^1.0.9",
+    "@mymonero/mymonero-app-bridge": "^1.0.11",
     "@mymonero/mymonero-bigint": "^1.0.5",
     "@mymonero/mymonero-keyimage-cache": "^1.0.5",
     "@mymonero/mymonero-locales": "^1.0.5",
@@ -49,11 +49,11 @@
     "babel-core": "6.26.3",
     "babel-loader": "8.0.6",
     "babel-minify": "0.5.1",
-    "copy-webpack-plugin": "^8.0.0",
+    "copy-webpack-plugin": "^8.1.0",
     "process": "0.11.10",
     "request": "2.88.0",
     "standard": "^16.0.3",
-    "webpack": "^5.27.0",
+    "webpack": "^5.27.2",
     "webpack-cli": "^4.5.0",
     "webpack-merge": "4.2.2",
     "worker-loader": "^3.0.0"
