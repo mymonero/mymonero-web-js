@@ -1,5 +1,8 @@
 'use strict'
 
+import './assets/css/styles.css'
+import './assets/css/clear.browser.css'
+
 window.BootApp = function () { // encased in a function to prevent scope being lost/freed on mobile
   const isDebug = false
   const app =
@@ -20,14 +23,14 @@ window.BootApp = function () { // encased in a function to prevent scope being l
   const isTouchDevice = ('ontouchstart' in document.documentElement)
   const isMobile = isTouchDevice // an approximation for 'mobile'
 
-  const setup_utils = require('../../MMAppRendererSetup/renderer_setup.browser')
+  const setup_utils = require('./MMAppRendererSetup/renderer_setup.browser')
   setup_utils({
     appVersion: app.getVersion(),
     reporting_processName: 'BrowserWindow'
   })
   // context
   require('@mymonero/mymonero-app-bridge')({}).then(function (coreBridge_instance) {
-    const context = require('../Models/index_context.browser').NewHydratedContext({
+    const context = require('./MainWindow/Models/index_context.browser').NewHydratedContext({
       nettype: require('@mymonero/mymonero-nettype').network_type.MAINNET, // critical setting
       app: app,
       isDebug: isDebug,
@@ -48,7 +51,7 @@ window.BootApp = function () { // encased in a function to prevent scope being l
     window.MyMonero_context = context
     //
     if (isMobile === false) { // then we don't have guaranteed native emoji support
-      const emoji_web = require('../../Emoji/emoji_web') // since we're using emoji, now that we have the context, we can call PreLoadAndSetUpEmojiOne
+      const emoji_web = require('./Emoji/emoji_web') // since we're using emoji, now that we have the context, we can call PreLoadAndSetUpEmojiOne
       emoji_web.PreLoadAndSetUpEmojiOne(context)
     }
     // configure native UI elements
@@ -62,7 +65,7 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       // when window resized on mobile (i.e. possibly when device rotated -
       // though we don't support that yet
       // if(/Android/.test(navigator.appVersion)) {
-      const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
+      const commonComponents_forms = require('./MMAppUICommonComponents/forms.web')
       window.addEventListener('resize', function () {
         console.log('💬  Window resized')
         commonComponents_forms.ScrollCurrentFormElementIntoView()
@@ -70,7 +73,7 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       // }
     }
     { // root view
-      const RootView = require('./RootView.web')
+      const RootView = require('./MainWindow/Views/RootView.web')
       const rootView = new RootView({}, context) // hang onto reference
       rootView.superview = null // just to be explicit; however we will set a .superlayer
       // manually attach the rootView to the DOM and specify view's usual managed reference(s)

@@ -56,7 +56,7 @@ class ExchangeTabContentView extends StackAndModalNavigationView {
   TabBarItem_icon_customStyle () {
     const self = this
     return {
-      backgroundImage: 'url(assets/img/XMRtoBTCInactive.svg)',
+      backgroundImage: 'url(./src/assets/img/XMRtoBTCInactive.svg)',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: '39px'
@@ -66,7 +66,7 @@ class ExchangeTabContentView extends StackAndModalNavigationView {
   TabBarItem_icon_selected_customStyle () {
     const self = this
     return {
-      backgroundImage: 'url(assets/img//XMRtoBTCActive.svg)',
+      backgroundImage: 'url(./src/assets/img//XMRtoBTCActive.svg)',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: '39px'

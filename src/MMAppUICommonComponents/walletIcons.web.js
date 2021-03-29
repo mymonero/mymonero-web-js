@@ -47,7 +47,7 @@ function __injectCSSRules_ifNecessary () {
 //
 function New_WalletIconLayer (context, optl_sizeClass) {
   const sizeClass = optl_sizeClass || SizeClasses.Large48
-  const assetsPath = '../../' + (context.ThemeController_rootPathSuffixPrefixingPathToFontFiles || '')
+  const assetsPath = './src/' + (context.ThemeController_rootPathSuffixPrefixingPathToFontFiles || '')
   //
   __injectCSSRules_ifNecessary()
   //

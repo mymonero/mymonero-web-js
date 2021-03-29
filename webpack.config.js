@@ -3,11 +3,26 @@ const webpack = require('webpack')
 const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: './src/MainWindow/Views/index.browser.js',
+  entry: './src/index.browser.js',
   output: {
-    path: path.resolve(__dirname, 'src'),
     filename: 'bundle.js',
-    publicPath: 'src'
+    path: path.resolve(__dirname, 'dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource'
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource'
+      }
+    ]
   },
   plugins: [
     new webpack.ProvidePlugin({

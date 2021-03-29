@@ -202,7 +202,7 @@ class SettingsView extends View {
         layer.style.right = '13px'
         layer.style.top = '12px'
         layer.style.zIndex = '100' // above options_containerView
-        layer.style.backgroundImage = 'url(../../assets/img/dropdown-arrow-down@3x.png)' // borrowing this
+        layer.style.backgroundImage = 'url(./src/assets/img/dropdown-arrow-down@3x.png)' // borrowing this
         layer.style.backgroundRepeat = 'no-repeat'
         layer.style.backgroundPosition = 'center'
         layer.style.backgroundSize = '10px 8px'

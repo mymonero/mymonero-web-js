@@ -26,7 +26,7 @@ class RequestTabContentView extends StackAndModalNavigationView {
 
   TabBarItem_icon_customStyle () {
     return {
-      backgroundImage: 'url(../../assets/img/icon_tabBar_fundsRequests@3x.png)',
+      backgroundImage: 'url(./src/assets/img/icon_tabBar_fundsRequests@3x.png)',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: '24px 24px'
@@ -35,7 +35,7 @@ class RequestTabContentView extends StackAndModalNavigationView {
 
   TabBarItem_icon_selected_customStyle () {
     return {
-      backgroundImage: 'url(../../assets/img/icon_tabBar_fundsRequests__active@3x.png)',
+      backgroundImage: 'url(./src/assets/img/icon_tabBar_fundsRequests__active@3x.png)',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: '24px 24px'

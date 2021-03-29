@@ -44,7 +44,7 @@ const walletSelectorClickListener = function (event) {
     const walletBalance = document.getElementById('selected-wallet-balance')
     const walletIcon = document.getElementById('selected-wallet-icon')
     walletElement.classList.remove('active')
-    walletIcon.style.backgroundImage = `url('../../../assets/img/wallet-${dataAttributes.swatch}@3x.png'`
+    walletIcon.style.backgroundImage = `url('./src/assets/img/wallet-${dataAttributes.swatch}@3x.png'`
     walletLabel.innerText = dataAttributes.walletlabel
     walletBalance.innerText = dataAttributes.walletbalance + ' XMR'
     const walletSelector = document.getElementById('wallet-selector')
