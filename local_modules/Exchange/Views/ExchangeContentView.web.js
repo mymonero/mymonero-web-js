@@ -107,7 +107,7 @@ class ExchangeContentView extends View {
         let defaultWallet = context.walletsListController.records[defaultOffset];
         let walletSelectOptions = `
         <div data-walletoffset="0" data-walletpublicaddress="${defaultWallet.public_address}" data-walletLabel="${defaultWallet.walletLabel}" data-swatch="${defaultWallet.swatch.substr(1)}" data-walletbalance="${self.UnlockedBalance_FormattedString(defaultWallet)}" data-walletid="${defaultWallet._id}" id="selected-wallet" class="hoverable-cell utility selectionDisplayCellView" style="">
-                <div id="selected-wallet-icon" class="walletIcon medium-32" style="background-image: url(MMAppUICommonComponents/Resources/wallet-00C6FF@3x.png)"></div>
+                <div id="selected-wallet-icon" class="walletIcon medium-32" style="background-image: url(../../assets/img//wallet-00C6FF@3x.png)"></div>
                 <div id="selected-wallet-label" class="walletName">${defaultWallet.walletLabel}</div>
                 <div id="selected-wallet-balance" class="description-label">${self.UnlockedBalance_FormattedString(defaultWallet)} XMR available</div>
             </div>
