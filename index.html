@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>MyMonero</title>
+
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./src/assets/img/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./src/assets/img/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./src/assets/img/favicon/favicon-16x16.png" />
+    <link rel="manifest" href="./src/assets/img/favicon/manifest.json" />
+    <link rel="mask-icon" href="./src/assets/img/favicon/safari-pinned-tab.svg" color="#5bbad5" />
+    <link rel="shortcut icon" href="./src/assets/img/favicon/favicon.ico" />
+
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src * data: gap: blob: https://ssl.gstatic.com http://localhost 'unsafe-eval' 'unsafe-inline';
+			style-src 'self' 'unsafe-inline';
+			script-src 'self' https://www.google-analytics.com/analytics.js https://widget.intercom.io/widget/hi3rzlw0 https://widget.intercom.io/widget/qa83i5n9 https://js.intercomcdn.com 'unsafe-inline' 'unsafe-eval';
+			object-src 'none'; 
+			font-src 'self' https://js.intercomcdn.com/fonts/;  
+			img-src 'self' data: https://downloads.intercomcdn.com/i/o/  https://js.intercomcdn.com/images/ https://static.intercomassets.com/ https://www.google-analytics.com/r/collect https://www.google-analytics.com/collect https://stats.g.doubleclick.net/r/collect; 
+			connect-src 'self' https://thingproxy.freeboard.io https://api.mymonero.com:8443 https://api-iam.intercom.io https://cloudflare-dns.com data: blob:;"
+    />
+    <!-- script-src of unsafe-eval required to load wasm files at present but actual eval is disabled in renderer_setup_utils -->
+    <meta name="apple-itunes-app" content="app-id=1372508199" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+    <script>
+      window.INTERCOM__APP_ID = /*production*/ "hi3rzlw0"; // "qa83i5n9"/*development*/  // TODO: select this via webpack env
+      window.intercomSettings = {
+        app_id: window.INTERCOM__APP_ID,
+        vertical_padding: 100,
+        hide_default_launcher: true,
+      };
+    </script>
+    <!-- 		<script>
+			(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/' + w.INTERCOM__APP_ID;var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
+		</script>
+ -->
+  </head>
+  <body>
+    <div class="sp sp-circle" id="loading-spinner"></div>
+
+    <script type="text/javascript" src="dist/bundle.js"></script>
+    <script>
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(
+        window,
+        document,
+        "script",
+        "https://www.google-analytics.com/analytics.js",
+        "ga"
+      );
+
+      ga("create", "UA-53312765-3", "auto");
+      ga("send", "pageview");
+    </script>
+  </body>
+</html>
