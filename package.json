@@ -6,21 +6,40 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": "https://github.com/mymonero/mymonero-web-js",
   "scripts": {
-    "start": "bin/start_dev_browser",
-    "postinstall": "bin/update_submodules",
-    "watch": "(webpack --config webpack.browser.dev.config.js --display-modules --watch) & bin/start_dev_browser"
+    "dev": "(webpack --mode=development) & python2 -m SimpleHTTPServer 9110",
+    "build": "webpack --mode=production",
+    "start": "(webpack --mode=development) & python2 -m SimpleHTTPServer 9110",
+    "watch": "(webpack --mode=development --watch) & python2 -m SimpleHTTPServer 9110"
   },
   "engines": {
     "node": "12.4.0"
   },
   "dependencies": {
+    "@mymonero/mymonero-app-bridge": "^1.0.11",
+    "@mymonero/mymonero-bigint": "^1.0.5",
+    "@mymonero/mymonero-keyimage-cache": "^1.0.5",
+    "@mymonero/mymonero-locales": "^1.0.5",
+    "@mymonero/mymonero-monero-config": "^1.0.5",
+    "@mymonero/mymonero-money-format": "^1.0.5",
+    "@mymonero/mymonero-net-service-utils": "^1.0.5",
+    "@mymonero/mymonero-nettype": "^1.0.5",
+    "@mymonero/mymonero-paymentid-utils": "^1.0.5",
+    "@mymonero/mymonero-response-parser-utils": "^1.0.5",
+    "@mymonero/mymonero-sendfunds-utils": "^1.0.5",
+    "@mymonero/mymonero-tx-parsing-utils": "^1.0.6",
     "async": "3.1.0",
     "bitcoin-address-validation": "^1.0.2",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
     "fastclick": "1.0.6",
     "html5-fs": "0.1.1",
     "jsqr": "1.1.1",
     "mymonero-exchange": "^0.1.5",
+    "path-browserify": "^1.0.1",
     "qrcode": "^1.4.4",
+    "safe-buffer": "^5.2.1",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.3",
     "uuid": "3.3.2",
     "velocity-animate": "1.5.2",
     "wallet-address-validator": "^0.2.4",
@@ -30,16 +49,15 @@
     "babel-core": "6.26.3",
     "babel-loader": "8.0.6",
     "babel-minify": "0.5.1",
+    "copy-webpack-plugin": "^8.1.0",
+    "css-loader": "^5.2.0",
+    "process": "0.11.10",
     "request": "2.88.0",
     "standard": "^16.0.3",
-    "webpack": "^4.41.6",
-    "webpack-cli": "3.3.12",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.27.2",
+    "webpack-cli": "^4.5.0",
     "webpack-merge": "4.2.2",
-    "worker-loader": "2.0.0"
-  },
-  "standard": {
-    "ignore": [
-      "local_modules/mymonero_libapp_js"
-    ]
+    "worker-loader": "^3.0.0"
   }
 }
