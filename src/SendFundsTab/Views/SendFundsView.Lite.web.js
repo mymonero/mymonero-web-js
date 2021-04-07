@@ -6,7 +6,6 @@ const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web'
 const commonComponents_amounts = require('../../MMAppUICommonComponents/amounts.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tooltips = require('../../MMAppUICommonComponents/tooltips.web')
-const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
 const WalletsSelectView = require('../../WalletsList/Views/WalletsSelectView.web')
 const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const commonComponents_actionButtons = require('../../MMAppUICommonComponents/actionButtons.web')
@@ -98,21 +97,16 @@ class SendFundsView extends View {
     layer.style.MozUserSelect = 'none' // disable selection here but enable selectively
     layer.style.msUserSelect = 'none' // disable selection here but enable selectively
     layer.style.userSelect = 'none' // disable selection here but enable selectively
-    //
     layer.style.position = 'relative'
     layer.style.boxSizing = 'border-box'
     layer.style.width = '100%'
     layer.style.height = '100%'
     layer.style.padding = '0' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
     layer.style.overflowY = 'auto'
-    layer.classList.add('ClassNameForScrollingAncestorOfScrollToAbleElement')
-    // layer.style.webkitOverflowScrolling = "touch"
-    //
     layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view
-    //
     layer.style.color = '#c0c0c0' // temporary
-    //
     layer.style.wordBreak = 'break-all' // to get the text to wrap
+    layer.classList.add('ClassNameForScrollingAncestorOfScrollToAbleElement')
   }
 
   _setup_validationMessageLayer () { // validation message
@@ -509,8 +503,8 @@ class SendFundsView extends View {
           selectLayer.style.textIndent = '11px'
         }
         { // hover effects/classes
-          selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
-          selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
+          selectLayer.classList.add('hoverable-cell')
+          selectLayer.classList.add('utility')
         }
         //
         // observation

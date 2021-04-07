@@ -127,7 +127,7 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
       layer.style.textAlign = 'left'
       layer.style.display = 'block'
       layer.style.padding = '10px 12px'
-      layer.style.textIndent = `${37 - 12}px`
+      layer.style.textIndent = `25px`
       const isMacOS = process.platform === 'darwin' // TODO: check for iOS too I suppose
       if (isMacOS) {
         layer.style.width = '72px'
@@ -233,16 +233,13 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
     // we need a cancel button
     const view = commonComponents_navigationBarButtons.New_LeftSide_CancelButtonView(self.context)
     const layer = view.layer
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        if (view.isEnabled !== false) {
-          self.wizardController._fromScreen_userPickedCancel()
-        }
-        return false
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      if (view.isEnabled !== false) {
+        self.wizardController._fromScreen_userPickedCancel()
       }
-    )
+      return false
+    })
     return view
   }
 

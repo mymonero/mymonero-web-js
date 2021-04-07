@@ -50,27 +50,15 @@ class ExchangeTabContentView extends StackAndModalNavigationView {
   }
 
   TabBarItem_layer_customStyle () {
-    return {}
+    return false
   }
 
   TabBarItem_icon_customStyle () {
-    const self = this
-    return {
-      backgroundImage: 'url(./src/assets/img/XMRtoBTCInactive.svg)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '39px'
-    }
+    return 'tabButton-exchange'
   }
 
   TabBarItem_icon_selected_customStyle () {
-    const self = this
-    return {
-      backgroundImage: 'url(./src/assets/img//XMRtoBTCActive.svg)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '39px'
-    }
+    return 'tabButton-exchange-selected'
   }
 
   // interactivity

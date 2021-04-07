@@ -64,7 +64,7 @@ function New_fieldValue_labeledRangeInputView (params, context) {
   labelLayer.style.position = 'relative'
   labelLayer.style.top = '-10px'
   const labelLayer_width = 100 // give it enough room for most labels - 'auto' would be nice
-  labelLayer.style.width = labelLayer_width + 'px'
+  labelLayer.style.width = '100px'
   labelLayer.style.textAlign = 'center'
   labelLayer.style.height = '15px'
   labelLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'

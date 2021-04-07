@@ -5,7 +5,6 @@ const commonComponents_tables = require('../../MMAppUICommonComponents/tables.we
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_labeledRangeInputs = require('../../MMAppUICommonComponents/labeledRangeInputs.web')
 const commonComponents_ccySelect = require('../../MMAppUICommonComponents/ccySelect.web')
-const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
 const config__MyMonero = require('../../HostedMoneroAPIClient/config__MyMonero')
 
 class SettingsView extends View {
@@ -178,9 +177,9 @@ class SettingsView extends View {
           selectLayer.style.textIndent = '11px'
         }
         // hover effects/classes
-        selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
-        selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
-        selectLayer.classList.add(commonComponents_hoverableCells.ClassFor_Disableable())
+        selectLayer.classList.add('hoverable-cell')
+        selectLayer.classList.add('utility')
+        selectLayer.classList.add('disableable')
         //
         // observation
         ccySelectLayer.addEventListener(

@@ -213,7 +213,7 @@ function _new_MnemonicConfirmation_WordView (word, wordUUID, context) {
   const layer = view.layer
   layer.className = 'mnemonic-pill'
   layer.href = '#' // clickable by default
-  context.themeController.StyleLayer_FontAsSmallPillLightMonospace(layer)
+  layer.classList.add('mnemonic-box-word-view')
   layer.ondragstart = function (e) { e.preventDefault(); return false } // disable link dragging
   layer.innerHTML = word.toUpperCase()
   { // for retrieval later

@@ -114,17 +114,13 @@ class BaseView_Wallet_MetaInfo extends BaseView_AWalletWizardScreen {
     self.rightBarButtonView = view
     const layer = view.layer
     layer.innerHTML = 'Next'
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        {
-          if (self.isSubmitButtonDisabled !== true) { // button is enabled
-            self._userSelectedNextButton()
-          }
-        }
-        return false
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      if (self.isSubmitButtonDisabled !== true) { // button is enabled
+        self._userSelectedNextButton()
       }
+      return false
+    }
     )
     self.set_submitButtonNeedsUpdate() // will be disabled on first push - but not necessarily on hitting Back
     return view
@@ -183,7 +179,7 @@ class BaseView_Wallet_MetaInfo extends BaseView_AWalletWizardScreen {
   //
   _userSelectedNextButton () {
     const self = this
-    throw 'You must override ' + self.constructor.name + '/_userSelectedNextButton() in your subclass.'
+    throw Error('You must override ' + self.constructor.name + '/_userSelectedNextButton() in your subclass.')
   }
 
   AWalletFieldInput_did_keypress (event) {

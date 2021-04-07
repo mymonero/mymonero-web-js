@@ -1,96 +1,11 @@
 'use strict'
 
 const View = require('../Views/View.web')
-const Views__cssRules = require('../Views/cssRules.web')
-//
 const activityIndicators = require('./activityIndicators.web')
 const commonComponents_forms = require('./forms.web')
-//
-const NamespaceName = 'Tables'
-const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
-function cssRules_generatorFn (context) {
-  const assetsPath = '../../' + ('../../')
-  const cssRules =
-	[
-		`.table_field {
-			padding: 0;
-		}`,
-		`.table_field a.clickableLinkButton {
-			
-		}`,
-		`.table_field .field_value {
-			
-		}`,
-		`.table_field .field_value a,
-		.table_field .field_value a:active,
-		.table_field .field_value a:hover
-		{
-			color: #FFFFFF;
-			cursor: default;
-			text-decoration: none;
-		}`,
-		`.table_field .field_value p {
-			display: block;
-			padding: 0 0 18px 0;
-			word-break: break-word;
-		}`,
-		//
-		`.inlineMessageDialogLayer {
-			background: rgba(245,230,125,0.05);
-			border: 0.5px solid rgba(245,230,125,0.30);
-			border-radius: 3px;
-			min-height: 29px;
-			box-sizing: border-box;
-			margin-left: 0;
-			margin-right: 0;
-			padding: 6px 8px 8px 8px;
-			margin-top: 15px;
-			margin-bottom: 10px;
-			height: auto;
-			width: 100%; /* feel free to set, along with margin left */
-			color: #F5E67E;
-			font-size: 11px;
-			font-weight: 400;
-			letter-spacing: 0.5px;
-			-webkit-font-smoothing: subpixel-antialiased;
-			word-break: break-word;
-			position: relative;
-			top: 0;
-			left: 0;
-		}`,
-		`.inlineMessageDialogLayer.wantsCloseButton {
-			padding-right: 18px;
-		}`,
-		`.inlineMessageDialogLayer > a.close-btn {
-			background-image: url(${assetsPath}assets/img/inlineMessageDialog_closeBtn@3x.png);
-			background-size: 8px 8px;
-			background-repeat: no-repeat;
-			background-position: center;
-			width: 27px;
-			height: 27px;
-			position: absolute;
-			right: 0px;
-			top: 0px;
-			display: block; /* for bounds as an a tag */
-			opacity: 0.8;
-			transition: opacity 0.05s ease-out;
-		}`,
-		`.inlineMessageDialogLayer > a.close-btn:hover {
-			opacity: 1.0;
-		}`
-	]
-  return cssRules
-}
-function __injectCSSRules_ifNecessary (context) {
-  Views__cssRules.InjectCSSRules_ifNecessary(
-    haveCSSRulesBeenInjected_documentKey,
-    cssRules_generatorFn,
-    context
-  )
-}
+
 //
 function New_fieldContainerLayer (context) {
-  __injectCSSRules_ifNecessary(context)
   //
   const layer = document.createElement('div')
   layer.className = 'table_field'
@@ -99,19 +14,11 @@ function New_fieldContainerLayer (context) {
 }
 exports.New_fieldContainerLayer = New_fieldContainerLayer
 //
-function New_clickableLinkButtonView (
-  buttonTitle,
-  context,
-  clicked_fn,
-  optl__mouseEnter_fn,
-  optl__mouseLeave_fn
-) {
+function New_clickableLinkButtonView (buttonTitle, context, clicked_fn, optl__mouseEnter_fn, optl__mouseLeave_fn) {
   clicked_fn = clicked_fn || function () {}
   const mouseEnter_fn = optl__mouseEnter_fn || function () {}
   const mouseLeave_fn = optl__mouseLeave_fn || function () {}
-  //
-  __injectCSSRules_ifNecessary(context)
-  //
+
   const view = new View({ tag: 'a' }, context)
   const a = view.layer
   a.className = 'clickableLinkButton'
@@ -120,14 +27,12 @@ function New_clickableLinkButtonView (
   a.style.cursor = 'pointer'
   a.style.webkitUserSelect = 'none' // disable selection
   context.themeController.StyleLayer_FontAsSmallRegularMonospace(a)
-
   a.style.width = 'auto'
   a.style.display = 'block'
   a.style.clear = 'both'
-
   a.style.webkitTapHighlightColor = 'rgba(0,0,0,0)'
-
   a.style.margin = '8px 0 0 9px'
+
   a.addEventListener('mouseenter', function () {
     if (view.isEnabled !== false) {
       a.style.textDecoration = 'underline'
@@ -167,8 +72,6 @@ function New_clickableLinkButtonView (
 exports.New_clickableLinkButtonView = New_clickableLinkButtonView
 //
 function New_fieldTitle_labelLayer (labelText, context) {
-  __injectCSSRules_ifNecessary(context)
-  //
   const layer = document.createElement('span')
   layer.innerHTML = labelText
   layer.style.float = 'left'
@@ -182,8 +85,6 @@ function New_fieldTitle_labelLayer (labelText, context) {
 exports.New_fieldTitle_labelLayer = New_fieldTitle_labelLayer
 //
 function New_fieldValue_labelLayer (labelText, context) {
-  __injectCSSRules_ifNecessary(context)
-  //
   const layer = document.createElement('span')
   layer.innerHTML = labelText
   layer.className = 'field_value'
@@ -202,8 +103,6 @@ function New_fieldValue_labelLayer (labelText, context) {
 exports.New_fieldValue_labelLayer = New_fieldValue_labelLayer
 //
 function New_fieldValue_base64DataImageLayer (imageData_base64String, context) {
-  __injectCSSRules_ifNecessary(context)
-  //
   const layer = document.createElement('img')
   layer.className = 'field_value'
   layer.style.backgroundColor = 'black' // not strictly necessary… mostly for debug
@@ -217,8 +116,6 @@ function New_fieldValue_base64DataImageLayer (imageData_base64String, context) {
 exports.New_fieldValue_base64DataImageLayer = New_fieldValue_base64DataImageLayer
 //
 function New_separatorLayer (context) {
-  __injectCSSRules_ifNecessary(context)
-  //
   const layer = document.createElement('div')
   layer.style.width = '100%'
   layer.style.height = '0.5px'
@@ -229,30 +126,28 @@ function New_separatorLayer (context) {
 exports.New_separatorLayer = New_separatorLayer
 //
 function New_customButton_aLayer (context, buttonTitleText, enabled_orTrue, clicked_fn) {
-  __injectCSSRules_ifNecessary(context)
   const layer = document.createElement('a')
-  { // setup
-    layer.innerHTML = buttonTitleText
-    layer.style.marginTop = '1px' // per design
-    layer.style.float = 'right'
-    layer.style.textAlign = 'right'
-    layer.style.fontSize = '15px'
-    layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-    layer.style.fontWeight = '500'
-    layer.style.fontSize = '11px'
-    layer.style.webkitFontSmoothing = 'subpixel-antialiased'
-    layer.style.textDecoration = 'none'
-    layer.addEventListener('mouseenter', function () {
-      if (layer.Component_IsEnabled !== false) {
-        layer.style.textDecoration = 'underline'
-      } else {
-        layer.style.textDecoration = 'none'
-      }
-    })
-    layer.addEventListener('mouseleave', function () {
+  layer.innerHTML = buttonTitleText
+  layer.style.marginTop = '1px' // per design
+  layer.style.float = 'right'
+  layer.style.textAlign = 'right'
+  layer.style.fontSize = '15px'
+  layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+  layer.style.fontWeight = '500'
+  layer.style.fontSize = '11px'
+  layer.style.webkitFontSmoothing = 'subpixel-antialiased'
+  layer.style.textDecoration = 'none'
+  layer.addEventListener('mouseenter', function () {
+    if (layer.Component_IsEnabled !== false) {
+      layer.style.textDecoration = 'underline'
+    } else {
       layer.style.textDecoration = 'none'
-    })
-  }
+    }
+  })
+  layer.addEventListener('mouseleave', function () {
+    layer.style.textDecoration = 'none'
+  })
+
   // component fns
   layer.Component_SetEnabled = function (enabled) {
     layer.Component_IsEnabled = enabled
@@ -327,8 +222,6 @@ function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_o
 exports.New_copyButton_aLayer = New_copyButton_aLayer
 //
 function New_redTextButtonView (text, context) {
-  __injectCSSRules_ifNecessary(context)
-  //
   const view = new View({ tag: 'a' }, context)
   const layer = view.layer
   layer.innerHTML = text
@@ -337,26 +230,18 @@ function New_redTextButtonView (text, context) {
   layer.style.float = 'left' // but do not let it have 100% width
   layer.style.clear = 'left' // but do not let it have 100% width
   layer.style.marginLeft = '32px'
-  //
   layer.style.color = '#F97777'
   context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
-  //
   layer.style.textDecoration = 'none'
   //
-  layer.addEventListener(
-    'mouseenter',
-    function () {
-      if (view.isEnabled !== false) {
-        layer.style.textDecoration = 'underline'
-      }
+  layer.addEventListener('mouseenter', function () {
+    if (view.isEnabled !== false) {
+      layer.style.textDecoration = 'underline'
     }
-  )
-  layer.addEventListener(
-    'mouseleave',
-    function () {
-      layer.style.textDecoration = 'none'
-    }
-  )
+  })
+  layer.addEventListener('mouseleave', function () {
+    layer.style.textDecoration = 'none'
+  })
   view.SetEnabled = function (isEnabled) {
     view.isEnabled = isEnabled
     if (isEnabled) {
@@ -386,13 +271,7 @@ function New_deleteRecordNamedButtonView (humanReadable_recordName, context, opt
 }
 exports.New_deleteRecordNamedButtonView = New_deleteRecordNamedButtonView
 //
-function New_createNewRecordNamedButtonView (
-  lowercased_humanReadable_recordName,
-  context,
-  clicked_fn
-) {
-  __injectCSSRules_ifNecessary(context)
-  //
+function New_createNewRecordNamedButtonView (lowercased_humanReadable_recordName, context, clicked_fn) {
   const text = '+ CREATE NEW ' + lowercased_humanReadable_recordName
   const layer = New_clickableLinkButtonView(text, context, clicked_fn)
   return layer
@@ -418,8 +297,6 @@ exports.New_spacerLayer = New_spacerLayer
 //
 function New_inlineMessageDialogLayer (context, messageString, optl_immediatelyVisible, optl_wantsXButtonHidden) {
   const immediatelyVisible = optl_immediatelyVisible === true // These are configured to not by default be initially visible
-  //
-  __injectCSSRules_ifNecessary(context)
   const layer = document.createElement('div')
   layer.classList.add('inlineMessageDialogLayer')
   layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
@@ -481,8 +358,6 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
   optl_isTruncatedPreviewForm, // single line, … trunc, etc
   optl_isSecretData // IMPORTANT: defaults to false if undefined
 ) {
-  __injectCSSRules_ifNecessary(context)
-  //
   const isTruncatedPreviewForm = optl_isTruncatedPreviewForm == true // undefined -> false
   const isSecretData = optl_isSecretData == true // undefined -> false
   const wantsCopyButton = isSecretData == false // only allow copy if not secret
@@ -496,7 +371,7 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
   const canSupportCopyButton = wantsCopyButton
   if (canSupportCopyButton == false) {
     if (wantsCopyButton && context.isLiteApp !== true) {
-      throw 'Expected this to be lite app when unable to support copy button'
+      throw Error('Expected this to be lite app when unable to support copy button')
     }
   }
   let copy_buttonLayer
@@ -572,18 +447,14 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
 exports.New_copyable_longStringValueField_component_fieldContainerLayer = New_copyable_longStringValueField_component_fieldContainerLayer
 //
 function New_tableCell_accessoryChevronLayer (context) {
-  __injectCSSRules_ifNecessary(context)
-  //
-  const image_filename = 'list_rightside_chevron@3x.png'
   const layer = document.createElement('img')
-  layer.src = './src/assets/img/' + image_filename
+  layer.src = './src/assets/img/list_rightside_chevron@3x.png'
   layer.style.position = 'absolute'
   layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
   layer.style.width = '7px'
-  const h = 12
-  layer.style.height = `${h}px`
+  layer.style.height = `12px`
   layer.style.right = '16px'
-  layer.style.top = `calc(50% - ${h / 2}px)`
+  layer.style.top = `calc(50% - 6px)`
   return layer
 }
 exports.New_tableCell_accessoryChevronLayer = New_tableCell_accessoryChevronLayer
@@ -593,24 +464,9 @@ function New_tableCell_accessoryActivityIndicatorLayer (isOnAccentBackground) {
   layer.style.position = 'absolute'
   layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
   layer.style.width = '16px'
-  const h = 14
-  layer.style.height = `${h}px`
+  layer.style.height = `14px`
   layer.style.right = '16px'
-  layer.style.top = `calc(50% - ${h / 2}px)`
+  layer.style.top = `calc(50% - 7px)`
   return layer
 }
 exports.New_tableCell_accessoryActivityIndicatorLayer = New_tableCell_accessoryActivityIndicatorLayer
-//
-function New_tableCell_separatorLayer () {
-  const layer = document.createElement('div')
-  layer.style.background = '#413e40'
-  layer.style.position = 'absolute'
-  layer.style.bottom = '-0.5px' // instead of 0… to make sure hover effects look nicer (but it might not do much in the end)
-  layer.style.height = '1px'
-  const margin_left = 50
-  layer.style.width = `calc(100% - ${margin_left}px)`
-  layer.style.left = `${margin_left}px`
-  layer.style.visibility = 'visible' // to be configured
-  return layer
-}
-exports.New_tableCell_separatorLayer = New_tableCell_separatorLayer

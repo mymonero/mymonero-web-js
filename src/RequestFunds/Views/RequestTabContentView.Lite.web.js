@@ -21,25 +21,15 @@ class RequestTabContentView extends StackAndModalNavigationView {
   // Runtime - Accessors - Implementation of TabBarItem protocol - custom tab bar item styling
   //
   TabBarItem_layer_customStyle () {
-    return {}
+    return false
   }
 
   TabBarItem_icon_customStyle () {
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_fundsRequests@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '24px 24px'
-    }
+    return 'tabButton-fundRequest'
   }
 
   TabBarItem_icon_selected_customStyle () {
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_fundsRequests__active@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '24px 24px'
-    }
+    return 'tabButton-fundRequest-selected'
   }
 
   // interactivity

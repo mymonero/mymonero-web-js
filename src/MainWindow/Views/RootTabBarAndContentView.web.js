@@ -75,8 +75,8 @@ class RootTabBarAndContentView extends TabBarAndContentView {
         self.sendTabContentView,
         self.requestTabContentView,
         self.contactsTabContentView,
-        self.settingsTabContentView,
-        self.exchangeTabContentView
+        self.exchangeTabContentView,
+        self.settingsTabContentView
       ]
     )
   }

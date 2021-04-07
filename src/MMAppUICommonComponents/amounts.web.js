@@ -178,7 +178,9 @@ function New_AmountInputFieldPKG (
   effectiveAmountLabelLayer.style.margin = '0 0 0 8px'
   effectiveAmountLabelLayer.style.verticalAlign = 'middle'
   effectiveAmountLabelLayer.style.color = '#8D8B8D'
-  context.themeController.StyleLayer_FontAsSubMiddlingRegularMonospace(effectiveAmountLabelLayer)
+  effectiveAmountLabelLayer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+  effectiveAmountLabelLayer.style.fontSize = '12px'
+  effectiveAmountLabelLayer.style.fontWeight = 'normal'
   div.appendChild(effectiveAmountLabelLayer)
   //
   let max_buttonView

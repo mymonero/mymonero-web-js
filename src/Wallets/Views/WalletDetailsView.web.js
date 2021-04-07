@@ -8,7 +8,6 @@ const commonComponents_tables = require('../../MMAppUICommonComponents/tables.we
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_actionButtons = require('../../MMAppUICommonComponents/actionButtons.web')
 const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emptyScreens.web')
-const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
 const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const InfoDisclosingView = require('../../InfoDisclosingView/Views/InfoDisclosingView.web')
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
@@ -186,8 +185,10 @@ class WalletDetailsView extends View {
     layer.style.padding = '12px 6px 0 6px' // 0 btm b/c it already exists
     layer.style.textAlign = 'left'
     layer.style.color = '#9E9C9E'
-    self.context.themeController.StyleLayer_FontAsMiddlingRegularMonospace(layer)
-    //
+    layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+    layer.style.fontSize = '13px'
+    layer.style.fontWeight = 'normal'
+
     self.layer.appendChild(layer)
   }
 
@@ -812,8 +813,8 @@ class WalletDetailsView extends View {
           listItemLayer.style.width = '100%'
           listItemLayer.style.height = '74px'
 
-          listItemLayer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
-          listItemLayer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
+          listItemLayer.classList.add('utility')
+          listItemLayer.classList.add('hoverable-cell')
           listItemLayer.addEventListener(
             'click',
             function (e) {

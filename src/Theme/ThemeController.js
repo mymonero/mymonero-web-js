@@ -27,21 +27,6 @@ class ThemeController {
     const self = this
   }
 
-  //
-  // Imperatives - Centralizations of element styling (for, e.g. cross-platform support)
-  StyleLayer_FontAsSmallRegularSansSerif (layer) {
-    const self = this
-    layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-    layer.style.fontSize = '12px'
-    layer.style.fontWeight = '500'
-    if (self.context.ThemeController_isMobileBrowser === true) {
-      //
-    } else {
-      layer.style.webkitFontSmoothing = 'subpixel-antialiased' // for chrome browser
-      layer.style.letterSpacing = '0.5px'
-    }
-  }
-
   StyleLayer_FontAsSmallRegularMonospace (layer) {
     const self = this
     if (self.context.ThemeController_isMobileBrowser === true) {
@@ -61,20 +46,6 @@ class ThemeController {
     }
   }
 
-  StyleLayer_FontAsMiddlingRegularMonospace (layer) {
-    const self = this
-    layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
-    layer.style.fontSize = '13px'
-    layer.style.fontWeight = 'normal'
-  }
-
-  StyleLayer_FontAsSubMiddlingRegularMonospace (layer) {
-    const self = this
-    layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
-    layer.style.fontSize = '12px'
-    layer.style.fontWeight = 'normal'
-  }
-
   StyleLayer_FontAsMessageBearingSmallLightMonospace (layer) {
     const self = this
     layer.style.fontSize = '11px' // we need this to visually stand out slightly more given how it's used
@@ -84,20 +55,6 @@ class ThemeController {
     } else {
       layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
       layer.style.fontWeight = '100' // instead of 500, cause this color, white, is rendered strong
-    }
-  }
-
-  StyleLayer_FontAsSmallPillLightMonospace (layer) {
-    const self = this
-    if (self.context.ThemeController_isMobileBrowser === true) {
-      layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
-      layer.style.fontSize = '11px'
-      layer.style.fontWeight = 'lighter'
-    } else {
-      layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
-      layer.style.fontSize = '10px'
-      layer.style.letterSpacing = '0.8px'
-      layer.style.fontWeight = '100'
     }
   }
 

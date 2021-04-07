@@ -20,28 +20,17 @@ class ContactsTabContentView extends StackAndModalNavigationView {
   // Runtime - Accessors - Implementation of TabBarItem protocol - custom tab bar item styling
   //
   TabBarItem_layer_customStyle () {
-    const self = this
-    return {}
+    return false
   }
 
   TabBarItem_icon_customStyle () {
     const self = this
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_contacts@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '24px 23px'
-    }
+    return 'tabButton-contacts'
   }
 
   TabBarItem_icon_selected_customStyle () {
     const self = this
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_contacts__active@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '24px 23px'
-    }
+    return 'tabButton-contacts-selected'
   }
 
   // interactivity

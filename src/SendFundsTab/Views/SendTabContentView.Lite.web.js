@@ -28,28 +28,15 @@ class SendTabContentView extends StackAndModalNavigationView {
   // Runtime - Accessors - Implementation of TabBarItem protocol - custom tab bar item styling
   //
   TabBarItem_layer_customStyle () {
-    const self = this
-    return {}
+    return false
   }
 
   TabBarItem_icon_customStyle () {
-    const self = this
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_sendFunds@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '24px 25px'
-    }
+    return 'tabButton-send'
   }
 
   TabBarItem_icon_selected_customStyle () {
-    const self = this
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_sendFunds__active@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '24px 25px'
-    }
+    return 'tabButton-send-selected'
   }
 
   // interactivity

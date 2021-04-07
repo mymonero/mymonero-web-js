@@ -372,9 +372,9 @@ function _new_pickedContactLayer (context, contact, didClickCloseBtn_fn) {
     if (context.Emoji_renderWithNativeEmoji !== true) {
       contentLayer.style.left = '0'
       contentLayer.style.height = '31px'
-      contentLayer.style.padding = `8px ${8 + 30}px 5px 10px`
+      contentLayer.style.padding = `8px 38px 5px 10px`
     } else {
-      contentLayer.style.padding = `3px ${8 + 30}px 5px 10px`
+      contentLayer.style.padding = `3px 38px 5px 10px`
     }
     contentLayer.style.whiteSpace = 'nowrap'
     contentLayer.style.overflow = 'hidden'
@@ -388,11 +388,9 @@ function _new_pickedContactLayer (context, contact, didClickCloseBtn_fn) {
     contentLayer.style.borderRadius = '3px'
     contentLayer.style.display = 'inline-block'
     contentLayer.style.cursor = 'default'
-
     contentLayer.style.fontSize = '13px'
     contentLayer.style.fontWeight = '300'
     contentLayer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
-
     contentLayer.style.color = '#FCFBFC'
     // contentLayer.style.webkitFontSmoothing = "subpixel-antialiased"
     const xButtonLayer = document.createElement('a')

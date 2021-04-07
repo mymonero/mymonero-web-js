@@ -2,7 +2,6 @@
 
 const View = require('../Views/View.web')
 const BarButtonBaseView = require('../StackNavigation/Views/BarButtonBaseView.web')
-const commonComponents_hoverableCells = require('./hoverableCells.web')
 
 function _New_ButtonBase_View (context, optl_didConfigureInteractivity_fn) {
   const view = new BarButtonBaseView({
@@ -25,7 +24,7 @@ function _New_ButtonBase_View (context, optl_didConfigureInteractivity_fn) {
   layer.style.padding = '0 8px'
   //
   view.SetEnabled(true)
-  layer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
+  layer.classList.add('hoverable-cell')
   //
   return view
 }
@@ -41,7 +40,7 @@ function New_GreyButtonView (context) {
     }
   )
   const layer = view.layer
-  layer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
+  layer.classList.add('utility')
   if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
     layer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
   } else { // avoiding shadow
@@ -50,7 +49,7 @@ function New_GreyButtonView (context) {
   layer.style.backgroundColor = '#383638'
   layer.style.color = '#FCFBFC'
   context.themeController.StyleLayer_FontAsMiddlingSemiboldSansSerif(layer)
-  layer.classList.add(commonComponents_hoverableCells.ClassFor_Disableable()) // allowing this to be auto-styled as disabled
+  layer.classList.add('disableable') // allowing this to be auto-styled as disabled
   return view
 }
 exports.New_GreyButtonView = New_GreyButtonView
@@ -80,7 +79,7 @@ function New_BlueButtonView (context) {
     }
   )
   const layer = view.layer
-  layer.classList.add(commonComponents_hoverableCells.ClassFor_BlueCell())
+  layer.classList.add('action')
 
   layer.style.webkitFontSmoothing = 'subpixel-antialiased'
   layer.style.fontSize = '12px'

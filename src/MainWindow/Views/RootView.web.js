@@ -3,16 +3,13 @@
 const View = require('../../Views/View.web')
 const RootFooterView = require('./RootFooterView.web')
 const ConnectivityMessageBarView = require('./ConnectivityMessageBarView.web')
-const PlatformSpecificRootTabBarAndContentView = require('./RootTabBarAndContentView.web')
-const commonComponents_assetPreloader = require('../../MMAppUICommonComponents/assetPreloader')
+const RootTabBarAndContentView = require('./RootTabBarAndContentView.web')
 
 class RootView extends View {
   constructor (options, context) {
     super(options, context)
-    //
-    const self = this
 
-    commonComponents_assetPreloader.PreLoadImages(self.context)
+    const self = this
     self.setup_views()
   }
 
@@ -20,15 +17,18 @@ class RootView extends View {
     const self = this
     //
     const layer = self.layer
-    layer.style.background = '#272527'
-    layer.style.position = 'absolute'
-    layer.style.width = '100%'
-    layer.style.height = '100%'
-    layer.style.left = '0px'
-    layer.style.top = '0px'
-    layer.style.overflow = 'hidden' // prevent scroll bar
+    layer.classList.add('main-body')
     //
-    self.setup_tabBarAndContentView()
+    const tabBarViewAndContentView = new RootTabBarAndContentView({}, self.context)
+    self.tabBarViewAndContentView = tabBarViewAndContentView
+    self.addSubview(tabBarViewAndContentView)
+
+    const tabBarViewAndContentViewLayer = self.tabBarViewAndContentView.layer
+    tabBarViewAndContentViewLayer.style.height = 'calc(100% - 32px)'
+
+    const footerView = new RootFooterView({}, self.context)
+    self.footerView = footerView
+    self.addSubview(footerView)
 
     const view = new ConnectivityMessageBarView({}, self.context)
     self.connectivityMessageBarView = view
@@ -40,20 +40,6 @@ class RootView extends View {
         e.preventDefault()
       }
     }
-  }
-
-  setup_tabBarAndContentView () {
-    const self = this
-    const tabBarViewAndContentView = new PlatformSpecificRootTabBarAndContentView({}, self.context)
-    self.tabBarViewAndContentView = tabBarViewAndContentView
-    self.addSubview(tabBarViewAndContentView)
-
-    const layer = self.tabBarViewAndContentView.layer
-    layer.style.height = 'calc(100% - 32px)'
-
-    const footerView = new RootFooterView({}, self.context)
-    self.footerView = footerView
-    self.addSubview(footerView)
   }
 }
 
