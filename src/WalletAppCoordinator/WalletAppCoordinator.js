@@ -10,10 +10,8 @@ class WalletAppCoordinator extends EventEmitter {
   constructor (options, context) {
     super() // must call super before we can access `this`
     const self = this
-    {
-      self.options = options
-      self.context = context
-    }
+    self.options = options
+    self.context = context
   }
 
   //

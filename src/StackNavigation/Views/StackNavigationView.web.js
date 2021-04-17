@@ -337,7 +337,7 @@ class StackNavigationView extends View {
     const indexOf_old_topStackView_inSubviews = subviewUUIDs.indexOf(old_topStackView.View_UUID())
     if (indexOf_old_topStackView_inSubviews === -1) {
       __trampolineFor_transitionEnded() // must unlock this function; calls 'fn' for us
-      throw `Asked to PopToView ${to_stackView.View_UUID()} but old_topStackView UUID not found in UUIDs of ${self.stackViewStageView.Description()} subviews.`
+      throw Error(`Asked to PopToView ${to_stackView.View_UUID()} but old_topStackView UUID not found in UUIDs of ${self.stackViewStageView.Description()} subviews.`)
     }
     { // make to_stackView the new top view
       to_stackView.navigationController = self
@@ -363,10 +363,7 @@ class StackNavigationView extends View {
         to_stackView.layer.style.position = 'absolute'
         to_stackView.layer.style.zIndex = '0' // because we want to make sure it goes under the current top stack view
       }
-      self.stackViewStageView.insertSubview(
-        to_stackView,
-        indexOf_old_topStackView_inSubviews
-      )
+      self.stackViewStageView.insertSubview(to_stackView, indexOf_old_topStackView_inSubviews)
       if (isAnimated === false) { // no need to animate anything - straight to end state
         to_stackView.layer.style.left = '0' // and we must reset this in case it was self._styleLeftForUnderlyingViewAnimation()
         _afterHavingFullyPresentedNewTopView_removeOldTopStackView()
@@ -378,8 +375,7 @@ class StackNavigationView extends View {
         setTimeout(
           function () { // wait til not blocked or we get choppiness
             // I. Kick off animating underlying (to/new) view back onto screen
-            Animate(
-              to_stackView.layer,
+            Animate(to_stackView.layer,
               {
                 left: '0px'
               },
@@ -388,8 +384,7 @@ class StackNavigationView extends View {
                 easing: self._animation_navigationPush_easing()
               }
             )
-            Animate(
-              old_topStackView.layer,
+            Animate(old_topStackView.layer,
               {
                 left: `${self.stackViewStageView.layer.offsetWidth}px`
               },
@@ -426,7 +421,7 @@ class StackNavigationView extends View {
       self.stackViews = stackViews_afterPop
       if (to_stackView.IsEqualTo(self.stackViews[self.stackViews.length - 1]) === false) {
         // we don't need to call __trampolineFor_transitionEnded here since we would have already triggered it in above isAnimated == false check branch
-        throw `Popped to to_stackView ${to_stackView.Description()} at idx ${indexOf_to_stackView} but it was not the last of self.stackViews after pop all views until that idx.`
+        throw Error(`Popped to to_stackView ${to_stackView.Description()} at idx ${indexOf_to_stackView} but it was not the last of self.stackViews after pop all views until that idx.`)
       }
     }
   }
