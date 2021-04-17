@@ -23,11 +23,6 @@ window.BootApp = function () { // encased in a function to prevent scope being l
   const isTouchDevice = ('ontouchstart' in document.documentElement)
   const isMobile = isTouchDevice // an approximation for 'mobile'
 
-  const setup_utils = require('./MMAppRendererSetup/renderer_setup.browser')
-  setup_utils({
-    appVersion: app.getVersion(),
-    reporting_processName: 'BrowserWindow'
-  })
   // context
   require('@mymonero/mymonero-app-bridge')({}).then(function (coreBridge_instance) {
     const context = require('./MainWindow/Models/index_context.browser').NewHydratedContext({
