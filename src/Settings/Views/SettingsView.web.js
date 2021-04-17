@@ -121,8 +121,8 @@ class SettingsView extends View {
           )
         }
       }, self.context)
-      view.layer.style.margin = `0 5px`
-      view.layer.style.width = `calc(100% - 10px)`
+      view.layer.style.margin = '0 5px'
+      view.layer.style.width = 'calc(100% - 10px)'
       self.appTimeoutRangeInputView = view // NOTE: This must be torn down manually; see TearDown()
       div.appendChild(view.layer)
       //

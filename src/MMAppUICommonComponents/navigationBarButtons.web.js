@@ -71,7 +71,6 @@ function New_BlueButtonView (context) {
         layer.style.backgroundColor = '#383638'
         layer.style.boxShadow = 'none'
         layer.style.color = '#6B696B'
-        //
         layer.style.fontWeight = '600'
       }
     }

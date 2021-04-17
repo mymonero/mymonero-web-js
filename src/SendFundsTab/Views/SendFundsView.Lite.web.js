@@ -446,12 +446,12 @@ class SendFundsView extends View {
       {
         const defaultValue = monero_sendingFunds_utils.default_priority()
         const values =
-				[
-				  1,
-				  2,
-				  3,
-				  4
-				]
+        [
+          1,
+          2,
+          3,
+          4
+        ]
         const descriptions = ['Low', 'Medium', 'High', 'Very High']
         const numberOf_values = values.length
         for (let i = 0; i < numberOf_values; i++) {
@@ -621,13 +621,11 @@ class SendFundsView extends View {
       div.style.height = 'auto'
       div.style.textAlign = 'center'
       div.style.marginTop = '24px'
-      //
       div.style.fontSize = '13px'
       div.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
       div.style.color = '#9E9C9E'
       div.style.fontWeight = '300'
       div.style.webkitFontSmoothing = 'subpixel-antialiased'
-      //
       div.innerHTML = 'Drag and drop a<br/>Monero Request Code '
       self.qrCodeInputs_contentView.layer.appendChild(div)
     }
@@ -729,7 +727,7 @@ class SendFundsView extends View {
     { // EventName_willDeconstructBootedStateAndClearPassword
       const emitter = self.context.passwordController
       if (self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn !== null && typeof self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn !== 'undefined') {
-        throw 'self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn not nil in ' + self.constructor.name
+        throw Error('self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn not nil in ' + self.constructor.name)
       }
       self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn = function () {
         self._passwordController_EventName_willDeconstructBootedStateAndClearPassword()
@@ -756,9 +754,7 @@ class SendFundsView extends View {
       self.contactOrAddressPickerLayer.Component_TearDown()
     }
     self.tearDownAnySpawnedReferencedPresentedViews()
-    {
-      self.stopObserving()
-    }
+    self.stopObserving()
     super.TearDown()
   }
 
@@ -786,10 +782,8 @@ class SendFundsView extends View {
 
   stopObserving () {
     const self = this
-    {
-      self.context.passwordController.RemoveRegistrantForDeleteEverything(self.registrantForDeleteEverything_token)
-      self.registrantForDeleteEverything_token = null
-    }
+    self.context.passwordController.RemoveRegistrantForDeleteEverything(self.registrantForDeleteEverything_token)
+    self.registrantForDeleteEverything_token = null
     {
       const emitter = self.context.walletAppCoordinator
       emitter.removeListener(
@@ -844,18 +838,13 @@ class SendFundsView extends View {
     self.rightBarButtonView = view
     const layer = view.layer
     layer.innerHTML = 'Send'
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        {
-          if (self.isSubmitButtonDisabled !== true) { // button is enabled
-            self._tryToGenerateSend()
-          }
-        }
-        return false
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      if (self.isSubmitButtonDisabled !== true) { // button is enabled
+        self._tryToGenerateSend()
       }
-    )
+      return false
+    })
     return view
   }
 
@@ -983,22 +972,21 @@ class SendFundsView extends View {
     // compute new state value:
     let isSubmittable = self.isFormDisabled != true && self.isResolvingSendTarget != true
     const raw_amount_String = self.amountInputLayer.value
-    {
-      if (typeof raw_amount_String !== 'undefined' && raw_amount_String) {
-        const selected_ccySymbol = self.ccySelectLayer.Component_selected_ccySymbol()
-        const rawInput_amount_Number = +raw_amount_String // turns string into JS Number
-        if (!isNaN(rawInput_amount_Number)) {
-          const submittableMoneroAmountDouble_orNull = Currencies.submittableMoneroAmountDouble_orNull(
-            self.context.CcyConversionRates_Controller_shared,
-            selected_ccySymbol,
-            rawInput_amount_Number
-          )
-          if (submittableMoneroAmountDouble_orNull == null) { // amt input exists but no converted amt found
-            if (selected_ccySymbol == Currencies.ccySymbolsByCcy.XMR) {
-              throw 'null submittableMoneroAmountDouble_orNull while selected_ccySymbol=.XMR'
-            }
-            isSubmittable = false // because we must be still loading the rate - so we want to explicitly /disable/ submission
+
+    if (typeof raw_amount_String !== 'undefined' && raw_amount_String) {
+      const selected_ccySymbol = self.ccySelectLayer.Component_selected_ccySymbol()
+      const rawInput_amount_Number = +raw_amount_String // turns string into JS Number
+      if (!isNaN(rawInput_amount_Number)) {
+        const submittableMoneroAmountDouble_orNull = Currencies.submittableMoneroAmountDouble_orNull(
+          self.context.CcyConversionRates_Controller_shared,
+          selected_ccySymbol,
+          rawInput_amount_Number
+        )
+        if (submittableMoneroAmountDouble_orNull == null) { // amt input exists but no converted amt found
+          if (selected_ccySymbol == Currencies.ccySymbolsByCcy.XMR) {
+            throw Error('null submittableMoneroAmountDouble_orNull while selected_ccySymbol=.XMR')
           }
+          isSubmittable = false // because we must be still loading the rate - so we want to explicitly /disable/ submission
         }
       }
     }
@@ -1039,10 +1027,7 @@ class SendFundsView extends View {
     function __hideEffectiveAmountUI () {
       self.effectiveAmountLabelLayer.style.display = 'none'
     }
-    function __setTextOnAmountUI (
-      title,
-      shouldHide_tooltipButton
-    ) {
+    function __setTextOnAmountUI (title, shouldHide_tooltipButton) {
       self.effectiveAmountLabelLayer.innerHTML = title
       if (shouldHide_tooltipButton != true) {
         // NOTE: shouldn't need to remove self.effectiveAmountLabel_tooltipLayer from its parentNode b/c we're rewriting innerHTML each time - DOM will handle
@@ -1073,7 +1058,7 @@ class SendFundsView extends View {
     const selected_ccySymbol = self.ccySelectLayer.Component_selected_ccySymbol()
     const displayCcySymbol = self.context.settingsController.displayCcySymbol
     if (displayCcySymbol == null) {
-      throw 'unexpectedly null displayCcySymbol'
+      throw Error('unexpectedly null displayCcySymbol')
     }
     const XMR = Currencies.ccySymbolsByCcy.XMR
     if (selected_ccySymbol == XMR && displayCcySymbol == XMR) { // special case - no label necessary
@@ -1089,7 +1074,7 @@ class SendFundsView extends View {
     if (xmrAmountDouble_orNull == null) {
       // but not empty … should have an amount… must be a non-XMR currency
       if (selected_ccySymbol == XMR) {
-        throw 'Unexpected selected_ccySymbol=.XMR'
+        throw Error('Unexpected selected_ccySymbol=.XMR')
       }
       __convenience_setLoadingTextAndHideTooltip()
       return
@@ -1098,7 +1083,7 @@ class SendFundsView extends View {
     let finalizable_text
     if (selected_ccySymbol == XMR) {
       if (displayCcySymbol == XMR) {
-        throw 'Unexpected displayCurrency=.XMR'
+        throw Error('Unexpected displayCurrency=.XMR')
       }
       const displayCurrencyAmountDouble_orNull = Currencies.displayUnitsRounded_amountInCurrency(
         self.context.CcyConversionRates_Controller_shared,
@@ -1122,10 +1107,7 @@ class SendFundsView extends View {
       finalizable_text = `= ${formatted_moneroAmount} ${Currencies.ccySymbolsByCcy.XMR}`
     }
     const final_text = finalizable_text
-    __setTextOnAmountUI(
-      final_text,
-      false // shouldHide_tooltipButton
-    )
+    __setTextOnAmountUI(final_text, false)
   }
 
   //
@@ -1137,7 +1119,7 @@ class SendFundsView extends View {
   _givenBootedSettingsController_setCcySelectLayer_initialValue () {
     const self = this
     if (self.context.settingsController.hasBooted != true) {
-      throw '_givenBootedSettingsController_setCcySelectLayer_initialValue called but !self.context.settingsController.hasBooted'
+      throw Error('_givenBootedSettingsController_setCcySelectLayer_initialValue called but !self.context.settingsController.hasBooted')
     }
     const amountCcy = self.context.settingsController.displayCcySymbol || 'XMR'
     self.ccySelectLayer.value = amountCcy
@@ -1146,31 +1128,23 @@ class SendFundsView extends View {
   _clearForm () {
     const self = this
     self._dismissValidationMessageLayer()
-    {
-      self.amountInputLayer.value = ''
-      self._givenBootedSettingsController_setCcySelectLayer_initialValue()
-      self.max_buttonView.setToggledOn(false) // must specifically un-set if set
-      self.set_effectiveAmountLabelLayer_needsUpdate() // just in case - as well as we must update or clear the MAX button toggle state and visibility
+    self.amountInputLayer.value = ''
+    self._givenBootedSettingsController_setCcySelectLayer_initialValue()
+    self.max_buttonView.setToggledOn(false) // must specifically un-set if set
+    self.set_effectiveAmountLabelLayer_needsUpdate() // just in case - as well as we must update or clear the MAX button toggle state and visibility
+    if (self.pickedContact && typeof self.pickedContact !== 'undefined') {
+      self.contactOrAddressPickerLayer.ContactPicker_unpickExistingContact_andRedisplayPickInput(
+        true // true, do not focus input
+      )
+      self.pickedContact = null // jic
     }
-    {
-      if (self.pickedContact && typeof self.pickedContact !== 'undefined') {
-        self.contactOrAddressPickerLayer.ContactPicker_unpickExistingContact_andRedisplayPickInput(
-          true // true, do not focus input
-        )
-        self.pickedContact = null // jic
-      }
-      self.contactOrAddressPickerLayer.ContactPicker_inputLayer.value = ''
-    }
-    {
-      self._hideResolvedAddress()
-      self._hideResolvedPaymentID()
-    }
-    {
-      self.manualPaymentIDInputLayer.value = ''
-      self.manualPaymentIDInputLayer_containerLayer.style.display = 'none'
-      //
-      self.addPaymentIDButtonView.layer.style.display = 'block'
-    }
+    self.contactOrAddressPickerLayer.ContactPicker_inputLayer.value = ''
+    self._hideResolvedAddress()
+    self._hideResolvedPaymentID()
+    self.manualPaymentIDInputLayer.value = ''
+    self.manualPaymentIDInputLayer_containerLayer.style.display = 'none'
+    //
+    self.addPaymentIDButtonView.layer.style.display = 'block'
     {
       const sel = self.prioritySelectLayer
       const defaultVal = monero_sendingFunds_utils.default_priority()
@@ -1219,10 +1193,10 @@ class SendFundsView extends View {
   _displayResolvedAddress (address) {
     const self = this
     if (!address) {
-      throw 'nil address passed to _displayResolvedAddress'
+      throw Error('nil address passed to _displayResolvedAddress')
     }
     if (typeof self.resolvedAddress_containerLayer === 'undefined' || !self.resolvedAddress_containerLayer) {
-      throw '_displayResolvedAddress expects a non-nil self.resolvedAddress_containerLayer'
+      throw Error('_displayResolvedAddress expects a non-nil self.resolvedAddress_containerLayer')
     }
     self.resolvedAddress_valueLayer.innerHTML = address
     self.resolvedAddress_containerLayer.style.display = 'block'
@@ -1238,10 +1212,10 @@ class SendFundsView extends View {
   _displayResolvedPaymentID (payment_id) {
     const self = this
     if (!payment_id) {
-      throw 'nil payment_id passed to _displayResolvedPaymentID'
+      throw Error('nil payment_id passed to _displayResolvedPaymentID')
     }
     if (typeof self.resolvedPaymentID_containerLayer === 'undefined' || !self.resolvedPaymentID_containerLayer) {
-      throw '_displayResolvedPaymentID expects a non-nil self.resolvedPaymentID_containerLayer'
+      throw Error('_displayResolvedPaymentID expects a non-nil self.resolvedPaymentID_containerLayer')
     }
     self.resolvedPaymentID_valueLayer.innerHTML = payment_id
     self.resolvedPaymentID_containerLayer.style.display = 'block'
@@ -1352,7 +1326,7 @@ class SendFundsView extends View {
         rawInput_amount_Number
       )
       if (submittableMoneroAmountDouble_orNull == null) {
-        throw 'submittableMoneroAmountDouble unexpectedly null while sending - button should be disabled'
+        throw Error('submittableMoneroAmountDouble unexpectedly null while sending - button should be disabled')
       }
       const submittableMoneroAmountDouble = submittableMoneroAmountDouble_orNull
       if (submittableMoneroAmountDouble <= 0) { // check this /after/ conversion to also check ->0 converted values
@@ -1382,7 +1356,7 @@ class SendFundsView extends View {
 			manuallyEnteredPaymentID_fieldIsVisible &&
 			!resolvedPaymentID_fieldIsVisible // but not if we have a resolved one!
     if (canUseManualPaymentID && hasPickedAContact) {
-      throw "canUseManualPaymentID shouldn't be true at same time as hasPickedAContact"
+      throw Error("canUseManualPaymentID shouldn't be true at same time as hasPickedAContact")
       // NOTE: This will also be true even if we are using the payment ID from a
       // Funds Request QR code / URI because we set the request URI as a 'resolved' /
       // "detected" payment id. So the `hasPickedAContact` usage above yields slightly
@@ -1535,10 +1509,7 @@ class SendFundsView extends View {
   //
   // Runtime - Imperatives - Navigation
   //
-  pushDetailsViewFor_transaction (
-    sentFrom_wallet,
-    transaction
-  ) {
+  pushDetailsViewFor_transaction (sentFrom_wallet, transaction) {
     const self = this
     const _cmd = 'pushDetailsViewFor_transaction'
     if (self.current_transactionDetailsView !== null) {
@@ -1548,22 +1519,22 @@ class SendFundsView extends View {
     }
     { // validate wallet and tx
       if (typeof sentFrom_wallet === 'undefined' || sentFrom_wallet === null) {
-        throw self.constructor.name + ' requires self.wallet to ' + _cmd
+        throw Error(self.constructor.name + ' requires self.wallet to ' + _cmd)
       }
       if (typeof transaction === 'undefined' || transaction === null) {
-        throw self.constructor.name + ' requires transaction to ' + _cmd
+        throw Error(self.constructor.name + ' requires transaction to ' + _cmd)
       }
     }
     const navigationController = self.navigationController
     if (typeof navigationController === 'undefined' || navigationController === null) {
-      throw self.constructor.name + ' requires navigationController to ' + _cmd
+      throw Error(self.constructor.name + ' requires navigationController to ' + _cmd)
     }
     {
       const options =
-			{
-			  wallet: sentFrom_wallet,
-			  transaction: transaction
-			}
+      {
+        wallet: sentFrom_wallet,
+        transaction: transaction
+      }
       const view = new JustSentTransactionDetailsView(options, self.context) // note JustSentTransactionDetailsView
       navigationController.PushView(
         view,
@@ -1583,14 +1554,14 @@ class SendFundsView extends View {
   viewWillAppear () {
     const self = this
     super.viewWillAppear()
-    {
-      if (typeof self.navigationController !== 'undefined' && self.navigationController !== null) {
-        self.layer.style.paddingTop = `${self.navigationController.NavigationBarHeight()}px`
-        //
-        self.qrCodeInputs_contentView.layer.style.height = `calc(100% - ${15 * 2 + self.navigationController.NavigationBarHeight() + 2}px)` // +2 for border
-        self.qrCodeInputs_contentView.layer.style.marginTop = `${15 + self.navigationController.NavigationBarHeight()}px`
-      }
+
+    if (typeof self.navigationController !== 'undefined' && self.navigationController !== null) {
+      self.layer.style.paddingTop = `${self.navigationController.NavigationBarHeight()}px`
+      //
+      self.qrCodeInputs_contentView.layer.style.height = `calc(100% - ${15 * 2 + self.navigationController.NavigationBarHeight() + 2}px)` // +2 for border
+      self.qrCodeInputs_contentView.layer.style.marginTop = `${15 + self.navigationController.NavigationBarHeight()}px`
     }
+
     self.set_isSubmittable_needsUpdate() // start off disabled
   }
 

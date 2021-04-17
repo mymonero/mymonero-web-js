@@ -24,22 +24,16 @@ function New_contactPickerLayer_Lite (
   { // observation of inputLayer
     let isFocused = false
     const hideResultsOnBlur_timeout = null
-    inputLayer.addEventListener(
-      'blur',
-      function (event) {
-        isFocused = false
+    inputLayer.addEventListener('blur', function (event) {
+      isFocused = false
+    })
+    inputLayer.addEventListener('focus', function (event) {
+      isFocused = true
+
+      if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
+        inputLayer.Component_ScrollIntoViewInFormContainerParent()
       }
-    )
-    inputLayer.addEventListener(
-      'focus',
-      function (event) {
-        isFocused = true
-        //
-        if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
-          inputLayer.Component_ScrollIntoViewInFormContainerParent()
-        }
-      }
-    )
+    })
     inputLayer.Component_ScrollIntoViewInFormContainerParent = function () { // this could also be called on window resize
       const this_layer = this
       commonComponents_forms._shared_scrollConformingElementIntoView(this_layer)

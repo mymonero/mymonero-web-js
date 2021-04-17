@@ -1,14 +1,6 @@
 'use strict'
 
-function ValidatedOARecordsFromTXTRecordsWithOpenAliasPrefix (
-  domain,
-  records,
-  dnssec_used,
-  secured,
-  dnssec_fail_reason,
-  openAliasPrefix
-) // throws; returns validatedOARecords
-{
+function ValidatedOARecordsFromTXTRecordsWithOpenAliasPrefix (domain, records, dnssec_used, secured, dnssec_fail_reason, openAliasPrefix) {
   const oaRecords = []
   if (dnssec_used) {
     if (secured) {
@@ -42,13 +34,8 @@ function ValidatedOARecordsFromTXTRecordsWithOpenAliasPrefix (
   return validated_oaRecords
 }
 exports.ValidatedOARecordsFromTXTRecordsWithOpenAliasPrefix = ValidatedOARecordsFromTXTRecordsWithOpenAliasPrefix
-//
-//
-function New_ParsedDescriptionFromOpenAliasRecordWithOpenAliasPrefix (
-  record,
-  openAliasPrefix
-) // throws on validation error
-{
+
+function New_ParsedDescriptionFromOpenAliasRecordWithOpenAliasPrefix (record, openAliasPrefix) {
   const parsedDescription = {}
   if (DoesRecordHaveValidOpenAliasPrefix(record, openAliasPrefix) == false) {
     throw Error('Invalid OpenAlias prefix')
@@ -74,12 +61,8 @@ function New_ParsedDescriptionFromOpenAliasRecordWithOpenAliasPrefix (
   return parsedDescription
 }
 exports.New_ParsedDescriptionFromOpenAliasRecordWithOpenAliasPrefix = New_ParsedDescriptionFromOpenAliasRecordWithOpenAliasPrefix
-//
-//
-function DoesRecordHaveValidOpenAliasPrefix (
-  record,
-  openAliasPrefix
-) {
+
+function DoesRecordHaveValidOpenAliasPrefix (record, openAliasPrefix) {
   if (record.slice(0, 4 + openAliasPrefix.length + 1) !== 'oa1:' + openAliasPrefix + ' ') {
     return false
   }

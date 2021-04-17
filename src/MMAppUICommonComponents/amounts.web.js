@@ -169,10 +169,7 @@ function New_AmountInputFieldPKG (
   ccySelectLayer.Component_setTop() // IMPORTANT: this must be called on setup
   //
   //
-  const effectiveAmountLabelLayer = commonComponents_forms.New_fieldTitle_labelLayer(
-    '',
-    context
-  )
+  const effectiveAmountLabelLayer = commonComponents_forms.New_fieldTitle_labelLayer('', context)
   effectiveAmountLabelLayer.style.display = 'inline-block'
   effectiveAmountLabelLayer.style.margin = '0 0 0 8px'
   effectiveAmountLabelLayer.style.verticalAlign = 'middle'
@@ -237,14 +234,14 @@ function New_AmountInputFieldPKG (
     ) {
       if (isMAXToggledOn) {
         if (toToggledOnText_orNullIfNotToggled == null) {
-          throw 'Illegal isMAXToggledOn && !toToggledOnText_orNullIfNotToggled'
+          throw Error('Illegal isMAXToggledOn && !toToggledOnText_orNullIfNotToggled')
         }
         const toToggledOnText = toToggledOnText_orNullIfNotToggled
         valueLayer.classList.add('placeholderAsValue')
         valueLayer.placeholder = toToggledOnText
       } else {
         if (toToggledOnText_orNullIfNotToggled != null) {
-          throw 'Illegal !isMAXToggledOn && toToggledOnText_orNullIfNotToggled'
+          throw Error('Illegal !isMAXToggledOn && toToggledOnText_orNullIfNotToggled')
         }
         valueLayer.classList.remove('placeholderAsValue')
         valueLayer.placeholder = valueLayer_amountPlaceholderText
