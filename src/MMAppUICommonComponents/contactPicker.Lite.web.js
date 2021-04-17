@@ -62,35 +62,26 @@ function New_contactPickerLayer_Lite (
         // _searchForAndDisplaySearchResults() // there isn't this call in .Lite.
       }, 350)
     }
-    inputLayer.addEventListener(
-      'input',
-      function () {
-        _inputLayer_receivedInputOrChanged(undefined) // this might seem redundant and/or to race with "keyup" but it doesn't affect _inputLayer_receivedInputOrChanged
+    inputLayer.addEventListener('input', function () {
+      _inputLayer_receivedInputOrChanged(undefined) // this might seem redundant and/or to race with "keyup" but it doesn't affect _inputLayer_receivedInputOrChanged
+    })
+    inputLayer.addEventListener('change', function () {
+      _inputLayer_receivedInputOrChanged(undefined) // this might seem redundant and/or to race with "keyup" but it doesn't affect _inputLayer_receivedInputOrChanged
+    })
+    inputLayer.addEventListener('keyup', function (event) {
+      const code = event.code
+      const wasEscapeKey = code == 'Escape' || event.keyCode == 27 /* should we use keyCode? */
+      if (wasEscapeKey) { // toggle search results visibility
+        // TODO: clear input? esp if esc hit twice?
+        return // think it's ok to just return here and not mess with the typingDebounceTimeout
       }
-    )
-    inputLayer.addEventListener(
-      'change', // try to catch paste on as many platforms as possible
-      function () {
-        _inputLayer_receivedInputOrChanged(undefined) // this might seem redundant and/or to race with "keyup" but it doesn't affect _inputLayer_receivedInputOrChanged
+      const wasOnlyModifierKey = code.indexOf('Meta') != -1 || code.indexOf('Alt') != -1 || code.indexOf('Control') != -1
+      if (wasOnlyModifierKey) {
+        console.log('Input was only modifier key. Ignoring.')
+        return
       }
-    )
-    inputLayer.addEventListener(
-      'keyup',
-      function (event) {
-        const code = event.code
-        const wasEscapeKey = code == 'Escape' || event.keyCode == 27 /* should we use keyCode? */
-        if (wasEscapeKey) { // toggle search results visibility
-          // TODO: clear input? esp if esc hit twice?
-          return // think it's ok to just return here and not mess with the typingDebounceTimeout
-        }
-        const wasOnlyModifierKey = code.indexOf('Meta') != -1 || code.indexOf('Alt') != -1 || code.indexOf('Control') != -1
-        if (wasOnlyModifierKey) {
-          console.log('Input was only modifier key. Ignoring.')
-          return
-        }
-        _inputLayer_receivedInputOrChanged(event)
-      }
-    )
+      _inputLayer_receivedInputOrChanged(event)
+    })
   }
   containerLayer.ContactPicker_unpickExistingContact_andRedisplayPickInput = function (andDoNotFocus) { /* noOp */ } // Present here b/c we must maintain the same interface!!
   //

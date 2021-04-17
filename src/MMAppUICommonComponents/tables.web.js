@@ -166,14 +166,11 @@ function New_customButton_aLayer (context, buttonTitleText, enabled_orTrue, clic
   // initial config
   layer.Component_SetEnabled(enabled_orTrue)
   // start observing
-  layer.addEventListener(
-    'click',
-    function (e) {
-      if (layer.Component_IsEnabled !== false) {
-        clicked_fn() // just going to assume it exists or code fault
-      }
+  layer.addEventListener('click', function (e) {
+    if (layer.Component_IsEnabled !== false) {
+      clicked_fn() // just going to assume it exists or code fault
     }
-  )
+  })
   return layer
 }
 exports.New_customButton_aLayer = New_customButton_aLayer
@@ -192,7 +189,7 @@ function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_o
       } else if (typeof runtime_valueToCopy === 'object') {
         pasteboard.CopyValuesByType(runtime_valueToCopy)
       } else {
-        throw `unrecognized typeof value to copy ${typeof runtime_valueToCopy} in New_copyButton_aLayer`
+        throw Error(`unrecognized typeof value to copy ${typeof runtime_valueToCopy} in New_copyButton_aLayer`)
       }
     }
   )

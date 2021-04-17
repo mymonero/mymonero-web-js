@@ -7,20 +7,16 @@ class ListView extends View {
   constructor (options, context) {
     super(options, context)
     const self = this
-    {
-      self.listController = self.options.listController
-      if (!self.listController || typeof self.listController === 'undefined') {
-        throw self.constructor.name + ' requires an options.listController'
-      }
+    self.listController = self.options.listController
+    if (!self.listController || typeof self.listController === 'undefined') {
+      throw Error(self.constructor.name + ' requires an options.listController')
     }
     self.setup()
   }
 
   setup () {
     const self = this
-    {
-      self.current_recordDetailsView = null // zeroing for comparison
-    }
+    self.current_recordDetailsView = null // zeroing for comparison
     self.setup_views()
   }
 
@@ -40,7 +36,6 @@ class ListView extends View {
   _setup_layer () {
     const self = this
     const padding_h = self.overridable_padding_h()
-    //
     const layer = self.layer
     layer.style.overflowY = 'hidden' // here, anyway. the cell container is what scrolls
     layer.style.boxSizing = 'border-box'
@@ -48,12 +43,10 @@ class ListView extends View {
     layer.style.height = '100%'
     layer.style.padding = `0 ${padding_h}px 0px ${padding_h}px`
     // we wait til viewWillAppear is called by the nav controller to set height
-    //
     layer.style.webkitUserSelect = 'none'
     layer.style.MozUserSelect = 'none'
     layer.style.msUserSelect = 'none'
     layer.style.wordBreak = 'break-all' // to get the text to wrap
-    //
     layer.style.backgroundColor = '#272527'
     layer.style.color = '#c0c0c0' // temporary
   }
@@ -156,22 +149,20 @@ class ListView extends View {
   _configureWith_records (records) {
     const self = this
     self.overridable_willTearDownUIWithRecords(records)
-    {
-      if (typeof self.cellsContainerView !== 'undefined' && self.cellsContainerView) {
-        self.cellsContainerView.removeFromSuperview()
-        self.cellsContainerView.TearDown()
-        self.cellsContainerView = null
-      }
-      if (self.recordCellViews.length !== 0) {
-        // for now, just flash list:
-        self.recordCellViews.forEach(
-          function (view, i) {
-            view.removeFromSuperview()
-            view.TearDown() // after we call remove, not before
-          }
-        )
-        self.recordCellViews = []
-      }
+    if (typeof self.cellsContainerView !== 'undefined' && self.cellsContainerView) {
+      self.cellsContainerView.removeFromSuperview()
+      self.cellsContainerView.TearDown()
+      self.cellsContainerView = null
+    }
+    if (self.recordCellViews.length !== 0) {
+      // for now, just flash list:
+      self.recordCellViews.forEach(
+        function (view, i) {
+          view.removeFromSuperview()
+          view.TearDown() // after we call remove, not before
+        }
+      )
+      self.recordCellViews = []
     }
     {
       const view = new View({}, self.context)
@@ -193,11 +184,11 @@ class ListView extends View {
         function (record, i) {
           const isAtEnd = i == numberOf_records - 1
           const options =
-					{
-					  cell_tapped_fn: function (cellView) {
-					    self.cellWasTapped(cellView)
-					  }
-					}
+          {
+            cell_tapped_fn: function (cellView) {
+              self.cellWasTapped(cellView)
+            }
+          }
           self.overridable_finalizeListCellViewOptions(options)
           const ListCellViewClass = self.overridable_listCellViewClass()
           const view = new ListCellViewClass(options, context)
@@ -230,10 +221,9 @@ class ListView extends View {
       // throw "Asked to pushRecordDetailsView while self.current_recordDetailsView !== null"
       return
     }
-    { // check record
-      if (typeof record === 'undefined' || record === null) {
-        throw Error(self.constructor.name + ' requires record to pushRecordDetailsView')
-      }
+    // check record
+    if (typeof record === 'undefined' || record === null) {
+      throw Error(self.constructor.name + ' requires record to pushRecordDetailsView')
     }
     const navigationController = self.navigationController
     if (typeof navigationController === 'undefined' || navigationController === null) {
@@ -241,9 +231,9 @@ class ListView extends View {
     }
     {
       const options =
-			{
-			  record: record
-			}
+      {
+        record: record
+      }
       const DetailsViewClass = self.overridable_recordDetailsViewClass(record)
       const view = new DetailsViewClass(options, self.context)
       navigationController.PushView(view, animated)
@@ -254,7 +244,6 @@ class ListView extends View {
     }
   }
 
-  //
   //
   // Runtime - Delegation - Interactions
   //

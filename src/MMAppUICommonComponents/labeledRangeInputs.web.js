@@ -79,17 +79,15 @@ function New_fieldValue_labeledRangeInputView (params, context) {
   td_2.appendChild(sliderRunnableTrackGraphicLayer)
   //
   const layer = document.createElement('input')
-  {
-    layer.type = 'range'
-    layer.min = min
-    layer.max = max
-    layer.step = step
-    layer.value = value
-    //
-    layer.className = 'labeledRangeInput'
-    layer.style.width = '100%'
-    layer.style.display = 'inline-block'
-  }
+  layer.type = 'range'
+  layer.min = min
+  layer.max = max
+  layer.step = step
+  layer.value = value
+  //
+  layer.className = 'labeledRangeInput'
+  layer.style.width = '100%'
+  layer.style.display = 'inline-block'
   td_2.appendChild(layer)
   //
   const td_3 = document.createElement('td')
@@ -115,10 +113,10 @@ function New_fieldValue_labeledRangeInputView (params, context) {
     const float_max = parseFloat(max)
     // ^- going to assuming float is a good medium for numerical comparison - supposing JS doesn't screw it up
     if (isNaN(float_inputValue)) {
-      throw 'Range input value cannot be parsed as float for comparison'
+      throw Error('Range input value cannot be parsed as float for comparison')
     }
     if (isNaN(float_max)) {
-      throw 'Range input max cannot be parsed as float for comparison'
+      throw Error('Range input max cannot be parsed as float for comparison')
     }
     if (float_inputValue === float_max) {
       if (isMaxInfinity) {

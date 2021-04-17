@@ -191,12 +191,12 @@ class ListBaseController extends EventEmitter {
 
   override_CollectionName () { // Return a string such as "Wallets", i.e. as declared at {recordName}_persistence_utils.CollectionName
     const self = this
-    throw `[${self.constructor.name}/overridable_CollectionName]: You must implement this method.`
+    throw Error(`[${self.constructor.name}/overridable_CollectionName]: You must implement this method.`)
   }
 
   override_lookup_RecordClass () { // Return a `class`, i.e. as declared in a module
     const self = this
-    throw `[${self.constructor.name}/override_lookup_RecordClass]: You must implement this method.`
+    throw Error(`[${self.constructor.name}/override_lookup_RecordClass]: You must implement this method.`)
   }
 
   override_booting_reconstituteRecordInstanceOptionsWithBase (
@@ -206,7 +206,7 @@ class ListBaseController extends EventEmitter {
     forOverrider_instance_didFailBoot_fn
   ) {
     const self = this
-    throw `[${self.constructor.name}/override_booting_reconstituteRecordInstanceOptionsWithBase]: You must implement this method and call at least one of the appropriate callbacks.`
+    throw Error(`[${self.constructor.name}/override_booting_reconstituteRecordInstanceOptionsWithBase]: You must implement this method and call at least one of the appropriate callbacks.`)
   }
 
   overridable_finalizeAndSortRecords (fn) // () -> Void
@@ -222,7 +222,7 @@ class ListBaseController extends EventEmitter {
     self.registrantForChangePassword_token = controller.AddRegistrantForChangePassword(self)
     { // EventName_willDeconstructBootedStateAndClearPassword
       if (self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn !== null && typeof self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn !== 'undefined') {
-        throw 'self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn not nil in ' + self.constructor.name
+        throw Error('self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn not nil in ' + self.constructor.name)
       }
       self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn = function () {
         self._passwordController_EventName_willDeconstructBootedStateAndClearPassword()
@@ -234,7 +234,7 @@ class ListBaseController extends EventEmitter {
     }
     { // EventName_didDeconstructBootedStateAndClearPassword
       if (self._passwordController_EventName_didDeconstructBootedStateAndClearPassword_listenerFn !== null && typeof self._passwordController_EventName_didDeconstructBootedStateAndClearPassword_listenerFn !== 'undefined') {
-        throw 'self._passwordController_EventName_didDeconstructBootedStateAndClearPassword_listenerFn not nil in ' + self.constructor.name
+        throw Error('self._passwordController_EventName_didDeconstructBootedStateAndClearPassword_listenerFn not nil in ' + self.constructor.name)
       }
       self._passwordController_EventName_didDeconstructBootedStateAndClearPassword_listenerFn = function () {
         self._passwordController_EventName_didDeconstructBootedStateAndClearPassword()
@@ -246,7 +246,7 @@ class ListBaseController extends EventEmitter {
     }
     { // EventName_ObtainedCorrectExistingPassword
       if (self._passwordController_EventName_ObtainedCorrectExistingPassword_listenerFn !== null && typeof self._passwordController_EventName_ObtainedCorrectExistingPassword_listenerFn !== 'undefined') {
-        throw 'self._passwordController_EventName_ObtainedCorrectExistingPassword_listenerFn not nil in ' + self.constructor.name
+        throw Error('self._passwordController_EventName_ObtainedCorrectExistingPassword_listenerFn not nil in ' + self.constructor.name)
       }
       self._passwordController_EventName_ObtainedCorrectExistingPassword_listenerFn = function () {
         self._passwordController_EventName_ObtainedCorrectExistingPassword()
@@ -289,7 +289,7 @@ class ListBaseController extends EventEmitter {
     }
     { // EventName_willDeconstructBootedStateAndClearPassword
       if (typeof self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn === 'undefined' || self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn === null) {
-        throw 'self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn undefined'
+        throw Error('self._passwordController_EventName_willDeconstructBootedStateAndClearPassword_listenerFn undefined')
       }
       controller.removeListener(
         controller.EventName_willDeconstructBootedStateAndClearPassword(),
@@ -299,7 +299,7 @@ class ListBaseController extends EventEmitter {
     }
     { // EventName_didDeconstructBootedStateAndClearPassword
       if (typeof self._passwordController_EventName_didDeconstructBootedStateAndClearPassword_listenerFn === 'undefined' || self._passwordController_EventName_didDeconstructBootedStateAndClearPassword_listenerFn === null) {
-        throw 'self._passwordController_EventName_didDeconstructBootedStateAndClearPassword_listenerFn undefined'
+        throw Error('self._passwordController_EventName_didDeconstructBootedStateAndClearPassword_listenerFn undefined')
       }
       controller.removeListener(
         controller.EventName_didDeconstructBootedStateAndClearPassword(),
@@ -309,7 +309,7 @@ class ListBaseController extends EventEmitter {
     }
     { // EventName_ObtainedCorrectExistingPassword
       if (typeof self._passwordController_EventName_ObtainedCorrectExistingPassword_listenerFn === 'undefined' || !self._passwordController_EventName_ObtainedCorrectExistingPassword_listenerFn) {
-        throw 'self._passwordController_EventName_ObtainedCorrectExistingPassword_listenerFn undefined'
+        throw Error('self._passwordController_EventName_ObtainedCorrectExistingPassword_listenerFn undefined')
       }
       controller.removeListener(
         controller.EventName_ObtainedCorrectExistingPassword(),
@@ -373,7 +373,7 @@ class ListBaseController extends EventEmitter {
         }
       }
     }
-    throw 'Record unexpectedly not found'
+    throw Error('Record unexpectedly not found')
   }
 
   //
@@ -430,24 +430,13 @@ class ListBaseController extends EventEmitter {
     )
   }
 
-  givenBooted_DeleteRecord (
-    recordInstance,
-    fn
-  ) {
+  givenBooted_DeleteRecord (recordInstance, fn) {
     const self = this
     const indexOfRecord = self.__recordInstanceAndIndexWithId(recordInstance._id)
-    self.givenBooted_DeleteRecordAtIndex(
-      recordInstance,
-      indexOfRecord,
-      fn
-    )
+    self.givenBooted_DeleteRecordAtIndex(recordInstance, indexOfRecord, fn)
   }
 
-  givenBooted_DeleteRecordAtIndex (
-    recordInstance,
-    indexOfRecord,
-    fn
-  ) {
+  givenBooted_DeleteRecordAtIndex (recordInstance, indexOfRecord, fn) {
     const self = this
     self.givenBooted_deleteRecord_noListUpdatedEmit(
       recordInstance,
@@ -461,12 +450,7 @@ class ListBaseController extends EventEmitter {
     )
   }
 
-  givenBooted_deleteRecord_noListUpdatedEmit (
-    recordInstance,
-    done_fn,
-    optl_didStopObserving_fn,
-    optl_didEmitDeletedRecord_fn
-  ) {
+  givenBooted_deleteRecord_noListUpdatedEmit (recordInstance, done_fn, optl_didStopObserving_fn, optl_didEmitDeletedRecord_fn) {
     const self = this
     //
     const didStopObserving_fn = optl_didStopObserving_fn || function () {}

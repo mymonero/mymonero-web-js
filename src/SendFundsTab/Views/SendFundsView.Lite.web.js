@@ -71,19 +71,9 @@ class SendFundsView extends View {
         )
         view.layer.style.paddingLeft = '16px'
       } else {
-        view = commonComponents_actionButtons.New_Stacked_ActionButtonsContainerView(
-          16,
-          16,
-          15,
-          self.context
-        )
+        view = commonComponents_actionButtons.New_Stacked_ActionButtonsContainerView(16, 16, 15, self.context)
       }
       self.actionButtonsContainerView = view
-      {
-        if (self.context.isLiteApp !== true) {
-          self._setup_actionButton_chooseFile()
-        }
-      }
       self.addSubview(view)
     }
     self._setup_qrCodeInputs_containerView()
@@ -125,8 +115,8 @@ class SendFundsView extends View {
     let paddingBottom
     if (self._isUsingRelativeNotFixedActionButtonsContainer() == false) {
       paddingBottom = commonComponents_actionButtons.ActionButtonsContainerView_h +
-								commonComponents_actionButtons.ActionButtonsContainerView_bottomMargin +
-								10
+      commonComponents_actionButtons.ActionButtonsContainerView_bottomMargin +
+      10
     } else {
       paddingBottom = 0
     }

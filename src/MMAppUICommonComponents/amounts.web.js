@@ -24,8 +24,7 @@ function New_AmountInputFieldPKG (
   div.style.position = 'relative' // to have layout reset origin of any position=absolute items
   div.style.left = '0'
   div.style.top = '0'
-  const container_padding_h = 22
-  div.style.padding = `7px ${container_padding_h}px 0 ${container_padding_h}px`
+  div.style.padding = '7px 22px 0 22px'
   //
   const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('AMOUNT', context)
   div.appendChild(labelLayer)
@@ -99,7 +98,7 @@ function New_AmountInputFieldPKG (
   //
   // Currency picker
   // TODO: move these into class + css rules
-  const selectLayer_left = container_padding_h + amountInput_baseW + 2 * valueLayer.Component_default_padding_h() + 1.5
+  const selectLayer_left = 22 + amountInput_baseW + 2 * valueLayer.Component_default_padding_h() + 1.5
   const selectLayer_h = valueLayer.Component_default_h() + 0.5
   const ccySelect_disclosureArrow_h = 13
   const ccySelectLayer = commonComponents_ccySelect.new_selectLayer()

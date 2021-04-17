@@ -28,69 +28,54 @@ function New_contactPickerLayer (
   { // observation of inputLayer
     let isFocused = false
     const hideResultsOnBlur_timeout = null
-    inputLayer.addEventListener(
-      'blur',
-      function (event) {
-        isFocused = false
-        setTimeout(function () { // wait for a few ms in case this blur is happening because of it a click - because if it is,
-          // it prevents a click on the result as the results are hidden (due to blur) before the result
-          // layer can receive the click
-          if (isFocused === false) { // user did not refocus
-            _removeAllAndHideAutocompleteResults()
-          }
-        }, 100) // 50ms didn't do it (which is kind of concerning)
-      }
-    )
-    inputLayer.addEventListener(
-      'focus',
-      function (event) {
-        isFocused = true
-        // always search, even if no query, as long as focused
-        _searchForAndDisplaySearchResults()
-        //
-        if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
-          inputLayer.Component_ScrollIntoViewInFormContainerParent()
+    inputLayer.addEventListener('blur', function (event) {
+      isFocused = false
+      setTimeout(function () { // wait for a few ms in case this blur is happening because of it a click - because if it is,
+        // it prevents a click on the result as the results are hidden (due to blur) before the result
+        // layer can receive the click
+        if (isFocused === false) { // user did not refocus
+          _removeAllAndHideAutocompleteResults()
         }
+      }, 100) // 50ms didn't do it (which is kind of concerning)
+    })
+    inputLayer.addEventListener('focus', function (event) {
+      isFocused = true
+      // always search, even if no query, as long as focused
+      _searchForAndDisplaySearchResults()
+      //
+      if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
+        inputLayer.Component_ScrollIntoViewInFormContainerParent()
       }
-    )
+    })
     inputLayer.Component_ScrollIntoViewInFormContainerParent = function () { // this could also be called on window resize
       const this_layer = this
       commonComponents_forms._shared_scrollConformingElementIntoView(this_layer)
     }
-    inputLayer.addEventListener(
-      'input',
-      function () {
-        _inputLayer_receivedInputOrChanged(undefined) // this might seem redundant and/or to race with "keyup" but it doesn't affect _inputLayer_receivedInputOrChanged
-      }
-    )
-    inputLayer.addEventListener(
-      'change', // try to catch paste on as many platforms as possible
-      function () {
-        _inputLayer_receivedInputOrChanged(undefined) // this might seem redundant and/or to race with "keyup" but it doesn't affect _inputLayer_receivedInputOrChanged
-      }
-    )
-    inputLayer.addEventListener(
-      'keyup',
-      function (event) {
-        const code = event.code
-        const wasEscapeKey = code == 'Escape' || event.keyCode == 27 /* should we use keyCode? */
-        if (wasEscapeKey) { // toggle search results visibility
-          if (autocompleteResultsLayer.style.display != 'none') {
-            _removeAllAndHideAutocompleteResults()
-          } else {
-            _searchForAndDisplaySearchResults()
-          }
-          // TODO: clear input? esp if esc hit twice?
-          return // think it's ok to just return here and not mess with the typingDebounceTimeout
+    inputLayer.addEventListener('input', function () {
+      _inputLayer_receivedInputOrChanged(undefined) // this might seem redundant and/or to race with "keyup" but it doesn't affect _inputLayer_receivedInputOrChanged
+    })
+    inputLayer.addEventListener('change', function () {
+      _inputLayer_receivedInputOrChanged(undefined) // this might seem redundant and/or to race with "keyup" but it doesn't affect _inputLayer_receivedInputOrChanged
+    })
+    inputLayer.addEventListener('keyup', function (event) {
+      const code = event.code
+      const wasEscapeKey = code == 'Escape' || event.keyCode == 27 /* should we use keyCode? */
+      if (wasEscapeKey) { // toggle search results visibility
+        if (autocompleteResultsLayer.style.display != 'none') {
+          _removeAllAndHideAutocompleteResults()
+        } else {
+          _searchForAndDisplaySearchResults()
         }
-        const wasOnlyModifierKey = code.indexOf('Meta') != -1 || code.indexOf('Alt') != -1 || code.indexOf('Control') != -1
-        if (wasOnlyModifierKey) {
-          console.log('Input was only modifier key. Ignoring.')
-          return
-        }
-        _inputLayer_receivedInputOrChanged(event)
+        // TODO: clear input? esp if esc hit twice?
+        return // think it's ok to just return here and not mess with the typingDebounceTimeout
       }
-    )
+      const wasOnlyModifierKey = code.indexOf('Meta') != -1 || code.indexOf('Alt') != -1 || code.indexOf('Control') != -1
+      if (wasOnlyModifierKey) {
+        console.log('Input was only modifier key. Ignoring.')
+        return
+      }
+      _inputLayer_receivedInputOrChanged(event)
+    })
   }
   const autocompleteResultsLayer = _new_autocompleteResultsLayer()
   containerLayer.appendChild(autocompleteResultsLayer)
@@ -191,6 +176,7 @@ function New_contactPickerLayer (
       }
     }
   }
+
   function _unpickExistingContact_andRedisplayPickInput (andDoNotFocus) {
     _removeExistingPickedContact()
     _redisplayInputLayer()
@@ -201,6 +187,7 @@ function New_contactPickerLayer (
     }
   }
   containerLayer.ContactPicker_unpickExistingContact_andRedisplayPickInput = _unpickExistingContact_andRedisplayPickInput
+
   function _displayPickedContact (contact) {
     __pickedContactLayer = _new_pickedContactLayer(
       context,
@@ -264,6 +251,7 @@ function _new_inputLayer (placeholderText, context) {
   })
   return layer
 }
+
 function _new_autocompleteResultsLayer () {
   const layer = document.createElement('div')
   layer.classList.add('autocomplete-results')
@@ -276,38 +264,31 @@ function _new_autocompleteResultsLayer () {
   layer.style.borderRadius = '3px'
   layer.style.boxShadow = '0 15px 12px 0 rgba(0,0,0,0.22), 0 19px 38px 0 rgba(0,0,0,0.30)'
   layer.style.overflowY = 'auto'
-  // layer.style.webkitOverflowScrolling = "touch"
   layer.style.zIndex = '10000' // above everything - even action buttons (absolute z-index alone may not be a sustainable methodology here)
-  //
   layer.style.display = 'none' // for now - no results at init!
-  //
   return layer
 }
+
 function _new_autocompleteResultRowLayer (context, contact, isAtEnd, clicked_fn) {
-  const height = 31
-  const padding_h = 15
   const layer = document.createElement('div')
   layer.classList.add('row')
   layer.style.position = 'relative'
   layer.style.left = '0'
   layer.style.boxSizing = 'border-box'
-  layer.style.padding = `0 ${padding_h}px`
+  layer.style.padding = '0 15px'
   layer.style.width = '100%'
-  layer.style.height = height + 'px'
+  layer.style.height = '31px'
   layer.style.color = '#1D1B1D'
   layer.style.fontSize = '13px'
   layer.style.fontWeight = '500'
   layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-  layer.style.lineHeight = height + 'px' // this is commented because it's overridden in the CSS rules above
+  layer.style.lineHeight = '31px' // this is commented because it's overridden in the CSS rules above
   layer.style.webkitUserSelect = 'none' // redundant but for explicitness
   layer.style.cursor = 'pointer'
   layer.style.whiteSpace = 'nowrap'
   layer.style.overflow = 'hidden'
   layer.style.textOverflow = 'ellipsis'
-  const imageBackedEmojiHTMLString = emoji_web.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(
-    context,
-    contact.emoji
-  )
+  const imageBackedEmojiHTMLString = emoji_web.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(context, contact.emoji)
   let titleClasses = 'title'
   if (context.Emoji_renderWithNativeEmoji !== true) {
     titleClasses += ' withNonNativeEmoji'
@@ -318,10 +299,7 @@ function _new_autocompleteResultRowLayer (context, contact, isAtEnd, clicked_fn)
     layer.addEventListener('mouseleave', function () { this.unhighlight() }) // will this be enough?
     layer.addEventListener('drag', function (e) { e.preventDefault(); e.stopPropagation(); return false }) // prevent accidental drag from interfering with user's expectation of a successful click
     //
-    const clickLike_eventName =
-			typeof document.body.ontouchstart === 'undefined'
-			  ? 'mousedown'
-			  : 'touchstart'
+    const clickLike_eventName = typeof document.body.ontouchstart === 'undefined' ? 'mousedown' : 'touchstart'
     layer.addEventListener(clickLike_eventName, function (e) { // not click, because of race conditions w/ the input focus and drags etc; plus it's snappier
       e.preventDefault()
       e.stopPropagation()
@@ -341,9 +319,8 @@ function _new_autocompleteResultRowLayer (context, contact, isAtEnd, clicked_fn)
     lineLayer.style.position = 'absolute'
     lineLayer.style.left = '50px'
     lineLayer.style.right = '0'
-    const lineHeight = 1
-    lineLayer.style.height = lineHeight + 'px'
-    lineLayer.style.top = (height - lineHeight) + 'px'
+    lineLayer.style.height = '1px'
+    lineLayer.style.top = '30px'
     lineLayer.style.backgroundColor = '#DFDEDF'
     layer.appendChild(lineLayer)
   }
@@ -395,26 +372,25 @@ function _new_pickedContactLayer (context, contact, didClickCloseBtn_fn) {
     // contentLayer.style.webkitFontSmoothing = "subpixel-antialiased"
     const xButtonLayer = document.createElement('a')
     contentLayer.appendChild(xButtonLayer)
-    {
-      xButtonLayer.style.display = 'block' // to get margin and bounds
-      xButtonLayer.style.position = 'absolute'
-      xButtonLayer.style.right = '0px'
-      xButtonLayer.style.top = '0px'
-      xButtonLayer.style.width = '34px'
-      xButtonLayer.style.height = '100%'
-      xButtonLayer.style.backgroundImage = 'url(./src/assets/img/contactPicker_xBtnIcn@3x.png)'
-      xButtonLayer.style.backgroundSize = '11px 10px'
-      xButtonLayer.style.backgroundPosition = 'center'
-      xButtonLayer.style.backgroundRepeat = 'no-repeat'
-      xButtonLayer.style.cursor = 'pointer'
-      xButtonLayer.addEventListener('click', function (e) {
-        e.preventDefault()
-        const this_a = this
-        const this_pickedContactLayer = this_a.parentNode.parentNode // two levels due to contentLayer
-        didClickCloseBtn_fn(this_pickedContactLayer)
-        return false
-      })
-    }
+
+    xButtonLayer.style.display = 'block' // to get margin and bounds
+    xButtonLayer.style.position = 'absolute'
+    xButtonLayer.style.right = '0px'
+    xButtonLayer.style.top = '0px'
+    xButtonLayer.style.width = '34px'
+    xButtonLayer.style.height = '100%'
+    xButtonLayer.style.backgroundImage = 'url(./src/assets/img/contactPicker_xBtnIcn@3x.png)'
+    xButtonLayer.style.backgroundSize = '11px 10px'
+    xButtonLayer.style.backgroundPosition = 'center'
+    xButtonLayer.style.backgroundRepeat = 'no-repeat'
+    xButtonLayer.style.cursor = 'pointer'
+    xButtonLayer.addEventListener('click', function (e) {
+      e.preventDefault()
+      const this_a = this
+      const this_pickedContactLayer = this_a.parentNode.parentNode // two levels due to contentLayer
+      didClickCloseBtn_fn(this_pickedContactLayer)
+      return false
+    })
   }
   return layer
 }

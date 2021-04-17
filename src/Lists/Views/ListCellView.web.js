@@ -11,9 +11,7 @@ class ListCellView extends View {
     super(options, context)
     //
     const self = this
-    {
-      self.cell_tapped_fn = options.cell_tapped_fn || function (cellView) {}
-    }
+    self.cell_tapped_fn = options.cell_tapped_fn || function (cellView) {}
     self.setup()
   }
 
@@ -24,14 +22,11 @@ class ListCellView extends View {
 
   setup_views () { // overridable, just call on super
     const self = this
-    self.overridable_layerToObserveForTaps().addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault() // not that there would be any
-        self.__cellTapped()
-        return false
-      }
-    )
+    self.overridable_layerToObserveForTaps().addEventListener('click', function (e) {
+      e.preventDefault() // not that there would be any
+      self.__cellTapped()
+      return false
+    })
   }
 
   overridable_layerToObserveForTaps () {

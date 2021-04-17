@@ -2,7 +2,7 @@
 
 const View = require('../Views/View.web')
 const Views__cssRules = require('../Views/cssRules.web')
-//
+
 const k_transitionTime = 0.2
 const k_height = 12
 const k_width = k_height * 2
@@ -12,7 +12,7 @@ const k_backgroundColor = '#1D1B1D'
 const k_backgroundColorChecked = '#1D1B1D'
 const k_knobColor = '#333638'
 const k_knobColorChecked = '#00C6FF'
-//
+
 // CSS rules
 const NamespaceName = 'switchToggles'
 const haveCSSRulesBeenInjected_documentKey = '__haveCSSRulesBeenInjected_' + NamespaceName
@@ -173,17 +173,14 @@ function New_fieldValue_switchToggleView (params, context) {
     }
     view.toggleChecked(false/* do not squelch emit */)
   }
-  input.addEventListener(
-    'click',
-    function (e) {
-      // prevent any automatic checking/unchecking
-      e.preventDefault()
-      e.stopPropagation()
-      //
-      // this is done so as to gain the ability to programmatically mediate checking
-      view.toggleChecked(false/* do not squelch emit */)
-    }
-  )
+  input.addEventListener('click', function (e) {
+    // prevent any automatic checking/unchecking
+    e.preventDefault()
+    e.stopPropagation()
+    //
+    // this is done so as to gain the ability to programmatically mediate checking
+    view.toggleChecked(false/* do not squelch emit */)
+  })
 
   return view
 }
