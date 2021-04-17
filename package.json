@@ -30,6 +30,7 @@
     "async": "3.1.0",
     "bitcoin-address-validation": "^1.0.2",
     "buffer": "^6.0.3",
+    "clipboard": "^2.0.8",
     "crypto-browserify": "^3.12.0",
     "fastclick": "1.0.6",
     "html5-fs": "0.1.1",
