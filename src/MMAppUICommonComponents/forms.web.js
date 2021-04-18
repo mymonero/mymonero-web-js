@@ -10,26 +10,17 @@ function New_fieldContainerLayer (context) {
   return layer
 }
 exports.New_fieldContainerLayer = New_fieldContainerLayer
-//
+
 function New_fieldTitle_labelLayer (labelText, context) {
   const layer = document.createElement('span')
-  layer.className = 'field_title'
   layer.innerHTML = labelText
-  layer.style.webkitUserSelect = 'none'
-  layer.style.MozUserSelect = 'none'
-  layer.style.msUserSelect = 'none'
-  layer.style.userSelect = 'none'
-  layer.style.display = 'block' // own line
-  layer.style.margin = '15px 0 8px 8px'
-  layer.style.textAlign = 'left'
-  layer.style.color = '#F8F7F8'
-  //
-  context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
+  layer.classList.add('field_title')
+  layer.classList.add('field-title-label')
   //
   return layer
 }
 exports.New_fieldTitle_labelLayer = New_fieldTitle_labelLayer
-//
+
 function New_fieldTitle_rightSide_accessoryLayer (labelText, context) {
   const layer = document.createElement('span')
   layer.className = 'field_title'

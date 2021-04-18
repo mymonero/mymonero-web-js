@@ -6,6 +6,8 @@ const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web'
 const commonComponents_labeledRangeInputs = require('../../MMAppUICommonComponents/labeledRangeInputs.web')
 const commonComponents_ccySelect = require('../../MMAppUICommonComponents/ccySelect.web')
 const config__MyMonero = require('../../HostedMoneroAPIClient/config__MyMonero')
+const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
+const ModalStandaloneAboutView = require('../../AboutWindow/Views/ModalStandaloneAboutView.web')
 
 class SettingsView extends View {
   constructor (options, context) {
@@ -34,16 +36,7 @@ class SettingsView extends View {
     const self = this
 
     const layer = self.layer
-    layer.style.webkitUserSelect = 'none' // disable selection here but enable selectively
-    layer.style.position = 'relative'
-    layer.style.boxSizing = 'border-box'
-    layer.style.width = '100%'
-    layer.style.height = '100%' // we're also set height in viewWillAppear when in a nav controller
-    layer.style.padding = `0 ${self.margin_h}px 0px ${self.margin_h}px` // actually going to change paddingTop in self.viewWillAppear() if navigation controller
-    layer.style.overflowY = 'auto'
-    layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view
-    layer.style.color = '#c0c0c0' // temporary
-    layer.style.wordBreak = 'break-all' // to get the text to wrap
+    layer.classList.add('settings-layer')
   }
 
   _setup_form_containerLayer () {
@@ -67,8 +60,6 @@ class SettingsView extends View {
       'ABOUT MYMONERO',
       self.context,
       function () {
-        const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
-        const ModalStandaloneAboutView = require('../../AboutWindow/Views/ModalStandaloneAboutView.web')
         const options = {}
         const view = new ModalStandaloneAboutView(options, self.context)
         self.current_ModalStandaloneAboutView = view
@@ -143,39 +134,14 @@ class SettingsView extends View {
       div.appendChild(labelLayer)
       //
       const selectContainerLayer = document.createElement('div')
-      selectContainerLayer.style.position = 'relative' // to container pos absolute
-      selectContainerLayer.style.left = '0'
-      selectContainerLayer.style.top = '0'
-      selectContainerLayer.style.width = '132px'
-      selectContainerLayer.style.height = '32px'
-      //
+      selectContainerLayer.classList.add('settings-dropdown-div')
+
       const ccySelectLayer = commonComponents_ccySelect.new_selectLayer()
       self.displayCcySelectLayer = ccySelectLayer
       self._configure_displayCcySelectLayer_value()
       {
         const selectLayer = ccySelectLayer
-        selectLayer.style.outline = 'none'
-        selectLayer.style.color = '#FCFBFC'
-        selectLayer.style.backgroundColor = '#383638'
-        selectLayer.style.width = '132px'
-        selectLayer.style.height = '32px'
-        selectLayer.style.border = '0'
-        selectLayer.style.padding = '0'
-        selectLayer.style.borderRadius = '3px'
-        selectLayer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
-        selectLayer.style.webkitAppearance = 'none' // apparently necessary in order to activate the following style.border…Radius
-        selectLayer.style.MozAppearance = 'none'
-        selectLayer.style.msAppearance = 'none'
-        selectLayer.style.appearance = 'none'
-        self.context.themeController.StyleLayer_FontAsMiddlingButtonContentSemiboldSansSerif(
-          selectLayer,
-          true // bright content, dark bg
-        )
-        if (typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-          selectLayer.style.textIndent = '4px'
-        } else {
-          selectLayer.style.textIndent = '11px'
-        }
+        selectLayer.classList.add('settings-dropdown')
         // hover effects/classes
         selectLayer.classList.add('hoverable-cell')
         selectLayer.classList.add('utility')
@@ -193,18 +159,7 @@ class SettingsView extends View {
       {
         const layer = document.createElement('div')
         self.disclosureArrowLayer = layer
-        layer.style.pointerEvents = 'none' // mustn't intercept pointer events
-        layer.style.border = 'none'
-        layer.style.position = 'absolute'
-        layer.style.width = '10px'
-        layer.style.height = '8px'
-        layer.style.right = '13px'
-        layer.style.top = '12px'
-        layer.style.zIndex = '100' // above options_containerView
-        layer.style.backgroundImage = 'url(./src/assets/img/dropdown-arrow-down@3x.png)' // borrowing this
-        layer.style.backgroundRepeat = 'no-repeat'
-        layer.style.backgroundPosition = 'center'
-        layer.style.backgroundSize = '10px 8px'
+        layer.classList.add('settings-dropdown-arrow')
         selectContainerLayer.appendChild(layer)
       }
       div.appendChild(selectContainerLayer)
@@ -216,7 +171,7 @@ class SettingsView extends View {
     const self = this
     const div = document.createElement('div')
     div.style.paddingTop = '23px'
-    const titleText = self.context.isLiteApp ? 'LOG OUT' : 'DELETE EVERYTHING'
+    const titleText = 'LOG OUT'
     const view = commonComponents_tables.New_redTextButtonView(titleText, self.context)
     self.deleteEverything_buttonView = view
     const layer = view.layer
