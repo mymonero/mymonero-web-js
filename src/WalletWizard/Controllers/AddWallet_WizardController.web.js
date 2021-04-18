@@ -308,12 +308,8 @@ class AddWallet_WizardController {
     if (optl_locale_code && typeof optl_locale_code !== 'undefined') {
       _with(optl_locale_code)
     } else {
-      self.context.locale.Locale(function (err, currentLocale) {
-        if (err) {
-          throw err
-        }
-        _with(currentLocale)
-      })
+      const currentLocale = window.navigator.language
+      _with(currentLocale)
     }
   }
 
