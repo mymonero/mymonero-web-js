@@ -5,7 +5,6 @@ const commonComponents_tables = require('../../MMAppUICommonComponents/tables.we
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_labeledRangeInputs = require('../../MMAppUICommonComponents/labeledRangeInputs.web')
 const commonComponents_ccySelect = require('../../MMAppUICommonComponents/ccySelect.web')
-const config__MyMonero = require('../../HostedMoneroAPIClient/config__MyMonero')
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
 const ModalStandaloneAboutView = require('../../AboutWindow/Views/ModalStandaloneAboutView.web')
 
@@ -148,12 +147,9 @@ class SettingsView extends View {
         selectLayer.classList.add('disableable')
         //
         // observation
-        ccySelectLayer.addEventListener(
-          'change',
-          function () {
-            self._ccySelectLayer_did_change()
-          }
-        )
+        ccySelectLayer.addEventListener('change', function () {
+          self._ccySelectLayer_did_change()
+        })
       }
       selectContainerLayer.appendChild(ccySelectLayer)
       {
@@ -237,70 +233,6 @@ class SettingsView extends View {
     self.displayCcySelectLayer.value = self.context.settingsController.displayCcySymbol
   }
 
-  _updateValidationErrorForAddressInputView (fn_orNil) {
-    const self = this
-    if (self.serverURLInputLayer == null || typeof self.serverURLInputLayer === 'undefined') {
-      return // not included
-    }
-    //
-    const fn = fn_orNil || function (didError, savableValue) {}
-    let mutable_value = (self.serverURLInputLayer.value || '').replace(/^\s+|\s+$/g, '') // whitespace-stripped
-    //
-    let preSubmission_validationError = null
-    {
-      if (mutable_value != '') {
-        if (mutable_value.indexOf('.') == -1 && mutable_value.indexOf(':') == -1 && mutable_value.indexOf('localhost') == -1) {
-          preSubmission_validationError = `Please enter a valid URL authority, e.g. ${config__MyMonero.API__authority}.`
-        } else { // important else in the absence of reorganizing this code
-          // strip http:// and https:// prefix here.. there's got to be a better way to do this..
-          // ... probably not a good idea to naively strip "*://" prefix ... or is it?
-          const strippablePrefixes =
-					[
-					  'https://',
-					  'http://',
-					  '//' // we can strip it for https anyway
-					]
-          for (let i = 0; i < strippablePrefixes.length; i++) {
-            const prefix = strippablePrefixes[i]
-            if (mutable_value.indexOf(prefix) === 0) {
-              mutable_value = mutable_value.slice(prefix.length, mutable_value.length)
-            }
-          }
-        }
-      }
-    }
-    if (preSubmission_validationError != null) {
-      self.serverURL_setValidationMessage(preSubmission_validationError)
-      self.serverURL_connecting_activityIndicatorLayer.style.display = 'none' // hide
-      // BUT we're also going to save the value so that the validation error here is displayed to the user
-      //
-      fn(true, null)
-      return
-    }
-    const final_value = mutable_value
-    fn(false, final_value) // no error, save value
-  }
-
-  //
-  // Runtime - Imperatives - UI config - Validation messages - Server URL
-  serverURL_setValidationMessage (validationMessageString) {
-    const self = this
-    if (validationMessageString === '' || !validationMessageString) {
-      self.ClearValidationMessage()
-      return
-    }
-    self.serverURLInputLayer.style.border = '1px solid #f97777'
-    self.serverURL_validationMessageLayer.style.display = 'block'
-    self.serverURL_validationMessageLayer.innerHTML = validationMessageString
-  }
-
-  serverURL_clearValidationMessage () {
-    const self = this
-    self.serverURLInputLayer.style.border = '1px solid rgba(0,0,0,0)'// todo: factor this into method on component
-    self.serverURL_validationMessageLayer.style.display = 'none'
-    self.serverURL_validationMessageLayer.innerHTML = ''
-  }
-
   //
   // Runtime - Delegation - Navigation/View lifecycle
   viewWillAppear () {
@@ -309,27 +241,13 @@ class SettingsView extends View {
     if (typeof self.navigationController !== 'undefined' && self.navigationController !== null) {
       self.layer.style.paddingTop = `${self.navigationController.NavigationBarHeight()}px`
     }
-    // config change pw btn text, app timeout slider, …
-    if (self.changePasswordButtonView) {
-      throw Error('Did not expect self.changePasswordButtonView')
-    }
-    self.appTimeoutSlider_messageLayer.innerHTML = 'Idle time before automatic log-out'
-    if (self.changePasswordButtonView) {
-      throw Error('Did not expect self.changePasswordButtonView')
-    }
-    if (self.serverURLInputLayer) {
-      throw Error('Did not expect self.serverURLInputLayer')
-    }
+
     const walletsExist = self.context.walletsListController.records.length > 0
     self.appTimeoutRangeInputView.SetEnabled(true)
     self.displayCcySelectLayer.disabled = false
     self.displayCcySelectLayer.classList.remove('disabled')
     self.deleteEverything_buttonView.SetEnabled(walletsExist) // cause this is actually the 'log out' btn
-    if (self.serverURLInputLayer) {
-      self.serverURLInputLayer.value = self.context.settingsController.specificAPIAddressURLAuthority || ''
-    }
     // and now that the value is set…
-    self._updateValidationErrorForAddressInputView() // so we get validation error from persisted but incorrect value, if necessary for user feedback
     self._configure_displayCcySelectLayer_value()
   }
 
@@ -365,8 +283,6 @@ class SettingsView extends View {
     self.tearDownAnySpawnedReferencedPresentedViews()
   }
 
-  //
-  // Delegation - Interactions
   _ccySelectLayer_did_change () {
     const self = this
     self.context.settingsController.Set_settings_valuesByKey(
@@ -381,66 +297,7 @@ class SettingsView extends View {
     )
   }
 
-  _serverURLInputLayer_did_keyUp () {
-    const self = this
-    function __teardown_timeout_toSave_serverURL () {
-      if (self.timeout_toSave_serverURL != null && typeof self.timeout_toSave_serverURL !== 'undefined') {
-        clearTimeout(self.timeout_toSave_serverURL)
-        self.timeout_toSave_serverURL = null
-      }
-    }
-    __teardown_timeout_toSave_serverURL()
-    self.serverURL_clearValidationMessage()
-    {
-      const entered_serverURL_value = self.serverURLInputLayer.value || ''
-      if (entered_serverURL_value == '') {
-        self.serverURL_connecting_activityIndicatorLayer.style.display = 'none' // no need to show 'connecting…'
-      } else {
-        self.serverURL_connecting_activityIndicatorLayer.style.display = 'block' // show
-      }
-    }
-    // now wait until user is really done typing…
-    self.timeout_toSave_serverURL = setTimeout(
-      function () {
-        __teardown_timeout_toSave_serverURL() // zero timer pointer
-        //
-        self._updateValidationErrorForAddressInputView( // also called on init so we get validation error on load
-          function (didError, savableValue) {
-            if (didError) {
-              return // not proceeding to save
-            }
-            const currentValue = self.context.settingsController.specificAPIAddressURLAuthority || ''
-            if (savableValue == currentValue) {
-              // do not clear/re-log-in on wallets if we're, e.g., resetting the password programmatically after the user has canceled deleting all wallets
-              self.serverURL_connecting_activityIndicatorLayer.style.display = 'none' // hide
-              return
-            }
-            self.context.settingsController.Set_settings_valuesByKey(
-              {
-                specificAPIAddressURLAuthority: savableValue
-              },
-              function (err) {
-                if (err) { // write failed
-                  self.serverURL_setValidationMessage('' + err)
-                  // so, importantly, revert the input contents, b/c the write failed
-                  self.serverURLInputLayer.value = self.context.settingsController.specificAPIAddressURLAuthority
-                  // but don't exit before hiding the 'connecting…' indicator
-                }
-                self.serverURL_connecting_activityIndicatorLayer.style.display = 'none' // hide
-              }
-            )
-          }
-        )
-      },
-      600
-    )
-  }
-
-  //
-  // Delegation - Delete everything
-  passwordController_DeleteEverything (
-    fn // this MUST be called
-  ) {
+  passwordController_DeleteEverything (fn) {
     const self = this
     self.layer.scrollTop = 0
     //
