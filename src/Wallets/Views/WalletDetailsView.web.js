@@ -51,9 +51,6 @@ class WalletDetailsView extends View {
     self._setup_balanceLabelView()
     self._setup_secondaryBalancesLabelLayer()
     self._setup_account_InfoDisclosingView()
-    if (self.context.isLiteApp !== true) {
-      self._setup_sendReceive_actionButtons()
-    }
     self._setup_layers_transactionsListLayerContainerLayer()
   }
 
@@ -291,20 +288,6 @@ class WalletDetailsView extends View {
     self.addSubview(infoDisclosingView)
   }
 
-  _setup_sendReceive_actionButtons () {
-    const self = this
-    const view = commonComponents_actionButtons.New_Stacked_ActionButtonsContainerView(
-      0,
-      0,
-      15,
-      self.context
-    )
-    self.actionButtonsContainerView = view
-    self._setup_actionButton_receive()
-    self._setup_actionButton_send()
-    self.addSubview(view)
-  }
-
   _setup_actionButton_receive () {
     const self = this
     const buttonView = commonComponents_actionButtons.New_ActionButtonView(
@@ -497,10 +480,6 @@ class WalletDetailsView extends View {
       self.current_transactionDetailsView.TearDown()
       self.current_transactionDetailsView = null
     }
-    if (typeof self.current_EditWalletView !== 'undefined' && self.current_EditWalletView) {
-      self.current_EditWalletView.TearDown()
-      self.current_EditWalletView = null
-    }
     // … is this sufficient? might need/want to tear down the stack nav too?
     if (self.currentlyPresented_ImportTransactionsModalView !== null && typeof self.currentlyPresented_ImportTransactionsModalView !== 'undefined') {
       self.currentlyPresented_ImportTransactionsModalView.TearDown() // might not be necessary but method guards itself
@@ -593,45 +572,27 @@ class WalletDetailsView extends View {
   Navigation_New_RightBarButtonView () {
     const self = this
     const view = commonComponents_navigationBarButtons.New_RightSide_EditButtonView(self.context)
-    if (self.context.isLiteApp === true) {
-      view.layer.innerHTML = 'Log&nbsp;Out'
-      view.layer.style.width = '64px'
-    }
+    view.layer.innerHTML = 'Log&nbsp;Out'
+    view.layer.style.width = '64px'
     const layer = view.layer
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        if (self.context.isLiteApp === true) {
-          self.context.windowDialogs.PresentQuestionAlertDialogWith(
-            'Log out?',
-            'Are you sure you want to log out?',
-            'Log Out',
-            'Cancel',
-            function (err, didChooseYes) {
-              if (err) {
-                throw err
-              }
-              if (didChooseYes) {
-                self.context.passwordController.InitiateDeleteEverything(function (err) {})
-              }
-            }
-          )
-        } else { // v--- self.navigationController because self is presented packaged in a StackNavigationView
-          const EditWalletView = require('./EditWalletView.web')
-          const view = new EditWalletView({
-            wallet: self.wallet
-          }, self.context)
-          self.current_EditWalletView = view
-          //
-          const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
-          const navigationView = new StackAndModalNavigationView({}, self.context)
-          navigationView.SetStackViews([view])
-          self.navigationController.PresentView(navigationView, true)
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      self.context.windowDialogs.PresentQuestionAlertDialogWith(
+        'Log out?',
+        'Are you sure you want to log out?',
+        'Log Out',
+        'Cancel',
+        function (err, didChooseYes) {
+          if (err) {
+            throw err
+          }
+          if (didChooseYes) {
+            self.context.passwordController.InitiateDeleteEverything(function (err) {})
+          }
         }
-        return false
-      }
-    )
+      )
+      return false
+    })
     return view
   }
 
