@@ -24,8 +24,7 @@ function New_AmountInputFieldPKG (
   div.style.position = 'relative' // to have layout reset origin of any position=absolute items
   div.style.left = '0'
   div.style.top = '0'
-  const container_padding_h = 22
-  div.style.padding = `7px ${container_padding_h}px 0 ${container_padding_h}px`
+  div.style.padding = '7px 22px 0 22px'
   //
   const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('AMOUNT', context)
   div.appendChild(labelLayer)
@@ -99,7 +98,7 @@ function New_AmountInputFieldPKG (
   //
   // Currency picker
   // TODO: move these into class + css rules
-  const selectLayer_left = container_padding_h + amountInput_baseW + 2 * valueLayer.Component_default_padding_h() + 1.5
+  const selectLayer_left = 22 + amountInput_baseW + 2 * valueLayer.Component_default_padding_h() + 1.5
   const selectLayer_h = valueLayer.Component_default_h() + 0.5
   const ccySelect_disclosureArrow_h = 13
   const ccySelectLayer = commonComponents_ccySelect.new_selectLayer()
@@ -170,15 +169,14 @@ function New_AmountInputFieldPKG (
   ccySelectLayer.Component_setTop() // IMPORTANT: this must be called on setup
   //
   //
-  const effectiveAmountLabelLayer = commonComponents_forms.New_fieldTitle_labelLayer(
-    '',
-    context
-  )
+  const effectiveAmountLabelLayer = commonComponents_forms.New_fieldTitle_labelLayer('', context)
   effectiveAmountLabelLayer.style.display = 'inline-block'
   effectiveAmountLabelLayer.style.margin = '0 0 0 8px'
   effectiveAmountLabelLayer.style.verticalAlign = 'middle'
   effectiveAmountLabelLayer.style.color = '#8D8B8D'
-  context.themeController.StyleLayer_FontAsSubMiddlingRegularMonospace(effectiveAmountLabelLayer)
+  effectiveAmountLabelLayer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+  effectiveAmountLabelLayer.style.fontSize = '12px'
+  effectiveAmountLabelLayer.style.fontWeight = 'normal'
   div.appendChild(effectiveAmountLabelLayer)
   //
   let max_buttonView
@@ -236,14 +234,14 @@ function New_AmountInputFieldPKG (
     ) {
       if (isMAXToggledOn) {
         if (toToggledOnText_orNullIfNotToggled == null) {
-          throw 'Illegal isMAXToggledOn && !toToggledOnText_orNullIfNotToggled'
+          throw Error('Illegal isMAXToggledOn && !toToggledOnText_orNullIfNotToggled')
         }
         const toToggledOnText = toToggledOnText_orNullIfNotToggled
         valueLayer.classList.add('placeholderAsValue')
         valueLayer.placeholder = toToggledOnText
       } else {
         if (toToggledOnText_orNullIfNotToggled != null) {
-          throw 'Illegal !isMAXToggledOn && toToggledOnText_orNullIfNotToggled'
+          throw Error('Illegal !isMAXToggledOn && toToggledOnText_orNullIfNotToggled')
         }
         valueLayer.classList.remove('placeholderAsValue')
         valueLayer.placeholder = valueLayer_amountPlaceholderText

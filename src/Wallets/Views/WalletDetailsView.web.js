@@ -8,7 +8,6 @@ const commonComponents_tables = require('../../MMAppUICommonComponents/tables.we
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_actionButtons = require('../../MMAppUICommonComponents/actionButtons.web')
 const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emptyScreens.web')
-const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
 const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const InfoDisclosingView = require('../../InfoDisclosingView/Views/InfoDisclosingView.web')
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
@@ -52,9 +51,6 @@ class WalletDetailsView extends View {
     self._setup_balanceLabelView()
     self._setup_secondaryBalancesLabelLayer()
     self._setup_account_InfoDisclosingView()
-    if (self.context.isLiteApp !== true) {
-      self._setup_sendReceive_actionButtons()
-    }
     self._setup_layers_transactionsListLayerContainerLayer()
   }
 
@@ -186,8 +182,10 @@ class WalletDetailsView extends View {
     layer.style.padding = '12px 6px 0 6px' // 0 btm b/c it already exists
     layer.style.textAlign = 'left'
     layer.style.color = '#9E9C9E'
-    self.context.themeController.StyleLayer_FontAsMiddlingRegularMonospace(layer)
-    //
+    layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+    layer.style.fontSize = '13px'
+    layer.style.fontWeight = 'normal'
+
     self.layer.appendChild(layer)
   }
 
@@ -288,20 +286,6 @@ class WalletDetailsView extends View {
     }
     self.account_InfoDisclosingView = infoDisclosingView
     self.addSubview(infoDisclosingView)
-  }
-
-  _setup_sendReceive_actionButtons () {
-    const self = this
-    const view = commonComponents_actionButtons.New_Stacked_ActionButtonsContainerView(
-      0,
-      0,
-      15,
-      self.context
-    )
-    self.actionButtonsContainerView = view
-    self._setup_actionButton_receive()
-    self._setup_actionButton_send()
-    self.addSubview(view)
   }
 
   _setup_actionButton_receive () {
@@ -496,10 +480,6 @@ class WalletDetailsView extends View {
       self.current_transactionDetailsView.TearDown()
       self.current_transactionDetailsView = null
     }
-    if (typeof self.current_EditWalletView !== 'undefined' && self.current_EditWalletView) {
-      self.current_EditWalletView.TearDown()
-      self.current_EditWalletView = null
-    }
     // … is this sufficient? might need/want to tear down the stack nav too?
     if (self.currentlyPresented_ImportTransactionsModalView !== null && typeof self.currentlyPresented_ImportTransactionsModalView !== 'undefined') {
       self.currentlyPresented_ImportTransactionsModalView.TearDown() // might not be necessary but method guards itself
@@ -592,45 +572,27 @@ class WalletDetailsView extends View {
   Navigation_New_RightBarButtonView () {
     const self = this
     const view = commonComponents_navigationBarButtons.New_RightSide_EditButtonView(self.context)
-    if (self.context.isLiteApp === true) {
-      view.layer.innerHTML = 'Log&nbsp;Out'
-      view.layer.style.width = '64px'
-    }
+    view.layer.innerHTML = 'Log&nbsp;Out'
+    view.layer.style.width = '64px'
     const layer = view.layer
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        if (self.context.isLiteApp === true) {
-          self.context.windowDialogs.PresentQuestionAlertDialogWith(
-            'Log out?',
-            'Are you sure you want to log out?',
-            'Log Out',
-            'Cancel',
-            function (err, didChooseYes) {
-              if (err) {
-                throw err
-              }
-              if (didChooseYes) {
-                self.context.passwordController.InitiateDeleteEverything(function (err) {})
-              }
-            }
-          )
-        } else { // v--- self.navigationController because self is presented packaged in a StackNavigationView
-          const EditWalletView = require('./EditWalletView.web')
-          const view = new EditWalletView({
-            wallet: self.wallet
-          }, self.context)
-          self.current_EditWalletView = view
-          //
-          const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
-          const navigationView = new StackAndModalNavigationView({}, self.context)
-          navigationView.SetStackViews([view])
-          self.navigationController.PresentView(navigationView, true)
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      self.context.windowDialogs.PresentQuestionAlertDialogWith(
+        'Log out?',
+        'Are you sure you want to log out?',
+        'Log Out',
+        'Cancel',
+        function (err, didChooseYes) {
+          if (err) {
+            throw err
+          }
+          if (didChooseYes) {
+            self.context.passwordController.InitiateDeleteEverything(function (err) {})
+          }
         }
-        return false
-      }
-    )
+      )
+      return false
+    })
     return view
   }
 
@@ -812,8 +774,8 @@ class WalletDetailsView extends View {
           listItemLayer.style.width = '100%'
           listItemLayer.style.height = '74px'
 
-          listItemLayer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
-          listItemLayer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
+          listItemLayer.classList.add('utility')
+          listItemLayer.classList.add('hoverable-cell')
           listItemLayer.addEventListener(
             'click',
             function (e) {

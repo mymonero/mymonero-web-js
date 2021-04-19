@@ -23,49 +23,24 @@ class SettingsTabContentView extends StackAndModalNavigationView {
   // Runtime - Accessors - Implementation of TabBarItem protocol
   // custom tab bar item styling
   TabBarItem_layer_customStyle (isHorizontalBar) {
-    const self = this
     if (isHorizontalBar) {
-      return undefined
+      return false
     } else {
-      return {
-        position: 'absolute', // we can get away with doing this because the tab bar won't move
-        left: '0',
-        bottom: '5px' // for desktop, anyway
-      }
+      return 'tabButton-send-location'
     }
   }
 
   TabBarItem_icon_customStyle () {
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_settings@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '16px 16px'
-    }
+    return 'tabButton-settings'
   }
 
   TabBarItem_icon_selected_customStyle () {
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_settings__active@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '16px 16px'
-    }
+    return 'tabButton-settings-selected'
   }
 
   // interactivity
   TabBarItem_shallDisable () {
     const self = this
-    const passwordController = self.context.passwordController
-    if (passwordController.hasUserSavedAPassword !== true) {
-      return false // no existing data - do not disable
-    }
-    if (passwordController.HasUserEnteredValidPasswordYet() !== true) { // has data but not unlocked app
-      return true // because the app needs to be unlocked before they can use it
-    }
-    if (passwordController.IsUserChangingPassword() === true) {
-      return true // changing pw - prevent jumping around
-    }
     return false
   }
 }

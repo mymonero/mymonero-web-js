@@ -57,27 +57,14 @@ class RootFooterView extends View {
     const self = this
     //
     const td = document.createElement('td')
-    td.style.maxWdth = '80px'
+    td.style.maxWidth = '80px'
     td.width = '25%'
     td.align = 'center'
     //
     const a = document.createElement('a')
     a.innerHTML = `<span>${title}</span>`
     a.style.color = colorValue
-    a.style.cursor = 'pointer'
-    a.style.webkitUserSelect = 'none' // disable selection
-    a.style.MozUserSelect = 'none'
-    a.style.msUserSelect = 'none'
-    a.style.userSelect = 'none'
-    self.context.themeController.StyleLayer_FontAsSmallRegularSansSerif(a)
-    a.style.webkitTapHighlightColor = 'rgba(0,0,0,0)'
-    a.style.margin = '0'
-    a.style.width = 'auto'
-    a.style.maxWidth = '82px'
-    a.style.lineHeight = '28px'
-    a.style.height = '32px'
-    a.style.display = 'inline-block'
-    a.style.padding = '0'
+    a.classList.add('footer-link')
     a.addEventListener('click', click_handler_fn)
     td.appendChild(a)
     //

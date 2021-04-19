@@ -336,13 +336,7 @@ class NavigationBarView extends View {
     )
   }
 
-  SetBarButtonsFromTopStackView (
-    stackView,
-    old_topStackView,
-    isAnimated,
-    ifAnimated_isFromRightNotLeft,
-    trueIfPoppingToRoot
-  ) {
+  SetBarButtonsFromTopStackView (stackView, old_topStackView, isAnimated, ifAnimated_isFromRightNotLeft, trueIfPoppingToRoot) {
     const self = this
     const self_layer_width = self.layer.offsetWidth
     { // remove existing

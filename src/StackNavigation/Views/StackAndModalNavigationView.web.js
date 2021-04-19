@@ -55,7 +55,7 @@ class StackAndModalNavigationView extends StackNavigationView {
   ) {
     const self = this
     if (modalView === null || typeof modalView === 'undefined') {
-      throw 'StackNavigationView asked to PresentView nil modalView'
+      throw Error('StackNavigationView asked to PresentView nil modalView')
     }
     const isAnimated =
 			!!(isAnimated_orTrue === true ||
@@ -64,7 +64,7 @@ class StackAndModalNavigationView extends StackNavigationView {
     //
     const old_topStackView = self.topStackView
     if (typeof old_topStackView === 'undefined' || old_topStackView == null) {
-      throw self.constructor.name + ' PresentView currently expects there to be an old_topStackView'
+      throw Error(self.constructor.name + ' PresentView currently expects there to be an old_topStackView')
     }
     if (self.isCurrentlyTransitioningAManagedView__Modal === true) {
       console.warn('⚠️  Asked to ' + self.constructor.name + '/PresentView but already self.isCurrentlyTransitioningAManagedView__Modal. Deferring execution.')
@@ -166,7 +166,7 @@ class StackAndModalNavigationView extends StackNavigationView {
     const self = this
     const numberOf_modalViews = self.modalViews.length
     if (numberOf_modalViews == 0) {
-      throw 'DismissTopModalView called with 0 self.modalViews'
+      throw Error('DismissTopModalView called with 0 self.modalViews')
     }
     if (numberOf_modalViews == 1) { // then pop all modals
       self.DismissModalViewsToView(
@@ -198,7 +198,7 @@ class StackAndModalNavigationView extends StackNavigationView {
 				isAnimated_orTrue == null)
     const topStackView = self.topStackView
     if (typeof topStackView === 'undefined' || topStackView == null) {
-      throw self.constructor.name + ' DismissModalViewsToView currently expects there to be an topStackView'
+      throw Error(self.constructor.name + ' DismissModalViewsToView currently expects there to be an topStackView')
     }
     const old_topModalView = self.topModalView
     if (typeof old_topModalView === 'undefined' || old_topModalView == null) {
@@ -294,7 +294,7 @@ class StackAndModalNavigationView extends StackNavigationView {
     }
     if (indexOf_to_modalView === -1) {
       __trampolineFor_transitionEnded()
-      throw 'to_modalView not found in self.modalViews'
+      throw Error('to_modalView not found in self.modalViews')
     }
     function __afterHavingFullyDismissedToModalView_cleanUpAndCallBack () {
       _afterHavingFullyPresentedNewTopView_removeOldTopModalView()
@@ -317,7 +317,7 @@ class StackAndModalNavigationView extends StackNavigationView {
       const indexOf_old_topModalView_inSubviews = subviewUUIDs.indexOf(old_topModalView.View_UUID())
       if (indexOf_old_topModalView_inSubviews === -1) {
         __trampolineFor_transitionEnded()
-        throw `Asked to DismissModalViewsToView ${to_modalView.View_UUID()} but old_topModalView UUID not found in UUIDs of ${self.Description()} subviews.`
+        throw Error(`Asked to DismissModalViewsToView ${to_modalView.View_UUID()} but old_topModalView UUID not found in UUIDs of ${self.Description()} subviews.`)
       }
       if (isAnimated === true) { // prepare for animation
         old_topModalView.layer.style.position = 'absolute'
@@ -365,14 +365,10 @@ class StackAndModalNavigationView extends StackNavigationView {
       self.modalViews = modalViews_afterPop
       if (to_modalView.IsEqualTo(self.modalViews[self.modalViews.length - 1]) === false) {
         // we don't need to call __trampolineFor_transitionEnded here since we would have already triggered it in above two isAnimated == false check branches
-        throw `Popped to to_modalView ${to_modalView.Description()} at idx ${indexOf_to_modalView} but it was not the last of self.modalViews after pop all views until that idx.`
+        throw Error(`Popped to to_modalView ${to_modalView.Description()} at idx ${indexOf_to_modalView} but it was not the last of self.modalViews after pop all views until that idx.`)
       }
     }
   }
-  //
-  //
-  // Runtime - Delegation - Overrides - Disallowing operations while modal is up
-  //
 
   //
   //

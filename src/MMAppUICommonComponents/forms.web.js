@@ -10,11 +10,21 @@ function New_fieldContainerLayer (context) {
   return layer
 }
 exports.New_fieldContainerLayer = New_fieldContainerLayer
-//
+
 function New_fieldTitle_labelLayer (labelText, context) {
   const layer = document.createElement('span')
-  layer.className = 'field_title'
   layer.innerHTML = labelText
+  layer.classList.add('field_title')
+  layer.classList.add('field-title-label')
+  //
+  return layer
+}
+exports.New_fieldTitle_labelLayer = New_fieldTitle_labelLayer
+
+function New_fieldTitle_rightSide_accessoryLayer (labelText, context) {
+  const layer = document.createElement('span')
+  layer.className = 'field_title'
+  layer.innerHTML = 'optional'
   layer.style.webkitUserSelect = 'none'
   layer.style.MozUserSelect = 'none'
   layer.style.msUserSelect = 'none'
@@ -22,16 +32,8 @@ function New_fieldTitle_labelLayer (labelText, context) {
   layer.style.display = 'block' // own line
   layer.style.margin = '15px 0 8px 8px'
   layer.style.textAlign = 'left'
-  layer.style.color = '#F8F7F8'
   //
   context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
-  //
-  return layer
-}
-exports.New_fieldTitle_labelLayer = New_fieldTitle_labelLayer
-//
-function New_fieldTitle_rightSide_accessoryLayer (labelText, context) {
-  const layer = New_fieldTitle_labelLayer('optional', context)
   layer.style.float = 'right'
   layer.style.color = '#6B696B'
   layer.style.fontSize = '11px'
@@ -60,7 +62,7 @@ exports.ScrollCurrentFormElementIntoView = ScrollCurrentFormElementIntoView
 
 let LocalVendor_ScrollPositionEndFixed_Animate = null
 function _shared_scrollConformingElementIntoView (inputLayer) {
-  const selector = `.'ClassNameForScrollingAncestorOfScrollToAbleElement'`
+  const selector = `.ClassNameForScrollingAncestorOfScrollToAbleElement`
   const scrollingAncestor = inputLayer.closest(selector)
   if (!scrollingAncestor || typeof scrollingAncestor === 'undefined') {
     console.warn('⚠️  Asked to _shared_scrollConformingElementIntoView but no scrollingAncestor found')
@@ -92,7 +94,7 @@ function _shared_scrollConformingElementIntoView (inputLayer) {
   )
 }
 exports._shared_scrollConformingElementIntoView = _shared_scrollConformingElementIntoView
-//
+
 function New_fieldValue_textInputLayer (context, params) {
   const layer = document.createElement('input')
   layer.className = 'field_value'
@@ -166,7 +168,7 @@ function New_fieldValue_textAreaView (params, context) {
     layer.placeholder = placeholderText
   }
   const padding_h = 8
-  layer.style.padding = `9px ${padding_h}px`
+  layer.style.padding = `9px 8px`
   layer.style.height = `${61 - 2 * padding_h}px`
   layer.style.width = `calc(100% - ${2 * padding_h}px)` // no border so no -2*brdr_w
   layer.style.borderRadius = '3px'
@@ -241,7 +243,7 @@ function New_fieldValue_selectLayer (params) {
     }
     layer.style.display = 'inline-block'
     layer.style.height = '30px'
-    layer.style.width = `calc(100% - 4px - ${2 * 10}px)`
+    layer.style.width = `calc(100% - 4px - 20px)`
     layer.style.border = '1px inset #222'
     layer.style.borderRadius = '4px'
     layer.style.textAlign = 'left'

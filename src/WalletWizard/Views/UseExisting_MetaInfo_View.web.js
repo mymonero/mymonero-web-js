@@ -58,32 +58,20 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
       view.layer.spellcheck = 'false'
       div.appendChild(view.layer)
       self.mnemonicTextAreaView = view
-      view.layer.addEventListener(
-        'keypress',
-        function (event) {
-          self.AWalletFieldInput_did_keypress(event) // defined on super
-        }
-      )
-      view.layer.addEventListener(
-        'keyup',
-        function (event) {
+      view.layer.addEventListener('keypress', function (event) {
+        self.AWalletFieldInput_did_keypress(event) // defined on super
+      })
+      view.layer.addEventListener('keyup', function (event) {
+        self.AWalletFieldInput_did_keyup(event) // defined on super
+      })
+      view.layer.addEventListener('change', function (event) {
+        self.AWalletFieldInput_did_keyup(event) // defined on super
+      })
+      view.layer.addEventListener('paste', function (event) {
+        setTimeout(function () {
           self.AWalletFieldInput_did_keyup(event) // defined on super
-        }
-      )
-      view.layer.addEventListener(
-        'change',
-        function (event) {
-          self.AWalletFieldInput_did_keyup(event) // defined on super
-        }
-      )
-      view.layer.addEventListener(
-        'paste',
-        function (event) {
-          setTimeout(function () {
-            self.AWalletFieldInput_did_keyup(event) // defined on super
-          }, 300) // wait a little because value seems not to be readable otherwise
-        }
-      )
+        }, 300) // wait a little because value seems not to be readable otherwise
+      })
     }
     self.walletMnemonicField_layer = div
     self.form_containerLayer.appendChild(div)
@@ -114,32 +102,20 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
         view.layer.spellcheck = 'false'
         div.appendChild(view.layer)
         self.addrTextAreaView = view
-        view.layer.addEventListener(
-          'keypress',
-          function (event) {
-            self.AWalletFieldInput_did_keypress(event) // defined on super
-          }
-        )
-        view.layer.addEventListener(
-          'keyup',
-          function (event) {
+        view.layer.addEventListener('keypress', function (event) {
+          self.AWalletFieldInput_did_keypress(event) // defined on super
+        })
+        view.layer.addEventListener('keyup', function (event) {
+          self.AWalletFieldInput_did_keyup(event) // defined on super
+        })
+        view.layer.addEventListener('change', function (event) {
+          self.AWalletFieldInput_did_keyup(event) // defined on super
+        })
+        view.layer.addEventListener('paste', function (event) {
+          setTimeout(function () {
             self.AWalletFieldInput_did_keyup(event) // defined on super
-          }
-        )
-        view.layer.addEventListener(
-          'change',
-          function (event) {
-            self.AWalletFieldInput_did_keyup(event) // defined on super
-          }
-        )
-        view.layer.addEventListener(
-          'paste',
-          function (event) {
-            setTimeout(function () {
-              self.AWalletFieldInput_did_keyup(event) // defined on super
-            }, 300) // wait a little because value seems not to be readable otherwise
-          }
-        )
+          }, 300) // wait a little because value seems not to be readable otherwise
+        })
       }
       self.addrAndKeysFieldsContainerLayer.appendChild(div)
     }
@@ -164,32 +140,20 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
         view.layer.spellcheck = 'false'
         div.appendChild(view.layer)
         self.viewKeyTextAreaView = view
-        view.layer.addEventListener(
-          'keypress',
-          function (event) {
-            self.AWalletFieldInput_did_keypress(event) // defined on super
-          }
-        )
-        view.layer.addEventListener(
-          'keyup',
-          function (event) {
+        view.layer.addEventListener('keypress', function (event) {
+          self.AWalletFieldInput_did_keypress(event) // defined on super
+        })
+        view.layer.addEventListener('keyup', function (event) {
+          self.AWalletFieldInput_did_keyup(event) // defined on super
+        })
+        view.layer.addEventListener('change', function (event) {
+          self.AWalletFieldInput_did_keyup(event) // defined on super
+        })
+        view.layer.addEventListener('paste', function (event) {
+          setTimeout(function () {
             self.AWalletFieldInput_did_keyup(event) // defined on super
-          }
-        )
-        view.layer.addEventListener(
-          'change',
-          function (event) {
-            self.AWalletFieldInput_did_keyup(event) // defined on super
-          }
-        )
-        view.layer.addEventListener(
-          'paste',
-          function (event) {
-            setTimeout(function () {
-              self.AWalletFieldInput_did_keyup(event) // defined on super
-            }, 300) // wait a little because value seems not to be readable otherwise
-          }
-        )
+          }, 300) // wait a little because value seems not to be readable otherwise
+        })
       }
       self.addrAndKeysFieldsContainerLayer.appendChild(div)
     }
@@ -214,32 +178,20 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
         view.layer.spellcheck = 'false'
         div.appendChild(view.layer)
         self.spendKeyTextAreaView = view
-        view.layer.addEventListener(
-          'keypress',
-          function (event) {
-            self.AWalletFieldInput_did_keypress(event) // defined on super
-          }
-        )
-        view.layer.addEventListener(
-          'keyup',
-          function (event) {
+        view.layer.addEventListener('keypress', function (event) {
+          self.AWalletFieldInput_did_keypress(event) // defined on super
+        })
+        view.layer.addEventListener('keyup', function (event) {
+          self.AWalletFieldInput_did_keyup(event) // defined on super
+        })
+        view.layer.addEventListener('change', function (event) {
+          self.AWalletFieldInput_did_keyup(event) // defined on super
+        })
+        view.layer.addEventListener('paste', function (event) {
+          setTimeout(function () {
             self.AWalletFieldInput_did_keyup(event) // defined on super
-          }
-        )
-        view.layer.addEventListener(
-          'change',
-          function (event) {
-            self.AWalletFieldInput_did_keyup(event) // defined on super
-          }
-        )
-        view.layer.addEventListener(
-          'paste',
-          function (event) {
-            setTimeout(function () {
-              self.AWalletFieldInput_did_keyup(event) // defined on super
-            }, 300) // wait a little because value seems not to be readable otherwise
-          }
-        )
+          }, 300) // wait a little because value seems not to be readable otherwise
+        })
       }
       self.addrAndKeysFieldsContainerLayer.appendChild(div)
     }
@@ -263,12 +215,12 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
     }
     {
       function _new_titleFor_loginModeButton () {
-        if (self.mode_loginWith == Modes_LoginWith.MnemonicSeed) {
+        if (self.mode_loginWith === Modes_LoginWith.MnemonicSeed) {
           return 'Address and Private Keys'
-        } else if (self.mode_loginWith == Modes_LoginWith.AddrAndPrivKeys) {
+        } else if (self.mode_loginWith === Modes_LoginWith.AddrAndPrivKeys) {
           return 'Secret Mnemonic'
         } else {
-          throw 'unrecognized self.mode_loginWith'
+          throw Error('unrecognized self.mode_loginWith')
           // return undefined
         }
       }
@@ -350,13 +302,6 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
     return view
   }
 
-  // Navigation_New_RightBarButtonView()
-  // {
-  // 	const self = this
-  // 	const view = super.Navigation_New_RightBarButtonView()
-  // 	view.layer.innerHTML = "Add"
-  // 	return view
-  // }
   //
   //
   // Runtime - Accessors - Overridable
@@ -399,18 +344,12 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
   //
   lookup__walletName () {
     const self = this
-    if (self.context.isLiteApp == true) {
-      return self.context.walletsListController.LiteAppWalletName()
-    }
-    return self.walletNameInputLayer.value
+    return self.context.walletsListController.LiteAppWalletName()
   }
 
   lookup__colorHexString () {
     const self = this
-    if (self.context.isLiteApp == true) {
-      return self.context.walletsListController.LiteAppWalletSwatchColor()
-    }
-    return self.walletColorPickerInputView.Component_Value()
+    return self.context.walletsListController.LiteAppWalletSwatchColor()
   }
 
   lookup__mnemonicSeed () {

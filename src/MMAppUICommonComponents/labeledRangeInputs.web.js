@@ -18,22 +18,22 @@ function New_fieldValue_labeledRangeInputView (params, context) {
       : min
   const isMaxInfinity = params.isMaxInfinity === true
   const labelForInfinity = params.labelForInfinity || 'Infinity' // like "Never"
-  //
+
   const labelFor_min = params.slideSideLabelFor_min || '' + min
   const labelStyleWidthFor_min = params.slideSideLabelStyleWidthFor_min || '50px'
   const labelFor_max = params.slideSideLabelFor_max || '' + max
   const labelStyleWidthFor_max = params.slideSideLabelStyleWidthFor_max || '50px'
-  //
+
   const view = new View({ tag: 'table' }, context)
   const table = view.layer
   table.className = 'labeledRangeInput-container'
   table.style.height = '40px'
   table.style.width = '100%'
   table.style.paddingTop = '14px'
-  //
+
   const tr = document.createElement('tr')
   table.appendChild(tr)
-  //
+
   function __new_sliderSide_labelLayer (text) {
     const sliderSide_labelLayer = document.createElement('div')
     sliderSide_labelLayer.innerHTML = text
@@ -64,7 +64,7 @@ function New_fieldValue_labeledRangeInputView (params, context) {
   labelLayer.style.position = 'relative'
   labelLayer.style.top = '-10px'
   const labelLayer_width = 100 // give it enough room for most labels - 'auto' would be nice
-  labelLayer.style.width = labelLayer_width + 'px'
+  labelLayer.style.width = '100px'
   labelLayer.style.textAlign = 'center'
   labelLayer.style.height = '15px'
   labelLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
@@ -79,17 +79,15 @@ function New_fieldValue_labeledRangeInputView (params, context) {
   td_2.appendChild(sliderRunnableTrackGraphicLayer)
   //
   const layer = document.createElement('input')
-  {
-    layer.type = 'range'
-    layer.min = min
-    layer.max = max
-    layer.step = step
-    layer.value = value
-    //
-    layer.className = 'labeledRangeInput'
-    layer.style.width = '100%'
-    layer.style.display = 'inline-block'
-  }
+  layer.type = 'range'
+  layer.min = min
+  layer.max = max
+  layer.step = step
+  layer.value = value
+  //
+  layer.className = 'labeledRangeInput'
+  layer.style.width = '100%'
+  layer.style.display = 'inline-block'
   td_2.appendChild(layer)
   //
   const td_3 = document.createElement('td')
@@ -115,10 +113,10 @@ function New_fieldValue_labeledRangeInputView (params, context) {
     const float_max = parseFloat(max)
     // ^- going to assuming float is a good medium for numerical comparison - supposing JS doesn't screw it up
     if (isNaN(float_inputValue)) {
-      throw 'Range input value cannot be parsed as float for comparison'
+      throw Error('Range input value cannot be parsed as float for comparison')
     }
     if (isNaN(float_max)) {
-      throw 'Range input max cannot be parsed as float for comparison'
+      throw Error('Range input max cannot be parsed as float for comparison')
     }
     if (float_inputValue === float_max) {
       if (isMaxInfinity) {
@@ -171,7 +169,7 @@ function New_fieldValue_labeledRangeInputView (params, context) {
   return view
 }
 exports.New_fieldValue_labeledRangeInputView = New_fieldValue_labeledRangeInputView
-//
+
 function New_fieldValue_timeBasedLabeledRangeInputView (params, context) {
   const optl_displayAsMinutesAtXMin = params.displayAsMinutesAtXMin
   const isToDisplayAsMinsAfterXMin = typeof optl_displayAsMinutesAtXMin !== 'undefined'

@@ -2,7 +2,6 @@
 
 const View = require('../../Views/View.web')
 const commonComponents_walletIcons = require('../../MMAppUICommonComponents/walletIcons.web')
-const commonComponents_hoverableCells = require('../../MMAppUICommonComponents/hoverableCells.web')
 const Currencies = require('../../CcyConversionRates/Currencies')
 
 class WalletCellContentsView extends View {
@@ -26,8 +25,8 @@ class WalletCellContentsView extends View {
     const self = this
     if (self.wantsHoverable) {
       // hover effects/classes
-      self.layer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
-      self.layer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
+      self.layer.classList.add('hoverable-cell')
+      self.layer.classList.add('utility')
     }
     {
       const layer = self.layer

@@ -10,21 +10,17 @@ class UserIdleInWindowController extends EventEmitter {
   constructor (options, context) {
     super() // must call before can access `this`
     const self = this
-    { // inputs/deps
-      self.options = options
-      self.context = context
-    }
-    { // initial state
-      self.isUserIdle = false
-      self._numberOfSecondsSinceLastUserInteraction = 0
-      self._numberOfRequestsToLockUserIdleAsDisabled = 0
-    }
+    // inputs/deps
+    self.options = options
+    self.context = context
+    // initial state
+    self.isUserIdle = false
+    self._numberOfSecondsSinceLastUserInteraction = 0
+    self._numberOfRequestsToLockUserIdleAsDisabled = 0
     { // begin observing things which break/reset idle
       function __userDidInteract () { // trampoline to maintain `this` and encapsulate _userDidInteract call
         const wasUserIdle = self.isUserIdle
-        {
-          self._userDidInteract()
-        }
+        self._userDidInteract()
         if (wasUserIdle === true) { // emit after we have set isUserIdle back to false
           self._userDidComeBackFromIdle()
         }
@@ -33,9 +29,8 @@ class UserIdleInWindowController extends EventEmitter {
       document.onmousemove = __userDidInteract
       document.onkeypress = __userDidInteract
     }
-    { // begin watching and checking if user considered idle
-      self._initiate_userIdle_intervalTimer()
-    }
+    // begin watching and checking if user considered idle
+    self._initiate_userIdle_intervalTimer()
   }
 
   //
@@ -84,7 +79,7 @@ class UserIdleInWindowController extends EventEmitter {
   __disable_userIdle () {
     const self = this
     if (!self.userIdle_intervalTimer || typeof self.userIdle_intervalTimer === 'undefined') {
-      throw '__disable_userIdle called but already have nil self.userIdle_intervalTimer'
+      throw Error('__disable_userIdle called but already have nil self.userIdle_intervalTimer')
     }
     clearInterval(self.userIdle_intervalTimer)
     self.userIdle_intervalTimer = null
@@ -93,7 +88,7 @@ class UserIdleInWindowController extends EventEmitter {
   __reEnable_userIdle () {
     const self = this
     if (self.userIdle_intervalTimer && typeof self.userIdle_intervalTimer !== 'undefined') {
-      throw '__reEnable_userIdle called but non-nil self.userIdle_intervalTimer'
+      throw Error('__reEnable_userIdle called but non-nil self.userIdle_intervalTimer')
     }
     self._initiate_userIdle_intervalTimer()
   }
@@ -137,18 +132,14 @@ class UserIdleInWindowController extends EventEmitter {
 
   _userDidComeBackFromIdle () {
     const self = this
-    {
-      self.isUserIdle = false // in case they were
-    }
+    self.isUserIdle = false // in case they were
     console.log('👀  User came back from having been idle.')
     self.emit(self.EventName_userDidComeBackFromIdle())
   }
 
   _userDidBecomeIdle () {
     const self = this
-    {
-      self.isUserIdle = true
-    }
+    self.isUserIdle = true
     console.log('⏲  User became idle.')
     self.emit(self.EventName_userDidBecomeIdle())
   }

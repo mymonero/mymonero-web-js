@@ -1,8 +1,7 @@
 'use strict'
 
 const View = require('../Views/View.web')
-const commonComponents_hoverableCells = require('./hoverableCells.web')
-//
+
 const ActionButton_h = 32
 const ActionButton_rightMargin = 9
 //
@@ -11,11 +10,7 @@ const ActionButtonsContainerView_bottomMargin = 8
 exports.ActionButtonsContainerView_bottomMargin = 8
 exports.ActionButtonsContainerView_h = 32
 //
-function New_ActionButtonsContainerView (
-  margin_fromWindowLeft,
-  margin_fromWindowRight,
-  context
-) {
+function New_ActionButtonsContainerView (margin_fromWindowLeft, margin_fromWindowRight, context) {
   const view = new View({}, context)
   const layer = view.layer
   layer.style.position = 'fixed'
@@ -26,22 +21,15 @@ function New_ActionButtonsContainerView (
   return view
 }
 exports.New_ActionButtonsContainerView = New_ActionButtonsContainerView
-//
-function New_Stacked_ActionButtonsContainerView (
-  margin_left,
-  margin_right,
-  margin_top,
-  context
-) {
+
+function New_Stacked_ActionButtonsContainerView (margin_left, margin_right, margin_top, context) {
   const view = new View({}, context)
   const layer = view.layer
-  {
-    layer.style.position = 'relative'
-    layer.style.width = `calc(100% - ${margin_left}px - ${margin_right}px)`
-    layer.style.marginLeft = `${margin_left}px`
-    layer.style.marginTop = `${margin_top}px`
-    layer.style.height = ActionButtonsContainerView_h + ActionButtonsContainerView_bottomMargin + 'px'
-  }
+  layer.style.position = 'relative'
+  layer.style.width = `calc(100% - ${margin_left}px - ${margin_right}px)`
+  layer.style.marginLeft = `${margin_left}px`
+  layer.style.marginTop = `${margin_top}px`
+  layer.style.height = ActionButtonsContainerView_h + ActionButtonsContainerView_bottomMargin + 'px'
   return view
 }
 exports.New_Stacked_ActionButtonsContainerView = New_Stacked_ActionButtonsContainerView
@@ -75,12 +63,12 @@ function New_ActionButtonView (
     layer.classList.remove('disabled')
   }
   view.SetColorType = function (colorType) {
-    layer.classList.remove(commonComponents_hoverableCells.ClassFor_GreyCell())
-    layer.classList.remove(commonComponents_hoverableCells.ClassFor_BlueCell())
-    layer.classList.remove(commonComponents_hoverableCells.ClassFor_RedCell())
+    layer.classList.remove('utility')
+    layer.classList.remove('action')
+    layer.classList.remove('destructive')
     //
     if (colorType === 'grey') {
-      layer.classList.add(commonComponents_hoverableCells.ClassFor_GreyCell())
+      layer.classList.add('utility')
       layer.style.color = '#FCFBFC'
       layer.style.backgroundColor = '#383638'
       if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
@@ -98,7 +86,7 @@ function New_ActionButtonView (
         layer.style.lineHeight = ActionButton_h + 'px' // reset/set on mobile - cause font size is consistent
       }
     } else if (colorType == 'blue') {
-      layer.classList.add(commonComponents_hoverableCells.ClassFor_BlueCell())
+      layer.classList.add('action')
       layer.style.color = '#161416'
       layer.style.backgroundColor = '#00C6FF'
       if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
@@ -114,7 +102,7 @@ function New_ActionButtonView (
       layer.style.transform = 'none' // reset
       layer.style.lineHeight = ActionButton_h + 'px' // reset/set
     } else if (colorType === 'red') {
-      layer.classList.add(commonComponents_hoverableCells.ClassFor_RedCell())
+      layer.classList.add('destructive')
       layer.style.color = '#161416'
       layer.style.backgroundColor = '#f97777'
       if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
@@ -129,7 +117,7 @@ function New_ActionButtonView (
       )
       layer.style.lineHeight = ActionButton_h + 'px' // reset/set
     } else {
-      throw 'unrecognized colorType ' + colorType
+      throw Error('unrecognized colorType ' + colorType)
     }
   }
   { // setup/style
@@ -150,11 +138,9 @@ function New_ActionButtonView (
     layer.style.height = ActionButton_h + 'px'
     layer.style.boxSizing = 'border-box'
     layer.style.borderRadius = '3px'
-    {
-      layer.classList.add(commonComponents_hoverableCells.ClassFor_HoverableCell())
-      layer.classList.add(commonComponents_hoverableCells.ClassFor_Disableable())
-      view.SetColorType(optl_colorType || 'grey')
-    }
+    layer.classList.add('hoverable-cell')
+    layer.classList.add('disableable')
+    view.SetColorType(optl_colorType || 'grey')
     layer.style.textDecoration = 'none'
     layer.style.textAlign = 'center'
     layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'

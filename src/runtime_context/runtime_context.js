@@ -4,11 +4,9 @@ const TXTRecordResolver = require('../OpenAlias/TXTResolver.web')
 const txtRecordResolver = new TXTRecordResolver({})
 
 const Pasteboard = require('../Pasteboard/Pasteboard.browser')
-const UrlBrowser = require('../URLBrowser/URLBrowser.browser')
 const FilesystemUI = require('../FilesystemUI/FilesystemUI.browser')
 const WindowDialogs = require('../WindowDialogs/WindowDialogs.browser')
 const CCyConversionRates = require('../CcyConversionRates/Controller')
-const Locale = require('../Locale/Locale.browser')
 const StringCryptor = require('../symmetric_cryptor/BackgroundStringCryptor.noOp')
 const Persister = require('../DocumentPersister/DocumentPersister.InMemory')
 const BackgroundAPIResponseParser = require('../HostedMoneroAPIClient/BackgroundResponseParser.web')
@@ -26,11 +24,9 @@ function NewHydratedContext (initialContext) {
   const context = initialContext != null ? initialContext : {}
 
   context.pasteboard = new Pasteboard({}, context)
-  context.urlBrowser = new UrlBrowser({}, context)
   context.filesystemUI = new FilesystemUI({}, context)
   context.windowDialogs = new WindowDialogs({}, context)
   context.CcyConversionRates_Controller_shared = new CCyConversionRates({}, context)
-  context.locale = new Locale({}, context)
   context.string_cryptor__background = new StringCryptor({}, context)
   context.persister = new Persister({}, context)
   context.backgroundAPIResponseParser = new BackgroundAPIResponseParser({

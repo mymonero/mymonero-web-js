@@ -11,12 +11,11 @@ class OpenAliasResolver extends EventEmitter {
   constructor (options, context) {
     super() // must call super before we can access `this`
     const self = this
-    {
-      self.options = options
-      self.txtRecordResolver = options.txtRecordResolver // probably a better way to inject this dependency than using context
-      //
-      self.context = context
-    }
+    self.options = options
+    self.txtRecordResolver = options.txtRecordResolver // probably a better way to inject this dependency than using context
+    //
+    self.context = context
+
     self.setMaxListeners(10000) // in case we have many contacts… :P
   }
 
