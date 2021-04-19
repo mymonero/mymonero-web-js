@@ -8,7 +8,7 @@ window.BootApp = function () { // encased in a function to prevent scope being l
   const app =
   { // implementing some methods to provide same API as electron
     getVersion: function () {
-      return '1.1.19' // TODO: read from config.. don't want to ship package.json with app though
+      return '1.1.20' // TODO: read from config.. don't want to ship package.json with app though
     },
     getName: function () {
       return 'MyMonero'
