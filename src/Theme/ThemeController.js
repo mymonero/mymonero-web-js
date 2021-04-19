@@ -142,16 +142,13 @@ class ThemeController {
     const self = this
     const view = commonComponents_navigationBarButtons.New_LeftSide_BackButtonView(self.context)
     const layer = view.layer
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        if (view.isEnabled !== false) { // button is enabled
-          clicked_fn()
-        }
-        return false
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      if (view.isEnabled !== false) { // button is enabled
+        clicked_fn()
       }
-    )
+      return false
+    })
     return view
   }
 }

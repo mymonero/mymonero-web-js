@@ -1,6 +1,5 @@
 'use strict'
 
-const View = require('../Views/View.web')
 const BarButtonBaseView = require('../StackNavigation/Views/BarButtonBaseView.web')
 
 function _New_ButtonBase_View (context, optl_didConfigureInteractivity_fn) {
@@ -22,14 +21,14 @@ function _New_ButtonBase_View (context, optl_didConfigureInteractivity_fn) {
   layer.style.boxSizing = 'border-box'
   layer.style.width = 'auto'
   layer.style.padding = '0 8px'
-  //
+
   view.SetEnabled(true)
   layer.classList.add('hoverable-cell')
-  //
+
   return view
 }
 exports.New_ButtonBase_View = _New_ButtonBase_View
-//
+
 function New_GreyButtonView (context) {
   const view = _New_ButtonBase_View(
     context,
@@ -53,7 +52,7 @@ function New_GreyButtonView (context) {
   return view
 }
 exports.New_GreyButtonView = New_GreyButtonView
-//
+
 function New_BlueButtonView (context) {
   const view = _New_ButtonBase_View(
     context,
@@ -67,13 +66,11 @@ function New_BlueButtonView (context) {
           layer.style.boxShadow = 'inset 0 0.5px 0 0 rgba(255,255,255,0.20)'
         }
         layer.style.color = '#161416'
-        //
         layer.style.fontWeight = '600'
       } else {
         layer.style.backgroundColor = '#383638'
         layer.style.boxShadow = 'none'
         layer.style.color = '#6B696B'
-        //
         layer.style.fontWeight = '600'
       }
     }
@@ -88,7 +85,7 @@ function New_BlueButtonView (context) {
   return view
 }
 exports.New_BlueButtonView = New_BlueButtonView
-//
+
 function New_LeftSide_BackButtonView (context) {
   const view = New_GreyButtonView(context)
   const layer = view.layer
@@ -104,7 +101,7 @@ function New_LeftSide_BackButtonView (context) {
   return view
 }
 exports.New_LeftSide_BackButtonView = New_LeftSide_BackButtonView
-//
+
 function New_RightSide_AddButtonView (context) {
   const view = New_BlueButtonView(context)
   const layer = view.layer
@@ -118,7 +115,7 @@ function New_RightSide_AddButtonView (context) {
   return view
 }
 exports.New_RightSide_AddButtonView = New_RightSide_AddButtonView
-//
+
 function New_LeftSide_CancelButtonView (context, title_orUndefinedForDefaultCancel) {
   const view = New_GreyButtonView(context)
   const layer = view.layer
@@ -128,15 +125,13 @@ function New_LeftSide_CancelButtonView (context, title_orUndefinedForDefaultCanc
 			title_orUndefinedForDefaultCancel === ''
 		  ? 'Cancel' : title_orUndefinedForDefaultCancel
   layer.innerHTML = title
-  //
   layer.style.display = 'block'
   layer.style.float = 'left' // so it sticks to the left of the left btn holder view layer
   layer.style.marginTop = '10px'
-  //
   return view
 }
 exports.New_LeftSide_CancelButtonView = New_LeftSide_CancelButtonView
-//
+
 function New_RightSide_SaveButtonView (context) {
   const view = New_BlueButtonView(context)
   const layer = view.layer
@@ -146,7 +141,7 @@ function New_RightSide_SaveButtonView (context) {
   return view
 }
 exports.New_RightSide_SaveButtonView = New_RightSide_SaveButtonView
-//
+
 function New_RightSide_EditButtonView (context) {
   const view = New_GreyButtonView(context)
   const layer = view.layer
@@ -157,24 +152,23 @@ function New_RightSide_EditButtonView (context) {
   return view
 }
 exports.New_RightSide_EditButtonView = New_RightSide_EditButtonView
-//
+
 function New_RightSide_ValueDisplayLabelButtonView (context) {
   const view = _New_ButtonBase_View(context)
   const layer = view.layer
-  { // setup/style
-    layer.href = '' // to make it non-clickable
-    layer.style.display = 'block'
-    layer.style.float = 'right' // so it sticks to the right of the right btn holder view layer
-    layer.style.marginTop = '12px'
-    layer.style.width = 'auto'
-    layer.style.height = 'auto'
-    layer.style.textDecoration = 'none'
-    context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
-    layer.style.color = '#9E9C9E'
-    layer.style.lineHeight = '200%' // % extra to get + aligned properly
-    layer.style.textAlign = 'center'
-    layer.style.cursor = 'default'
-  }
+  // setup/style
+  layer.href = '' // to make it non-clickable
+  layer.style.display = 'block'
+  layer.style.float = 'right' // so it sticks to the right of the right btn holder view layer
+  layer.style.marginTop = '12px'
+  layer.style.width = 'auto'
+  layer.style.height = 'auto'
+  layer.style.textDecoration = 'none'
+  context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
+  layer.style.color = '#9E9C9E'
+  layer.style.lineHeight = '200%' // % extra to get + aligned properly
+  layer.style.textAlign = 'center'
+  layer.style.cursor = 'default'
   return view
 }
 exports.New_RightSide_ValueDisplayLabelButtonView = New_RightSide_ValueDisplayLabelButtonView

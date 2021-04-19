@@ -74,9 +74,8 @@ function New_MnemonicTextDisplayView (mnemonicString, context) {
   const view = new View({}, context)
   const layer = view.layer
   layer.className = 'mnemonic-container'
-  const padding_v = 35
-  layer.style.minHeight = `${128 - 2 * padding_v}px`
-  layer.style.padding = `${padding_v}px 24px`
+  layer.style.minHeight = `${128 - 2 * 35}px`
+  layer.style.padding = '35px 24px'
   layer.style.width = `calc(100% - ${2 * 16}px - ${2 * 1}px - ${2 * 24}px)`
   layer.style.wordBreak = 'break-word'
   layer.style.lineHeight = '20px'
@@ -104,9 +103,8 @@ function New_MnemonicConfirmation_SelectedWordsView (mnemonicString, context, di
   {
     const layer = view.layer
     layer.className = 'mnemonic-container'
-    const padding_v = 20 // instead of 24, because word elements have v margin of 4
-    layer.style.minHeight = `${129 - 2 * padding_v}px`
-    layer.style.padding = `${padding_v}px 24px`
+    layer.style.minHeight = `${129 - 2 * 20}px`
+    layer.style.padding = '20px 24px'
     layer.style.width = `calc(100% - ${2 * 16}px - ${2 * 1}px - ${2 * 24}px)`
     layer.style.textAlign = 'center'
   }
@@ -135,24 +133,21 @@ function New_MnemonicConfirmation_SelectedWordsView (mnemonicString, context, di
     //
     const wordView = _new_MnemonicConfirmation_WordView(word, wordUUID, context)
     const wordView_layer = wordView.layer
-    wordView_layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        if (view.isEnabled == false) {
-          console.warn('Word deselected but control not enabled')
-          return
-        }
-        const this_wordView_layer = this
-        this_wordView_layer.href = '' // no longer clickable
-        const wordUUID = this_wordView_layer.__component_mnemonicWordUUID
-        if (!wordUUID || typeof wordUUID === 'undefined') {
-          throw 'No word id associated with clicked layer'
-        }
-        view.Component_DeselectWordWithUUID(wordUUID)
-        return false
+    wordView_layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      if (view.isEnabled == false) {
+        console.warn('Word deselected but control not enabled')
+        return
       }
-    )
+      const this_wordView_layer = this
+      this_wordView_layer.href = '' // no longer clickable
+      const wordUUID = this_wordView_layer.__component_mnemonicWordUUID
+      if (!wordUUID || typeof wordUUID === 'undefined') {
+        throw Error('No word id associated with clicked layer')
+      }
+      view.Component_DeselectWordWithUUID(wordUUID)
+      return false
+    })
     selectedWord_viewsByWordUUID[wordUUID] = wordView
     view.layer.appendChild(wordView_layer)
     //
@@ -162,7 +157,7 @@ function New_MnemonicConfirmation_SelectedWordsView (mnemonicString, context, di
     {
       const indexOf_wordUUID = ordered_selectedWordUUIDs.indexOf(wordUUID)
       if (indexOf_wordUUID === -1) {
-        throw 'WordUUID not found in list of selected words.'
+        throw Error('WordUUID not found in list of selected words.')
       }
       ordered_selectedWordUUIDs.splice(indexOf_wordUUID, 1) // remove
     }
@@ -207,7 +202,7 @@ function New_MnemonicConfirmation_SelectedWordsView (mnemonicString, context, di
   return view
 }
 exports.New_MnemonicConfirmation_SelectedWordsView = New_MnemonicConfirmation_SelectedWordsView
-//
+
 function _new_MnemonicConfirmation_WordView (word, wordUUID, context) {
   const view = new View({ tag: 'a' }, context)
   const layer = view.layer
@@ -216,25 +211,23 @@ function _new_MnemonicConfirmation_WordView (word, wordUUID, context) {
   layer.classList.add('mnemonic-box-word-view')
   layer.ondragstart = function (e) { e.preventDefault(); return false } // disable link dragging
   layer.innerHTML = word.toUpperCase()
-  { // for retrieval later
-    layer.__component_mnemonicWord = word
-    layer.__component_mnemonicWordUUID = wordUUID
-  }
+  // for retrieval later
+  layer.__component_mnemonicWord = word
+  layer.__component_mnemonicWordUUID = wordUUID
   return view
 }
-//
+
 function New_MnemonicConfirmation_SelectableWordsView (
   mnemonicString,
   mnemonicConfirmation_selectedWordsView,
   context
 ) {
   __injectCSSRules_ifNecessary(context)
-  //
+
   const view = new View({}, context)
   {
     const layer = view.layer
-    const padding_v = 24
-    layer.style.padding = `${padding_v}px 24px`
+    layer.style.padding = '24px 24px'
     layer.style.width = `calc(100% - ${2 * 24}px)`
     layer.style.textAlign = 'center'
     layer.style.marginTop = '10px'
@@ -255,34 +248,31 @@ function New_MnemonicConfirmation_SelectableWordsView (
       const wordView_layer = wordView.layer
       view.layer.appendChild(wordView_layer)
       //
-      wordView_layer.addEventListener(
-        'click',
-        function (e) {
-          e.preventDefault()
-          if (mnemonicConfirmation_selectedWordsView.isEnabled == false) {
-            console.warn('Word selected but disabled.')
-            return false
-          }
-          const this_wordView_layer = this
-          const isSelectedClass = 'mnemonic-pill--selectedPlaceholder'
-          if (this_wordView_layer.className === isSelectedClass) { // if it's already picked
-            return
-          }
-          this_wordView_layer.className = isSelectedClass // flip to selected type
-          this_wordView_layer.href = '' // no longer clickable
-          const word = this_wordView_layer.__component_mnemonicWord
-          if (!word || typeof word === 'undefined') {
-            throw 'No word associated with clicked layer'
-          }
-          const wordUUID = this_wordView_layer.__component_mnemonicWordUUID
-          if (!wordUUID || typeof wordUUID === 'undefined') {
-            throw 'No word ID associated with clicked layer'
-          }
-          mnemonicConfirmation_selectedWordsView.Component_SelectWordWithUUID(word, wordUUID)
-          //
+      wordView_layer.addEventListener('click', function (e) {
+        e.preventDefault()
+        if (mnemonicConfirmation_selectedWordsView.isEnabled == false) {
+          console.warn('Word selected but disabled.')
           return false
         }
-      )
+        const this_wordView_layer = this
+        const isSelectedClass = 'mnemonic-pill--selectedPlaceholder'
+        if (this_wordView_layer.className === isSelectedClass) { // if it's already picked
+          return
+        }
+        this_wordView_layer.className = isSelectedClass // flip to selected type
+        this_wordView_layer.href = '' // no longer clickable
+        const word = this_wordView_layer.__component_mnemonicWord
+        if (!word || typeof word === 'undefined') {
+          throw Error('No word associated with clicked layer')
+        }
+        const wordUUID = this_wordView_layer.__component_mnemonicWordUUID
+        if (!wordUUID || typeof wordUUID === 'undefined') {
+          throw Error('No word ID associated with clicked layer')
+        }
+        mnemonicConfirmation_selectedWordsView.Component_SelectWordWithUUID(word, wordUUID)
+        //
+        return false
+      })
     }
   )
   // Component - Methods - Teardown - Imperatives
@@ -295,7 +285,7 @@ function New_MnemonicConfirmation_SelectableWordsView (
       function (wordUUID, i) {
         const word = wordsByWordUUID[wordUUID]
         if (typeof word === 'undefined' || !word) {
-          throw 'Word not found for UUID'
+          throw Error('Word not found for UUID')
           // return
         }
         words.push(word)

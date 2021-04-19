@@ -36,13 +36,12 @@ class TXTResolver {
             fn('Unrecognized DNS response entry format')
             return
           }
-          { // remove wrapping escaped "s
-            if (entryData.charAt(0) == '"') { // remove
-              entryData = entryData.substring(1)
-            }
-            if (entryData.charAt(entryData.length - 1) == '"') {
-              entryData = entryData.slice(0, entryData.length - 1) // remove last char
-            }
+          // remove wrapping escaped "s
+          if (entryData.charAt(0) == '"') { // remove
+            entryData = entryData.substring(1)
+          }
+          if (entryData.charAt(entryData.length - 1) == '"') {
+            entryData = entryData.slice(0, entryData.length - 1) // remove last char
           }
           records.push(entryData)
         }

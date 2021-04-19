@@ -13,10 +13,10 @@ class RequestsDownloadAppEmptyScreenView extends View {
 
     const view = new View({}, self.context)
     const layer = view.layer
-    layer.style.marginTop = `56px`
+    layer.style.marginTop = '56px'
     layer.style.marginLeft = '16px'
-    layer.style.width = `calc(100% - 32px)`
-    layer.style.height = `calc(100% - 56px - 15px)`
+    layer.style.width = 'calc(100% - 32px)'
+    layer.style.height = 'calc(100% - 71px)'
 
     const emptyStateMessageContainerView = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
       '👇',

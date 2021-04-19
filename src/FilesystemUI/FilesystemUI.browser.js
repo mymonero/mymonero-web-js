@@ -1,8 +1,5 @@
 'use strict'
-
-const FilesystemUI_Abstract = require('./FilesystemUI_Abstract')
-
-class FilesytemUI extends FilesystemUI_Abstract {
+class FilesytemUI {
   //
   //
   // Runtime - Accessors - Lookups - IPC - Main window
@@ -20,14 +17,7 @@ class FilesytemUI extends FilesystemUI_Abstract {
     alert('Code fault: PresentDialogToSaveBase64ImageStringAsImageFile not yet implemented')
   }
 
-  PresentDialogToSaveTextFile (
-    contentString,
-    title,
-    defaultFilename_sansExt,
-    ext,
-    fn,
-    optl_uriContentPrefix
-  ) {
+  PresentDialogToSaveTextFile (contentString, title, defaultFilename_sansExt, ext, fn, optl_uriContentPrefix) {
     if (typeof optl_uriContentPrefix === 'undefined' || !optl_uriContentPrefix) {
       throw Error('PresentDialogToSaveTextFile expected optl_uriContentPrefix')
     }

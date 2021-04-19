@@ -4,16 +4,13 @@ const View = require('../Views/View.web')
 const activityIndicators = require('./activityIndicators.web')
 const commonComponents_forms = require('./forms.web')
 
-//
 function New_fieldContainerLayer (context) {
-  //
   const layer = document.createElement('div')
   layer.className = 'table_field'
-  //
   return layer
 }
 exports.New_fieldContainerLayer = New_fieldContainerLayer
-//
+
 function New_clickableLinkButtonView (buttonTitle, context, clicked_fn, optl__mouseEnter_fn, optl__mouseLeave_fn) {
   clicked_fn = clicked_fn || function () {}
   const mouseEnter_fn = optl__mouseEnter_fn || function () {}
@@ -120,11 +117,11 @@ function New_separatorLayer (context) {
   layer.style.width = '100%'
   layer.style.height = '0.5px'
   layer.style.backgroundColor = '#494749'
-  //
+
   return layer
 }
 exports.New_separatorLayer = New_separatorLayer
-//
+
 function New_customButton_aLayer (context, buttonTitleText, enabled_orTrue, clicked_fn) {
   const layer = document.createElement('a')
   layer.innerHTML = buttonTitleText
@@ -166,18 +163,15 @@ function New_customButton_aLayer (context, buttonTitleText, enabled_orTrue, clic
   // initial config
   layer.Component_SetEnabled(enabled_orTrue)
   // start observing
-  layer.addEventListener(
-    'click',
-    function (e) {
-      if (layer.Component_IsEnabled !== false) {
-        clicked_fn() // just going to assume it exists or code fault
-      }
+  layer.addEventListener('click', function (e) {
+    if (layer.Component_IsEnabled !== false) {
+      clicked_fn() // just going to assume it exists or code fault
     }
-  )
+  })
   return layer
 }
 exports.New_customButton_aLayer = New_customButton_aLayer
-//
+
 function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_orTrue, pasteboard) { // defaults to 'text' content type
   // state var declarations - hopefully this won't go out of scope?
   let runtime_valueToCopy // gets set below
@@ -192,7 +186,7 @@ function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_o
       } else if (typeof runtime_valueToCopy === 'object') {
         pasteboard.CopyValuesByType(runtime_valueToCopy)
       } else {
-        throw `unrecognized typeof value to copy ${typeof runtime_valueToCopy} in New_copyButton_aLayer`
+        throw Error(`unrecognized typeof value to copy ${typeof runtime_valueToCopy} in New_copyButton_aLayer`)
       }
     }
   )
@@ -220,7 +214,7 @@ function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_o
   return layer
 }
 exports.New_copyButton_aLayer = New_copyButton_aLayer
-//
+
 function New_redTextButtonView (text, context) {
   const view = new View({ tag: 'a' }, context)
   const layer = view.layer
@@ -257,11 +251,11 @@ function New_redTextButtonView (text, context) {
     }
   }
   view.SetEnabled(true)
-  //
+
   return view
 }
 exports.New_redTextButtonView = New_redTextButtonView
-//
+
 function New_deleteRecordNamedButtonView (humanReadable_recordName, context, optl_replacementVerbString, optl_completeTitleOverrideString) {
   const verbString = optl_replacementVerbString || 'DELETE'
   const text = optl_completeTitleOverrideString || verbString + ' ' + humanReadable_recordName.toUpperCase() + '…'
@@ -270,31 +264,31 @@ function New_deleteRecordNamedButtonView (humanReadable_recordName, context, opt
   return view
 }
 exports.New_deleteRecordNamedButtonView = New_deleteRecordNamedButtonView
-//
+
 function New_createNewRecordNamedButtonView (lowercased_humanReadable_recordName, context, clicked_fn) {
   const text = '+ CREATE NEW ' + lowercased_humanReadable_recordName
   const layer = New_clickableLinkButtonView(text, context, clicked_fn)
   return layer
 }
 exports.New_createNewRecordNamedButtonView = New_createNewRecordNamedButtonView
-//
+
 function New_clearingBreakLayer () {
   const layer = document.createElement('br')
   layer.clear = 'both'
-  //
+
   return layer
 }
 exports.New_clearingBreakLayer = New_clearingBreakLayer
-//
+
 function New_spacerLayer () {
   const layer = document.createElement('div')
   layer.style.width = '100%'
   layer.style.height = '40px' // just tentative - feel free to customize
-  //
+
   return layer
 }
 exports.New_spacerLayer = New_spacerLayer
-//
+
 function New_inlineMessageDialogLayer (context, messageString, optl_immediatelyVisible, optl_wantsXButtonHidden) {
   const immediatelyVisible = optl_immediatelyVisible === true // These are configured to not by default be initially visible
   const layer = document.createElement('div')
@@ -322,7 +316,7 @@ function New_inlineMessageDialogLayer (context, messageString, optl_immediatelyV
     // TODO: callback?
     return false
   })
-  //
+
   layer.SetValidationError = function (to_messageString, method__optl_wantsXButtonHidden) {
     if (to_messageString === '') {
       layer.ClearAndHideMessage()
@@ -348,7 +342,7 @@ function New_inlineMessageDialogLayer (context, messageString, optl_immediatelyV
   return layer
 }
 exports.New_inlineMessageDialogLayer = New_inlineMessageDialogLayer
-//
+
 function New_copyable_longStringValueField_component_fieldContainerLayer (
   context,
   fieldLabelTitle,
@@ -404,27 +398,23 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
       clearingBreakLayer.clear = 'both'
       div.appendChild(clearingBreakLayer)
     }
-    {
-      valueLayer.style.float = 'left'
-      valueLayer.style.textAlign = 'left'
-      valueLayer.style.marginTop = '9px'
-      valueLayer.style.maxWidth = canSupportCopyButton ? '270px' : '300px'
-      div.appendChild(valueLayer)
-    }
+    valueLayer.style.float = 'left'
+    valueLayer.style.textAlign = 'left'
+    valueLayer.style.marginTop = '9px'
+    valueLayer.style.maxWidth = canSupportCopyButton ? '270px' : '300px'
+    div.appendChild(valueLayer)
   } else {
-    {
-      labelLayer.style.float = 'left'
-      div.appendChild(labelLayer)
-    }
-    {
-      valueLayer.style.maxWidth = canSupportCopyButton ? '44%' : '50%'
-      valueLayer.style.float = 'left'
-      valueLayer.style.whiteSpace = 'nowrap'
-      valueLayer.style.overflow = 'hidden'
-      valueLayer.style.textOverflow = 'ellipsis'
-      valueLayer.style.marginLeft = '16px'
-      div.appendChild(valueLayer)
-    }
+    labelLayer.style.float = 'left'
+    div.appendChild(labelLayer)
+
+    valueLayer.style.maxWidth = canSupportCopyButton ? '44%' : '50%'
+    valueLayer.style.float = 'left'
+    valueLayer.style.whiteSpace = 'nowrap'
+    valueLayer.style.overflow = 'hidden'
+    valueLayer.style.textOverflow = 'ellipsis'
+    valueLayer.style.marginLeft = '16px'
+    div.appendChild(valueLayer)
+
     if (canSupportCopyButton) {
       div.appendChild(copy_buttonLayer)
     }
@@ -445,28 +435,28 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
   return div
 }
 exports.New_copyable_longStringValueField_component_fieldContainerLayer = New_copyable_longStringValueField_component_fieldContainerLayer
-//
+
 function New_tableCell_accessoryChevronLayer (context) {
   const layer = document.createElement('img')
   layer.src = './src/assets/img/list_rightside_chevron@3x.png'
   layer.style.position = 'absolute'
   layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
   layer.style.width = '7px'
-  layer.style.height = `12px`
+  layer.style.height = '12px'
   layer.style.right = '16px'
-  layer.style.top = `calc(50% - 6px)`
+  layer.style.top = 'calc(50% - 6px)'
   return layer
 }
 exports.New_tableCell_accessoryChevronLayer = New_tableCell_accessoryChevronLayer
-//
+
 function New_tableCell_accessoryActivityIndicatorLayer (isOnAccentBackground) {
   const layer = activityIndicators.New_Graphic_ActivityIndicatorLayer(isOnAccentBackground)
   layer.style.position = 'absolute'
   layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
   layer.style.width = '16px'
-  layer.style.height = `14px`
+  layer.style.height = '14px'
   layer.style.right = '16px'
-  layer.style.top = `calc(50% - 7px)`
+  layer.style.top = 'calc(50% - 7px)'
   return layer
 }
 exports.New_tableCell_accessoryActivityIndicatorLayer = New_tableCell_accessoryActivityIndicatorLayer

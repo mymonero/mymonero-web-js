@@ -8,7 +8,7 @@ class SendTabContentView extends StackAndModalNavigationView {
     const self = this
     { // walletsListView
       const options = {}
-      const SendFundsView = self._required_rootViewClassModule()
+      const SendFundsView = require('./SendFundsView.Lite.web')
       const view = new SendFundsView(options, self.context)
       self.sendFundsView = view
     }
@@ -17,10 +17,6 @@ class SendTabContentView extends StackAndModalNavigationView {
         self.sendFundsView
       ]
     )
-  }
-
-  _required_rootViewClassModule () {
-    return require('./SendFundsView.Lite.web')
   }
 
   //
@@ -89,4 +85,3 @@ class SendTabContentView extends StackAndModalNavigationView {
   }
 }
 module.exports = SendTabContentView
-
