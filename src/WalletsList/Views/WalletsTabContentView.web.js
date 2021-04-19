@@ -40,17 +40,6 @@ class WalletsTabContentView extends StackAndModalNavigationView {
 
   // interactivity
   TabBarItem_shallDisable () {
-    const self = this
-    const passwordController = self.context.passwordController
-    if (passwordController.hasUserSavedAPassword !== true) {
-      return false // no existing data - do not disable
-    }
-    if (passwordController.HasUserEnteredValidPasswordYet() !== true) { // has data but not unlocked app
-      return true // because the app needs to be unlocked before they can use it
-    }
-    if (passwordController.IsUserChangingPassword() === true) {
-      return true // changing pw - prevent jumping around
-    }
     return false
   }
 }
