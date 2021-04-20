@@ -41,58 +41,35 @@ class AddWallet_WizardController {
 
   setup () {
     const self = this
-    {
-      self.current_wizardTaskModeName = null
-      self.initial_wizardTaskModeName = null
-    }
+    self.current_wizardTaskModeName = null
+    self.initial_wizardTaskModeName = null
     self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName = {}
-    if (self.context.isLiteApp != true) {
-      self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName.FirstTime_CreateWallet =
-			{
-			  0: 'MetaInfo',
-			  1: 'Instructions',
-			  2: 'InformOfMnemonic',
-			  3: 'ConfirmMnemonic'
-			}
-    } else {
-      self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName.FirstTime_CreateWallet =
-			{
-			  0: 'Instructions',
-			  1: 'InformOfMnemonic',
-			  2: 'ConfirmMnemonic'
-			}
+    self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName.FirstTime_CreateWallet =
+    {
+      0: 'Instructions',
+      1: 'InformOfMnemonic',
+      2: 'ConfirmMnemonic'
     }
     self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName.FirstTime_UseExisting =
-		{
-		  0: 'MetaInfo'
-		}
+    {
+      0: 'MetaInfo'
+    }
     self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName.PickCreateOrUseExisting =
-		{
-		  0: 'Landing' // only one screen before we patch to…
-		}
-    if (self.context.isLiteApp != true) {
-      self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName.AfterPick_CreateWallet =
-			{
-			  0: 'Landing', // provided so we can still have idx at 1 for screen after Landing after patch
-			  1: 'MetaInfo',
-			  2: 'Instructions',
-			  3: 'InformOfMnemonic',
-			  4: 'ConfirmMnemonic'
-			}
-    } else {
-      self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName.AfterPick_CreateWallet =
-			{
-			  0: 'Landing', // provided so we can still have idx at 1 for screen after Landing after patch
-			  1: 'Instructions',
-			  2: 'InformOfMnemonic',
-			  3: 'ConfirmMnemonic'
-			}
+    {
+      0: 'Landing' // only one screen before we patch to…
+    }
+    self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName.AfterPick_CreateWallet =
+    {
+      0: 'Landing', // provided so we can still have idx at 1 for screen after Landing after patch
+      1: 'Instructions',
+      2: 'InformOfMnemonic',
+      3: 'ConfirmMnemonic'
     }
     self.WizardTask_ModeStepNamesByIdxStr_ByTaskModeName.AfterPick_UseExisting =
-		{
-		  0: 'Landing', // provided so we can still have idx at 1 for screen after Landing after patch
-		  1: 'MetaInfo'
-		}
+    {
+      0: 'Landing', // provided so we can still have idx at 1 for screen after Landing after patch
+      1: 'MetaInfo'
+    }
   }
 
   //
@@ -308,12 +285,8 @@ class AddWallet_WizardController {
     if (optl_locale_code && typeof optl_locale_code !== 'undefined') {
       _with(optl_locale_code)
     } else {
-      self.context.locale.Locale(function (err, currentLocale) {
-        if (err) {
-          throw err
-        }
-        _with(currentLocale)
-      })
+      const currentLocale = window.navigator.language
+      _with(currentLocale)
     }
   }
 

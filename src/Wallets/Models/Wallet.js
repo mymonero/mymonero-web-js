@@ -174,14 +174,8 @@ class Wallet extends EventEmitter {
       _createWithLocale(self.options.locale_code)
       return
     }
-    self.context.locale.Locale(function (err, currentLocale) {
-      if (err) {
-        console.error('Error obtaining locale.')
-        self.failedToInitialize_cb(err)
-        throw err
-      }
-      _createWithLocale(currentLocale)
-    })
+    const currentLocale = window.navigator.language
+    _createWithLocale(currentLocale)
   }
 
   /// /////////////////////////////////////////////////////////////////////////////

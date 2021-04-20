@@ -1,33 +1,5 @@
-// Copyright (c) 2014-2019, MyMonero.com
-//
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without modification, are
-// permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice, this list of
-//	conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright notice, this list
-//	of conditions and the following disclaimer in the documentation and/or other
-//	materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its contributors may be
-//	used to endorse or promote products derived from this software without specific
-//	prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-// THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-// THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 'use strict'
-//
+
 const async = require('async')
 const EventEmitter = require('events')
 const uuidV1 = require('uuid/v1')
@@ -72,7 +44,7 @@ class PasswordController_Base extends EventEmitter {
     self.setupAndBoot()
   }
 
-  setupAndBoot () {	// we can afford to do this w/o any callback saying "success" because we defer execution of
+  setupAndBoot () { // we can afford to do this w/o any callback saying "success" because we defer execution of
     // things which would rely on boot-time info till we've booted
     const self = this
     //
@@ -110,10 +82,7 @@ class PasswordController_Base extends EventEmitter {
         )
       }
     )
-    function _proceedTo_loadStateFromModel (
-      hasUserSavedAPassword,
-      passwordModel_doc
-    ) {
+    function _proceedTo_loadStateFromModel (hasUserSavedAPassword, passwordModel_doc) {
       self.hasUserSavedAPassword = hasUserSavedAPassword
       //
       self._id = passwordModel_doc._id || undefined
@@ -134,7 +103,7 @@ class PasswordController_Base extends EventEmitter {
   _setBooted () {
     const self = this
     if (self.hasBooted == true) {
-      throw 'code fault: _setBooted called while self.hasBooted=true'
+      throw Error('code fault: _setBooted called while self.hasBooted=true')
     }
     self.hasBooted = true
     const fns_length = self._whenBooted_fns.length
@@ -155,7 +124,7 @@ class PasswordController_Base extends EventEmitter {
     const self = this
     const controller = self.context.userIdleInWindowController
     if (typeof controller === 'undefined' || controller === null) {
-      throw 'nil self.context.userIdleInWindowController'
+      throw Error('nil self.context.userIdleInWindowController')
     }
     controller.on(
       controller.EventName_userDidBecomeIdle(),

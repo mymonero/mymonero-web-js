@@ -39,9 +39,7 @@ class InfoDisclosingView extends View {
       layer.style.top = '0'
       layer.style.padding = '0'
       layer.style.overflow = 'hidden'
-      layer.addEventListener(
-        'click',
-        function (e) {
+      layer.addEventListener('click', function (e) {
           const target = e.target
           const hasClass_doNotUseForDisclosureToggling = target.classList.contains(self._className_doNotUseForDisclosureToggling())
           if (hasClass_doNotUseForDisclosureToggling) {

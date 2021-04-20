@@ -88,7 +88,6 @@ class TransactionDetailsView extends View {
     layer.style.backgroundColor = '#272527' // so we don't get a strange effect when pushing self on a stack nav view
     layer.style.color = '#c0c0c0' // temporary
     layer.style.overflowY = 'auto'
-    // layer.style.webkitOverflowScrolling = "touch"
     layer.style.padding = '0 16px 40px 16px' // actually going to change paddingTop in self.viewWillAppear() if navigation controller
     layer.style.wordBreak = 'break-all' // to get the text to wrap
   }
@@ -304,14 +303,11 @@ class TransactionDetailsView extends View {
       }
       layer.innerHTML = valueString
     }
-    view.layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        // disabled
-        return false
-      }
-    )
+    view.layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      // disabled
+      return false
+    })
     return view
   }
 

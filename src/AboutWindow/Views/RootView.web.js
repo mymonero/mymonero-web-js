@@ -33,13 +33,11 @@ class RootView extends View {
     }
     {
       const layer = document.createElement('a')
-      const w = 50
-      const h = 50
-      layer.style.width = 50 + 'px'
-      layer.style.height = 50 + 'px'
+      layer.style.width = '50px'
+      layer.style.height = '50px'
       layer.style.display = 'block'
       layer.style.outline = 'none'
-      layer.style.backgroundSize = `${w}px ${h}px`
+      layer.style.backgroundSize = '50px 50px'
       layer.style.backgroundImage = 'url(./src/assets/img/logo_solid_light@3x.png)'
       layer.style.backgroundPosition = 'center'
       layer.style.backgroundRepeat = 'no-repeat'
@@ -48,7 +46,7 @@ class RootView extends View {
       layer.href = 'https://' + self.context.appDownloadLink_domainAndPath
       layer.addEventListener('click', function (e) {
         e.preventDefault()
-        self.context.urlBrowser.OpenURLInSystemBrowser(this.href)
+        window.open(this.href, '_blank')
         return false
       })
 
@@ -89,7 +87,7 @@ class RootView extends View {
       })
       layer.addEventListener('click', function (e) {
         e.preventDefault()
-        self.context.urlBrowser.OpenURLInSystemBrowser(this.href)
+        window.open(this.href, '_blank')
         return false
       })
       self.layer.appendChild(layer)

@@ -2,6 +2,16 @@ body {
   background-color: #272527;
 }
 
+.main-body {
+  background: #272527;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+
 #loading-spinner {
   position: absolute;
   left: 50%;
@@ -2404,6 +2414,22 @@ div.customSelect {}
     background-color: #7C7A7C;
   }
 }
+
+.mnemonic-box-word-view {
+  font-family: Native-Light, input, menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  font-weight: 100;
+}
+
+@media (hover: none) {
+  .mnemonic-box-word-view {
+    font-family: Native-Regular, input, menlo, monospace;
+    font-size: 11px;
+    letter-spacing: normal;
+    font-weight: lighter;
+  }
+}
 .activityIndicators.graphicAndLabel {
   padding: 8px 10px 7px 32px;
 }
@@ -2415,3 +2441,257 @@ div.customSelect {}
 .activityIndicators.graphicAndLabel > span {
   display: inline-block;
 }
+
+.tabButton-layer {
+  display: inline-block;
+  position: relative;
+  --webkit-app-region: no-drag;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.tabButton-send-location {
+  position: absolute;
+  left: 0;
+  bottom: 5px;
+}
+.tabButton-settings {
+  background-image: url('../img/icon_tabBar_settings@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+}
+
+.tabButton-settings-selected {
+  background-image: url('../img/icon_tabBar_settings__active@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+}
+
+.tabButton-send {
+  background-image: url('../img/icon_tabBar_sendFunds@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px 25px;
+}
+
+.tabButton-send-selected {
+  background-image: url('../img/icon_tabBar_sendFunds__active@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px 25px;
+}
+
+.tabButton-fundRequest {
+  background-image: url('../img/icon_tabBar_fundsRequests@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+}
+
+.tabButton-fundRequest-selected {
+  background-image: url('../img/icon_tabBar_fundsRequests__active@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+}
+
+.tabButton-exchange {
+  background-image: url('../img/XMRtoBTCInactive.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 39px;
+}
+
+.tabButton-exchange-selected {
+  background-image: url('../img/XMRtoBTCActive.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 39px;
+}
+
+.tabButton-contacts {
+  background-image: url('../img/icon_tabBar_contacts@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px 23px;
+}
+
+.tabButton-contacts-selected {
+  background-image: url('../img/icon_tabBar_contacts__active@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px 23px;
+}
+
+.tabButton-wallets {
+  background-image: url('../img/icon_tabBar_wallets@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+}
+
+.tabButton-wallets-selected {
+  background-image: url('../img/icon_tabBar_wallets__active@3x.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+}
+
+.footer-link {
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  -webkit-font-smoothing: subpixel-antialiased;
+  margin: 0;
+  width: auto;
+  max-width: 82px;
+  line-height: 28px;
+  height: 32px;
+  display: inline-block;
+  padding: 0;
+  letter-spacing: 0.5px;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+@media (hover: none) {
+  .footer-link {
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 0;
+    width: auto;
+    max-width: 82px;
+    line-height: 28px;
+    height: 32px;
+    display: inline-block;
+    padding: 0;
+  }
+}
+
+.field-title-label {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: block;
+  margin: 15px 0 8px 8px;
+  text-align: left;
+  color: #F8F7F8;
+
+  font-family: Native-Light, input, menlo, monospace;
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  font-weight: 300;
+}
+
+@media (hover: none) {
+  .field-title-label {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: block;
+    margin: 15px 0 8px 8px;
+    text-align: left;
+    color: #F8F7F8;
+  
+    font-family: Native-Regular, input, menlo, monospace;
+    font-size: 11px;
+    font-weight: lighter;
+  }
+}
+
+.settings-layer {
+  -webkit-user-select: none;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 0 0px 0px 0px;
+  overflow-y: auto;
+  background-color: #272527;
+  word-break: break-all;
+}
+
+.settings-dropdown-div {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 132px;
+  height: 32px;
+}
+
+.settings-dropdown {
+  outline: none;
+  color: #FCFBFC;
+  background-color: #383638;
+  width: 132px;
+  height: 32px;
+  border: 0;
+  padding: 0;
+  border-radius: 3px;
+  box-shadow: 0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  text-indent: 11px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+}
+
+@media (hover: none) {
+  .settings-dropdown {
+    outline: none;
+    color: #FCFBFC;
+    background-color: #383638;
+    width: 132px;
+    height: 32px;
+    border: 0;
+    padding: 0;
+    border-radius: 3px;
+    box-shadow: 0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-indent: 11px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+    font-size: 13px;
+    letter-spacing: 0;
+    font-weight: 600;
+  }
+}
+
+.settings-dropdown-arrow {
+  pointer-events: none;
+  border: none;
+  position: absolute;
+  width: 10px;
+  height: 8px;
+  right: 13px;
+  top: 12px;
+  z-index: 100;
+  background-image: url(../img/dropdown-arrow-down@3x.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px 8px;
+}
+

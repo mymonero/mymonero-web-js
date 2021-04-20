@@ -163,10 +163,7 @@ class View extends EventEmitter {
         if (layerOf_subviewAbove.parentNode !== superlayer) {
           throw Error('View hierarchy error - layerOf_subviewAbove.parentNode !== superlayer')
         }
-        superlayer.insertBefore(
-          view.layer,
-          layerOf_subviewAbove
-        )
+        superlayer.insertBefore(view.layer, layerOf_subviewAbove)
       } else { // then we're able to just append the view
         superlayer.appendChild(
           view.layer

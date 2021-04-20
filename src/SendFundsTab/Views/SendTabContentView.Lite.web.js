@@ -8,7 +8,7 @@ class SendTabContentView extends StackAndModalNavigationView {
     const self = this
     { // walletsListView
       const options = {}
-      const SendFundsView = self._required_rootViewClassModule()
+      const SendFundsView = require('./SendFundsView.Lite.web')
       const view = new SendFundsView(options, self.context)
       self.sendFundsView = view
     }
@@ -19,52 +19,25 @@ class SendTabContentView extends StackAndModalNavigationView {
     )
   }
 
-  _required_rootViewClassModule () {
-    return require('./SendFundsView.Lite.web')
-  }
-
   //
   //
   // Runtime - Accessors - Implementation of TabBarItem protocol - custom tab bar item styling
   //
   TabBarItem_layer_customStyle () {
-    const self = this
-    return {}
+    return false
   }
 
   TabBarItem_icon_customStyle () {
-    const self = this
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_sendFunds@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '24px 25px'
-    }
+    return 'tabButton-send'
   }
 
   TabBarItem_icon_selected_customStyle () {
-    const self = this
-    return {
-      backgroundImage: 'url(./src/assets/img/icon_tabBar_sendFunds__active@3x.png)',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '24px 25px'
-    }
+    return 'tabButton-send-selected'
   }
 
   // interactivity
   TabBarItem_shallDisable () {
     const self = this
-    const passwordController = self.context.passwordController
-    if (passwordController.hasUserSavedAPassword !== true) {
-      return true // no existing data - do disable
-    }
-    if (passwordController.HasUserEnteredValidPasswordYet() !== true) { // has data but not unlocked app
-      return true // because the app needs to be unlocked before they can use it
-    }
-    if (passwordController.IsUserChangingPassword() === true) {
-      return true // changing pw - prevent jumping around
-    }
     const wallets = self.context.walletsListController.records // figure it's ready by this point
     const numberOf_wallets = wallets.length
     const walletsExist = numberOf_wallets !== 0
@@ -102,4 +75,3 @@ class SendTabContentView extends StackAndModalNavigationView {
   }
 }
 module.exports = SendTabContentView
-

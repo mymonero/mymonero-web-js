@@ -45,16 +45,11 @@ class CreateWallet_MetaInfo_View extends BaseView_Wallet_MetaInfo {
     const view = commonComponents_navigationBarButtons.New_LeftSide_CancelButtonView(self.context)
     self.leftBarButtonView = view
     const layer = view.layer
-    { // observe
-      layer.addEventListener(
-        'click',
-        function (e) {
-          e.preventDefault()
-          self.wizardController._fromScreen_userPickedCancel()
-          return false
-        }
-      )
-    }
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      self.wizardController._fromScreen_userPickedCancel()
+      return false
+    })
     return view
   }
 

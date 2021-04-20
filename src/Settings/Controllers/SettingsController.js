@@ -1,6 +1,5 @@
 'use strict'
 
-const async = require('async')
 const EventEmitter = require('events')
 const uuidV1 = require('uuid/v1')
 const CollectionName = 'Settings'
@@ -15,8 +14,7 @@ const k_defaults_record =
   authentication_requireWhenDisclosingWalletSecrets: true,
   autoDownloadUpdatesEnabled: true
 }
- 
-//
+
 class SettingsController extends EventEmitter {
   constructor (options, context) {
     super()
