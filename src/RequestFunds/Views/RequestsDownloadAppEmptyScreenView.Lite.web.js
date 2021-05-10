@@ -19,7 +19,7 @@ class RequestsDownloadAppEmptyScreenView extends View {
     layer.style.height = 'calc(100% - 71px)'
 
     const emptyStateMessageContainerView = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
-      '👇',
+      `<div href='#' class="pointing-down">&nbsp;</div>"`,
       "To make Monero Requests,<br/><a href=\"https://mymonero.com\" target=\"_blank\" style='color: #11bbec; cursor: pointer; -webkit-user-select: none; text-decoration: none;'>download the app</a>.",
       self.context,
       0,

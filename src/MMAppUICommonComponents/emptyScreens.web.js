@@ -1,10 +1,8 @@
 'use strict'
 
 const View = require('../Views/View.web')
-const EmojiWeb = require('../Emoji/emoji_web')
 
-function New_EmptyStateMessageContainerView (optl_emoji, optl_messageText, context, optl_explicitMarginH, optl_explicitMarginV, optl_contentTranslateYPX) {
-  const nativeEmoji = typeof optl_emoji === 'string' ? optl_emoji : '😀'
+function New_EmptyStateMessageContainerView (emojiSrc, optl_messageText, context, optl_explicitMarginH, optl_explicitMarginV, optl_contentTranslateYPX) {
   const messageText = typeof optl_messageText === 'string' ? optl_messageText : ''
   const margin_h = typeof optl_explicitMarginH !== 'undefined' ? optl_explicitMarginH : 16
   const margin_v = typeof optl_explicitMarginV !== 'undefined' ? optl_explicitMarginV : 18
@@ -28,7 +26,8 @@ function New_EmptyStateMessageContainerView (optl_emoji, optl_messageText, conte
 
   const emojiLayer = document.createElement('div')
   emojiLayer.classList.add('emoji-label')
-  emojiLayer.innerHTML = EmojiWeb.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(context, nativeEmoji)
+  //emojiLayer.innerHTML = EmojiWeb.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(context, nativeEmoji)
+  emojiLayer.innerHTML = emojiSrc;
   contentContainerLayer.appendChild(emojiLayer)
 
   const messageLayer = document.createElement('div')

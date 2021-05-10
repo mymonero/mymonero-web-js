@@ -56,7 +56,7 @@ class WalletsListView extends ListView {
     layer.style.height = `calc(100% - ${marginTop}px)`
     {
       const emptyStateMessageContainerView = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
-        '😃',
+        '<div class="smiley"></div>',
         "Welcome to MyMonero!<br/>Let's get started.",
         self.context,
         0,

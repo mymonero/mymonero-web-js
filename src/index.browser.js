@@ -35,7 +35,6 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       TabBarView_isHorizontalBar: isMobile,
       ThemeController_isMobileBrowser: isMobile,
       Tooltips_nonHoveringBehavior: isMobile, // be able to dismiss on clicks etc
-      Emoji_renderWithNativeEmoji: isMobile, // b/c this is a browser, we could be on desktop, i.e. w/o guaranteed native emoji support
       // TODO: detect if Mac … if so, render w/o native emoji (need holistic fallback solution though - see Gitlab post referenced by https://github.com/mymonero/mymonero-app-js/issues/194)
       appDownloadLink_domainAndPath: 'mymonero.com',
       HostedMoneroAPIClient_DEBUGONLY_mockSendTransactionSuccess: false,
@@ -44,11 +43,6 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       monero_utils: coreBridge_instance
     })
     window.MyMonero_context = context
-    //
-    if (isMobile === false) { // then we don't have guaranteed native emoji support
-      const emoji_web = require('./Emoji/emoji_web') // since we're using emoji, now that we have the context, we can call PreLoadAndSetUpEmojiOne
-      emoji_web.PreLoadAndSetUpEmojiOne(context)
-    }
     // configure native UI elements
     document.addEventListener('touchstart', function () {}, true) // to allow :active styles to work in your CSS on a page in Mobile Safari:
     //
