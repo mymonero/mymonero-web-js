@@ -2695,3 +2695,15 @@ div.customSelect {}
   background-size: 10px 8px;
 }
 
+.pointing-down {
+  width: 16px;
+  height: 16px;
+  margin: 0 auto;
+  background-image: url(../img/FingerPointingDown.jpg)
+}
+.smiley {
+  width: 16px;
+  height: 16px;
+  margin: 0 auto;
+  background-image: url(../img/Smiley.jpg)
+}
