@@ -21,7 +21,7 @@ class ContactsDownloadAppEmptyScreenView extends View {
     layer.style.height = `calc(100% - ${marginTop}px - 15px)`
     //
     const emptyStateMessageContainerView = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
-      '👇',
+      `<div href='#' class="pointing-down">&nbsp;</div>"`,
       "To create Contacts,<br/><a href=\"https://mymonero.com\" target=\"_blank\" style='color: #11bbec; cursor: pointer; -webkit-user-select: none; text-decoration: none;'>download the app</a>.",
       self.context,
       0,
