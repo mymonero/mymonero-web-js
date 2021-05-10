@@ -1,10 +1,9 @@
 'use strict'
 
 const View = require('../Views/View.web')
-const EmojiWeb = require('../Emoji/emoji_web')
+//const EmojiWeb = require('../Emoji/emoji_web')
 
 function New_EmptyStateMessageContainerView (emojiSrc, optl_messageText, context, optl_explicitMarginH, optl_explicitMarginV, optl_contentTranslateYPX) {
-  //const nativeEmoji = typeof optl_emoji === 'string' ? optl_emoji : '😀'
   const messageText = typeof optl_messageText === 'string' ? optl_messageText : ''
   const margin_h = typeof optl_explicitMarginH !== 'undefined' ? optl_explicitMarginH : 16
   const margin_v = typeof optl_explicitMarginV !== 'undefined' ? optl_explicitMarginV : 18
