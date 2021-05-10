@@ -2,7 +2,6 @@
 
 const Animate = require('velocity-animate')
 const View = require('../../Views/View.web')
-//const emoji_web = require('../../Emoji/emoji_web')
 
 class NavigationBarView extends View {
   constructor (options, context) {
@@ -238,11 +237,6 @@ class NavigationBarView extends View {
     const successor_titleLayer = self.titleLayer.cloneNode()
     successor_titleLayer.style.color = titleTextColor
     successor_titleLayer.innerHTML = titleString
-
-    // successor_titleLayer.innerHTML = emoji_web.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(
-    //   self.context,
-    //   titleString
-    // ) // set up with new title
 
     successor_titleLayer.style.width = to_styleWidth
     successor_titleLayer.style.paddingLeft = extra_paddingLeft + 'px'
