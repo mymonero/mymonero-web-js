@@ -4,6 +4,8 @@ const View = require('../Views/View.web')
 
 class TabBarItemButtonView extends View {
   constructor (options, context) {
+    console.log('TBIV constructor');
+    console.log(options);
     options.tag = 'a'
     //
     super(options, context)
@@ -26,6 +28,7 @@ class TabBarItemButtonView extends View {
   setup_views () {
     const self = this
     {
+      console.log(self.layer_baseStyleTemplate);
       const layer = self.layer
       layer.classList.add('tabButton-layer') // disable highlight under Cordova/MobileSafari
       if (self.isHorizontalBar) {
@@ -47,7 +50,15 @@ class TabBarItemButtonView extends View {
       layer.style.border = 'none'
       self.iconImageLayer = layer
       self.layer.appendChild(self.iconImageLayer)
+      console.log(self.icon_baseStyleTemplate);
       self.iconImageLayer.classList.add(self.icon_baseStyleTemplate)
+      self.iconImageLayer.id = self.icon_baseStyleTemplate;
+      if (self.icon_baseStyleTemplate == "tabButton-exchange") {
+        let elem = document.getElementById("tabButton-exchange");
+        console.log(elem);
+        console.log(elem);
+        //elem.addEventListener('click', this.MonitorForFirstExchangeInvocation())
+      }
     }
     self.layer.addEventListener('click', function (e) {
       e.preventDefault()
@@ -57,6 +68,10 @@ class TabBarItemButtonView extends View {
       return false
     }
     )
+  }
+
+  MonitorForFirstExchangeInvocation() {
+    console.log("Invoked");
   }
 
   // Runtime - Accessors - Events
