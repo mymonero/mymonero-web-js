@@ -4,9 +4,14 @@ const View = require('../../Views/View.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger // important: grab defined export
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
+const ExchangeHelper = require("mymonero-exchange-helper")
+let exchangeHelper = new ExchangeHelper();
 
 class ExchangeContentView extends View {
   constructor (options, context) {
+    console.log("ECV constructor invoked");
+    // Can we deterministically add an event listener to clicks on the Exchange tab?
+    
     super(options, context)
     const ecvSelf = this
     const self = context
@@ -25,43 +30,44 @@ class ExchangeContentView extends View {
     ecvSelf._setup_views()
     ecvSelf.observerIsSet = false
 
-    const interval = setInterval(function () {
-      // if wallets exist, setup the wallet selector for the exchange page
-      try {
-        if (context.walletsListController.records !== undefined) {
-          // ecvSelf._setup_walletExchangeOptions(self.context);
-        }
-      } catch {
-        // wallet not instantiated yet, no need to display notices
-      }
-      ecvSelf._refresh_sending_fee()
-    }, 2000)
-    ecvSelf.keepExchangeOptionsUpdated = interval
+    // Do we really need to update the wallet repeatedly when we're refactoring to update on tab button click?
+    // const interval = setInterval(function () {
+    //   // if wallets exist, setup the wallet selector for the exchange page
+    //   try {
+    //     if (context.walletsListController.records !== undefined) {
+    //       // ecvSelf._setup_walletExchangeOptions(self.context);
+    //     }
+    //   } catch {
+    //     // wallet not instantiated yet, no need to display notices
+    //   }
+    //   ecvSelf._refresh_sending_fee()
+    // }, 2000)
+    // ecvSelf.keepExchangeOptionsUpdated = interval
   }
 
   _setup_walletExchangeOptions (context) {
-    const self = this
-    const walletDiv = document.getElementById('wallet-selector')
-    if (walletDiv === null) {
-      return
-    }
-    // if the user has selected a wallet, we update the balances for the
+    // const self = this
+    // const walletDiv = document.getElementById('wallet-selector')
+    // if (walletDiv === null) {
+    //   return
+    // }
+    // // if the user has selected a wallet, we update the balances for the
 
-    // get oldest wallet based on how wallets are inserted into wallets as a zero element, changing indexes backwards
-    const defaultOffset = 0
-    const defaultWallet = context.walletsListController.records[defaultOffset]
-    const walletSelectOptions = `
-        <div data-walletoffset="0" data-walletpublicaddress="${defaultWallet.public_address}" data-walletLabel="${defaultWallet.walletLabel}" data-swatch="${defaultWallet.swatch.substr(1)}" data-walletbalance="${self.UnlockedBalance_FormattedString(defaultWallet)}" data-walletid="${defaultWallet._id}" id="selected-wallet" class="hoverable-cell utility selectionDisplayCellView" style="">
-                <div id="selected-wallet-icon" class="walletIcon medium-32" style="background-image: url(./src/assets/img/wallet-00C6FF@3x.png)"></div>
-                <div id="selected-wallet-label" class="walletName">${defaultWallet.walletLabel}</div>
-                <div id="selected-wallet-balance" class="description-label">${self.UnlockedBalance_FormattedString(defaultWallet)} XMR available</div>
-            </div>
-            <div id="wallet-options" class="options_containerView">
-                <div class="options_cellViews_containerView" style="position: relative; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 20; overflow-y: auto; max-height: 174.9px;">
-                </div>
-            </div>
-        `
-    walletDiv.innerHTML = walletSelectOptions
+    // // get oldest wallet based on how wallets are inserted into wallets as a zero element, changing indexes backwards
+    // const defaultOffset = 0
+    // const defaultWallet = context.walletsListController.records[defaultOffset]
+    // const walletSelectOptions = `
+    //     <div data-walletoffset="0" data-walletpublicaddress="${defaultWallet.public_address}" data-walletLabel="${defaultWallet.walletLabel}" data-swatch="${defaultWallet.swatch.substr(1)}" data-walletbalance="${self.UnlockedBalance_FormattedString(defaultWallet)}" data-walletid="${defaultWallet._id}" id="selected-wallet" class="hoverable-cell utility selectionDisplayCellView" style="">
+    //             <div id="selected-wallet-icon" class="walletIcon medium-32" style="background-image: url(./src/assets/img/wallet-00C6FF@3x.png)"></div>
+    //             <div id="selected-wallet-label" class="walletName">${defaultWallet.walletLabel}</div>
+    //             <div id="selected-wallet-balance" class="description-label">${self.UnlockedBalance_FormattedString(defaultWallet)} XMR available</div>
+    //         </div>
+    //         <div id="wallet-options" class="options_containerView">
+    //             <div class="options_cellViews_containerView" style="position: relative; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 20; overflow-y: auto; max-height: 174.9px;">
+    //             </div>
+    //         </div>
+    //     `
+    // walletDiv.innerHTML = walletSelectOptions
   }
 
   _refresh_sending_fee () {
@@ -90,16 +96,41 @@ class ExchangeContentView extends View {
     // self.keepExchangeOptionsUpdated = interval; // we use a named interval attached to the view so that we can stop it if we ever want to;
   }
 
+  // New refactored
+  _setup_tabButtonClickListener(context) {
+    const self = this;
+    console.log("Setting up tab button click listener");
+    let tabElement = document.getElementById('tabButton-exchange');
+    tabElement.addEventListener('click', self.renderExchangeForm.bind(context))
+    
+  }
+
+  // New refactored
+  renderExchangeForm(context) {
+    const self = this 
+    //self._setup_walletExchangeOptions(context);
+    let walletHtml = exchangeHelper.walletSelectorTemplate(self)
+    //let walletDiv = document.getElementById('wallet-selector');
+    //walletDiv.appendChild(walletHtml);
+    console.log(walletHtml);
+    console.log(context);
+    console.log("Clicked");
+  }
+
   _setup_emptyStateContainerView (context) {
     // TODO: wrap this in a promise so that we can execute logic after this
     const self = this
-
-    // We run this on an interval because of the way DOM elements are instantiated. Our Exchange DOM only renders once a user clicks the XMR->BTC menu tab
+    self.exchangeFormTemplate = exchangeHelper.htmlFormTemplate();
+    let parentElementToAttachListenerTo = document.getElementById('tabButton-exchange');
+    // We need to refactor this to update a template
     const initialExchangeInit = setInterval(() => {
-      const walletDiv = document.getElementById('wallet-selector')
-      if (walletDiv !== null) {
+      // We can't guarantee the existence of the tabButton-exchange div because of how the page loads, so we wrap it in an interval that fires as soon as the render is done
+      let parentElementToAttachListenerTo = document.getElementById('tabButton-exchange');
+      if (parentElementToAttachListenerTo !== null) {
+        self._setup_tabButtonClickListener(self.context);
         clearInterval(self.initialExchangeInit)
-        self._setup_walletExchangeOptions(self.context)
+        // TODO: We need to move the walletExchangeOptions init somewhere else
+        //self._setup_walletExchangeOptions(self.context)
       }
     }, 200)
 
@@ -164,89 +195,34 @@ class ExchangeContentView extends View {
         const exchangeXmrDiv = document.getElementById('exchange-xmr')
         exchangeXmrDiv.classList.remove('active')
 
-        /*
+        /* 
                     * We define the status update and the response handling function here, since we need to update the DOM with status feedback from the monero-daemon.
                     * We pass them as the final argument to ExchangeUtils.sendFunds
                     * It performs the necessary DOM-based status updates in this file so that we don't tightly couple DOM updates to a Utility module.
                     */
-        function validation_status_fn (str) {
-          const monerodUpdates = document.getElementById('monerod-updates')
-          monerodUpdates.innerText = str
-        }
+        //function validation_status_fn = exchangeHelper.validationStatusCallback
         /*
                     * We perform the necessary DOM-based status updates in this file so that we don't tightly couple DOM updates to a Utility module.
                     */
-        function handle_response_fn (err, mockedTransaction) {
-          let str
-          const monerodUpdates = document.getElementById('monerod-updates')
-          if (err) {
-            str = typeof err === 'string' ? err : err.message
-            monerodUpdates.innerText = str
-            return
-          }
-          str = 'Sent successfully.'
-          monerodUpdates.innerText = str
-        }
+        // function handle_response_fn (err, mockedTransaction) {
+        //   let str
+        //   const monerodUpdates = document.getElementById('monerod-updates')
+        //   if (err) {
+        //     str = typeof err === 'string' ? err : err.message
+        //     monerodUpdates.innerText = str
+        //     return
+        //   }
+        //   str = 'Sent successfully.'
+        //   monerodUpdates.innerText = str
+        // }
         // No cancel handler code since we don't provide a cancel method
         function cancelled_fn () { // canceled_fn
           // No cancel handler code since we don't provide a cancel method
         }
+        
         /*
                     * We declare sendfunds here to have access to the context object
                     */
-
-        function sendFunds (wallet, xmr_amount, xmr_send_address, sweep_wallet, validation_status_fn, handle_response_fn, context) {
-          if (context.walletsListController.orderSent == true) {
-            console.log('Duplicate order')
-          } else {
-            try {
-              return new Promise((resolve, reject) => {
-                context.walletsListController.orderSent = true
-
-                const enteredAddressValue = xmr_send_address // ;
-                const resolvedAddress = ''
-                const manuallyEnteredPaymentID = ''
-                const resolvedPaymentID = ''
-                const hasPickedAContact = false
-                const manuallyEnteredPaymentID_fieldIsVisible = false
-                const resolvedPaymentID_fieldIsVisible = false
-                const resolvedAddress_fieldIsVisible = false
-                let contact_payment_id
-                let cached_OAResolved_address
-                let contact_hasOpenAliasAddress
-                let contact_address
-                const raw_amount_string = xmr_amount // XMR amount in double
-                const sweeping = sweep_wallet
-                const simple_priority = 1
-
-                wallet.SendFunds(
-                  enteredAddressValue,
-                  resolvedAddress,
-                  manuallyEnteredPaymentID,
-                  resolvedPaymentID,
-                  hasPickedAContact,
-                  resolvedAddress_fieldIsVisible,
-                  manuallyEnteredPaymentID_fieldIsVisible,
-                  resolvedPaymentID_fieldIsVisible,
-                  contact_payment_id,
-                  cached_OAResolved_address,
-                  contact_hasOpenAliasAddress,
-                  contact_address,
-                  raw_amount_string,
-                  sweeping,
-                  simple_priority,
-                  validation_status_fn,
-                  cancelled_fn,
-                  handle_response_fn
-                )
-              })
-            } catch (error) {
-              context.walletsListController.orderSent = false
-              console.log(error)
-            }
-          }
-        } // end of function
-
         const xmr_amount = document.getElementById('in_amount_remaining').innerHTML
         const xmr_send_address = document.getElementById('receiving_subaddress').innerHTML
         const xmr_amount_str = '' + xmr_amount
@@ -260,7 +236,7 @@ class ExchangeContentView extends View {
           } else {
             context.walletsListController.orderSent = false
           }
-          sendFunds(context.walletsListController.records[0], xmr_amount_str, xmr_send_address, sweep_wallet, validation_status_fn, handle_response_fn, context)
+          sendFunds(context.walletsListController.records[0], xmr_amount_str, xmr_send_address, sweep_wallet, exchangeHelper.validationStatusCallback, exchangeHelper.handleSendResponseCallback, context)
         } catch (error) {
           console.log(error)
         }
@@ -272,183 +248,21 @@ class ExchangeContentView extends View {
       // let's make the xmr.to form in HTML for sanity's sake
       const layer = document.createElement('div')
       // layer.classList.add("xmr_input");
-      let html = '    <div>'
-      // html += fs.readFileSync(__dirname + '/Body.html', 'utf8');
-      html += `
-            <div id="orderStatusPage">
-            <div id="wallet-selector" class="WalletSelectView ListCustomSelectView form_field">
-                        <!-- we insert this html dynamically from ECV.web.js -->
-            </div>
-            <div class="form_field" id="currency-table">
-                <table class="full-width">
-                    <tr>
-                        <td>   
-                            <div class="field_title form-field-title">XMR to send
-                                <div style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0;">
-                                    <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                    <input id="XMRcurrencyInput" class="textInput currencyInput" type="text" placeholder="00.00" value="">
-                                    <select id="currencySelect"><option value="XMR" style="text-align: center;">XMR</option></select>    
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div id="BTCInputDiv" class="field_title form-field-title">BTC you will receive
-                                <div class="" style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0">
-                                    <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                    <input id="BTCcurrencyInput" class="textInput currencyInput" type="text" placeholder="00.00" value="">
-                                    <select id="currencySelect"><option value="BTC" style="text-align: center;">BTC</option></select>    
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <input id="in_address" type="hidden" value="">
-                </table>
-            </div>
-            <div class="form_field" id="tx-fee">
-                    <span class="field_title form-field-title" style="margin-top: 8px; color: rgb(158, 156, 158); display: inline-block;">Loading ...</span>
-                </div>
-                
-    
-                <div class="form_field" id="btc-address">
-                    <span class="field_title form-field-title" style="margin-top: 17px;">DESTINATION BITCOIN ADDRESS
-                    </span>
-                    <div class="contactPicker" style="position: relative; width: 100%; user-select: none;">
-                        <input id="btcAddress" class="full-width longTextInput" type="text" placeholder="Destination BTC Address" autocomplete="off" autocapitalize="none" spellcheck="false" value="">
-                    </div>
-                </div>
-                <div id="localmonero"><a href="#" id="localmonero-anchor" class="clickableLinkButton">Buy Monero using LocalMonero</a></div>
-                <div id="indacoin"><a href="#" id="indacoin-anchor" class="clickableLinkButton">Buy Monero using Indacoin</a></div>
-                <div id="validation-messages"></div>
-                <div id="address-messages"></div>
-                <div id="server-messages"></div>
-    
-            </div>
-                    
-            </div>
-            <div id="order-status">
-    
-            </div>
-        </div>
-        <div id="exchangePage">
-            <div class="field_title form-field-title">
-                <table>
-                    <tr>
-                    <td colspan="2" style="word-wrap: normal; word-break: normal;">Please note an exchange may take a few minutes to process. <span class="provider-name"></span> are able to provide support for any exchanges. For all issues, please contact <span class="provider-name"></span> with your UUID for assistance.</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="field_title form-field-title uppercase">
-                                <div style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0;">
-                                    <span class="field_title form-field-title label-spacing uppercase" style="margin-top: 0px;"><span class="provider-name"></span> UUID</span>
-                                    <div id="provider_order_id" class="textInput currencyOutput" type="text" placeholder="0.00" style="text-transform: none !important"></div>
-                                    <div class="currencySelect"><option value="XMR" style="text-align: center;">&nbsp;&nbsp;&nbsp;&nbsp;</option></select> 
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="field_title form-field-title uppercase">Time Remaining
-                                <div id="clock">
-                                    <span id="minutesRemaining"></span>
-                                    <span>:</span>
-                                    <span id="secondsRemaining"></span>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="field_title form-field-title">Remaining XMR payable
-                                <div style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0;">
-                                    <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                    <div id="in_amount_remaining" class="textInput currencyOutput" type="text" placeholder="0.00">Loading</div>
-                                    <div class="currencySelect"><option value="XMR" style="text-align: center;">XMR</option>    
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="field_title form-field-title">BTC to be paid out
-                                <div class="" style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0">
-                                    <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                    <div id="out_amount" class="textInput currencyOutput" type="text">Loading</div>
-                                    <div class="currencySelect"><option value="BTC" style="text-align: center;">BTC</option>    
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="field_title form-field-title uppercase label-spacing">
-                                <div class="" style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0">
-                                    <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">Order Status</span>
-                                    <div class="order-status textInput currencyOutput" id="status"></div>
-                                    <div class="currencySelect"><option value="XMR" style="text-align: center;">&nbsp;&nbsp;&nbsp;</option>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="field_title form-field-title hidden">
-                    <table class="full-width" style="display: none;">
-                        <tr>
-                            <td>
-                                <div class="field_title form-field-title">Receiving subaddress
-                                    <div style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0;">
-                                        <div id="receiving_subaddress" class="textInput currencyOutput" type="text">Loading</div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-            </div>
-            <div id="monerod-updates" class="validationWindow">
-    
-            </div>
-                <table class="hidden">
-                    <tr>
-                        <td>btc_amount_partial</td>
-                        <td id="btc_amount_partial"> "0"</td>
-                    </tr>
-                    <tr>
-                        <td>btc_dest_address</td>
-                        <td id="in_address"> "2NBaUzuYqJvbThw77QVqq8NEXmkmDmSooy9"</td>
-                    </tr>
-    
-                    <tr>
-                        <td>expires_at</td>
-                        <td id="expires_at"> "2020-08-07T13:54:30Z"</td>
-                    </tr>
-                    <tr>
-                        <td>incoming_amount_total</td>
-                        <td id="in_amount"> "1"</td>
-                    </tr>
-    
-                    <tr>
-                        <td>incoming_price_btc</td>
-                        <td id="incoming_price_btc"> "0.00789659"</td>
-                    </tr>
-                    <tr>
-                        <td>receiving_subaddress</td>
-                        <td id="receiving_subaddress"> "72FsJzvGG4x97vvjwu9V6e8hBBfB3bhrqVEEoPsxrkjAVgQUnbA22cbgMmu5b4Lx6cQ75vnjPVs9HUB1L32yBMhaNsi7KrD"</td>
-                    </tr>
-                    <tr>
-                        <td>remaining_amount_incoming</td>
-                        <td id="remaining_amount_incoming"> "1"</td>
-                    </tr>
-                    <tr>
-                        <td>uuid</td>
-                        <td id="uuid"> "xmrto-NCXzGE"</td>
-                    </tr>
-                </table>            
-            </div>
-        </div>
-    </div>
-    `
-      layer.innerHTML = html
-      contentContainerLayer.appendChild(layer)
-    }
+      console.log("Get base form");
+      console.log(exchangeHelper);
 
+      // We clone the first element of the template so that we get an instance of the first element, rather than a document fragment. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template
+      let html = self.exchangeFormTemplate.content.firstElementChild.cloneNode(true);
+      console.log(html);
+      console.log(self);
+      console.log(exchangeHelper.outCurrencySelector);
+      console.log("Get the base form here");
+      console.log(contentContainerLayer)
+      layer.appendChild(html)
+      contentContainerLayer.appendChild(layer)
+      console.log(contentContainerLayer)
+    }
+    console.log("This ran?");
     self.emptyStateMessageContainerView = view
     self.addSubview(view)
 
