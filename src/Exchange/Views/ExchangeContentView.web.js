@@ -330,20 +330,20 @@ class ExchangeContentView extends View {
         }
       }
 
-      const XMRCurrencyInputKeydownListener = function (event) {
-        if (event.which == 8 || event.which == 110 || event.which == 46 || event.which == 190) { return }
+      // const XMRCurrencyInputKeydownListener = function (event) {
+      //   if (event.which == 8 || event.which == 110 || event.which == 46 || event.which == 190) { return }
 
-        if ((event.which >= 48 && event.which <= 57) || (event.which >= 96 && event.which <= 105)) {
-          return
-        }
+      //   if ((event.which >= 48 && event.which <= 57) || (event.which >= 96 && event.which <= 105)) {
+      //     return
+      //   }
 
-        if (!checkDecimals(XMRcurrencyInput.value, 12)) {
-          event.preventDefault()
-          return
-        }
+      //   if (!checkDecimals(XMRcurrencyInput.value, 12)) {
+      //     event.preventDefault()
+      //     return
+      //   }
 
-        event.preventDefault()
-      }
+      //   event.preventDefault()
+      // }
 
       const BTCCurrencyInputKeydownListener = function (event) {
         if (event.which == 8 || event.which == 110 || event.which == 46 || event.which == 190) { return }
@@ -801,10 +801,14 @@ class ExchangeContentView extends View {
       if (exchangeRendered == null) {
 
       } else {
-        btcAddressInput.addEventListener('input', BTCAddressInputListener)
-        XMRcurrencyInput.addEventListener('keydown', XMRCurrencyInputKeydownListener)
-        BTCcurrencyInput.addEventListener('keydown', BTCCurrencyInputKeydownListener)
-        orderBtn.addEventListener('click', orderBtnClicked)
+
+
+        console.log(exchangeHelper.eventListeners)
+
+        btcAddressInput.addEventListener('input', exchangeHelper.eventListeners.BTCAddressInputListener)
+        XMRcurrencyInput.addEventListener('keydown', exchangeHelper.eventListeners.XMRCurrencyInputKeydownListener)
+        BTCcurrencyInput.addEventListener('keydown', exchangeHelper.eventListeners.BTCCurrencyInputKeydownListener)
+        orderBtn.addEventListener('click', exchangeHelper.eventListeners.orderBtnClicked)
 
         BTCcurrencyInput.addEventListener('keyup', function (event) {
           validationMessages.innerHTML = ''
@@ -948,24 +952,7 @@ class ExchangeContentView extends View {
         layer.style.fontWeight = '300'
       }
     }
-
-    // view.layer.addEventListener(
-    //     "click",
-    //     function(e)
-    //     {
-    //         e.preventDefault()
-    //         //
-    //         let orderElement = document.getElementById("")
-    //         //
-    //         // const view = new AddContactFromContactsTabView({}, self.context)
-    //         // self.currentlyPresented_AddContactView = view
-    //         // const navigationView = new StackAndModalNavigationView({}, self.context)
-    //         // navigationView.SetStackViews([ view ])
-    //         // self.navigationController.PresentView(navigationView, true)
-    //         //
-    //         return false
-    //     }
-    // )
+    
     return view
   }
 }
