@@ -183,8 +183,7 @@ class ImportTransactionsModalView extends View {
       const buttonLayer = commonComponents_tables.New_copyButton_aLayer(
         self.context,
         '', // for now
-        true,
-        self.context.pasteboard
+        true
       )
       buttonLayer.style.margin = '-1px 0 0 0'
       buttonLayer.style.float = 'right'
@@ -221,8 +220,7 @@ class ImportTransactionsModalView extends View {
         const buttonLayer = commonComponents_tables.New_copyButton_aLayer(
           self.context,
           '', // for now
-          true,
-          self.context.pasteboard
+          true
         )
         buttonLayer.style.margin = '-1px 0 0 0'
         buttonLayer.style.float = 'right'

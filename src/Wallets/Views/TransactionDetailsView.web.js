@@ -155,7 +155,6 @@ class TransactionDetailsView extends View {
       self.context,
       fieldLabelTitle,
       '', // for now
-      self.context.pasteboard,
       valueToDisplayIfValueNil
     )
     self.valueLayer__transactionHash = div
@@ -172,7 +171,6 @@ class TransactionDetailsView extends View {
       self.context,
       fieldLabelTitle,
       '', // for now
-      self.context.pasteboard,
       valueToDisplayIfValueNil,
       false // not truncated - functions and looks better
     )
@@ -190,7 +188,6 @@ class TransactionDetailsView extends View {
       self.context,
       fieldLabelTitle,
       '', // for now
-      self.context.pasteboard,
       valueToDisplayIfValueNil
     )
     self.valueLayer__paymentID = div
@@ -207,7 +204,6 @@ class TransactionDetailsView extends View {
       self.context,
       fieldLabelTitle,
       '', // for now
-      self.context.pasteboard,
       valueToDisplayIfValueNil,
       false // it looks weird to have truncated fields next to non-truncated fields, presently
     )

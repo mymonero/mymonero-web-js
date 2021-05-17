@@ -3,7 +3,6 @@
 const TXTRecordResolver = require('../../OpenAlias/TXTResolver.web')
 const txtRecordResolver = new TXTRecordResolver({})
 
-const Pasteboard = require('../../Pasteboard/Pasteboard.browser')
 const FilesystemUI = require('../../FilesystemUI/FilesystemUI.browser')
 const WindowDialogs = require('../../WindowDialogs/WindowDialogs.browser')
 const CCyConversionRates = require('../../CcyConversionRates/Controller')
@@ -19,6 +18,7 @@ const UserIdleInWindowController = require('../../UserIdle/UserIdleInWindowContr
 const WalletsListController = require('../../WalletsList/Controllers/WalletsListController.Lite')
 const WalletAppCoordinator = require('../../WalletAppCoordinator/WalletAppCoordinator')
 const ExceptionAlerting = require('../../MainWindow/Controllers/ExceptionAlerting.browser.web.js')
+const ClipboardJS = require('clipboard')
 
 function NewHydratedContext (initialContext) {
   initialContext = initialContext || {}
@@ -29,7 +29,7 @@ function NewHydratedContext (initialContext) {
 
   const context = initialContext != null ? initialContext : {}
 
-  context.pasteboard = new Pasteboard({}, context)
+  context.clipboard = new ClipboardJS('.copy-trigger')
   context.filesystemUI = new FilesystemUI({}, context)
   context.windowDialogs = new WindowDialogs({}, context)
   context.CcyConversionRates_Controller_shared = new CCyConversionRates({}, context)

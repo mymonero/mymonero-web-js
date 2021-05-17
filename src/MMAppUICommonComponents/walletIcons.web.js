@@ -23,19 +23,19 @@ const cssRules =
 	//
 	// size classes
 	// large-48
-	`.walletIcon.${SizeClasses.Large48} {
+	`.walletIcon.large-48 {
 	  width: 48px;
 	  height: 48px;
 	  background-size: 48px 48px;
 	}`,
 	// large-43
-	`.walletIcon.${SizeClasses.Large43} {
+	`.walletIcon.large-43 {
 	  width: 43px;
 	  height: 43px;
 	  background-size: 43px 43px;
 	}`,
 	// medium-32
-	`.walletIcon.${SizeClasses.Medium32} {
+	`.walletIcon.medium-32 {
 	  width: 32px;
 	  height: 32px;
 	  background-size: 32px 32px;

@@ -172,7 +172,7 @@ function New_customButton_aLayer (context, buttonTitleText, enabled_orTrue, clic
 }
 exports.New_customButton_aLayer = New_customButton_aLayer
 
-function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_orTrue, pasteboard) { // defaults to 'text' content type
+function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_orTrue) { // defaults to 'text' content type
   // state var declarations - hopefully this won't go out of scope?
   let runtime_valueToCopy // gets set below
   //
@@ -180,15 +180,7 @@ function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_o
     context,
     'COPY',
     enabled_orTrue,
-    function () {
-      if (typeof runtime_valueToCopy === 'string') {
-        pasteboard.CopyString(runtime_valueToCopy)
-      } else if (typeof runtime_valueToCopy === 'object') {
-        pasteboard.CopyValuesByType(runtime_valueToCopy)
-      } else {
-        throw Error(`unrecognized typeof value to copy ${typeof runtime_valueToCopy} in New_copyButton_aLayer`)
-      }
-    }
+    function () {}
   )
   layer.classList.add('copy-trigger')
   function _setValueToCopy (to_value__orValuesByContentType) {
@@ -347,7 +339,6 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
   context,
   fieldLabelTitle,
   value,
-  pasteboard,
   valueToDisplayIfValueNil_orDefault,
   optl_isTruncatedPreviewForm, // single line, … trunc, etc
   optl_isSecretData // IMPORTANT: defaults to false if undefined
@@ -373,8 +364,7 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
     copy_buttonLayer = New_copyButton_aLayer(
       context,
       value,
-      isValueNil === false,
-      pasteboard
+      isValueNil === false
     )
   }
   const valueLayer = New_fieldValue_labelLayer('' + valueToDisplay, context)

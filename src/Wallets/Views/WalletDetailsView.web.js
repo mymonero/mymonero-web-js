@@ -5,15 +5,12 @@ const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger
 const View = require('../../Views/View.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
-const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
-const commonComponents_actionButtons = require('../../MMAppUICommonComponents/actionButtons.web')
 const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emptyScreens.web')
 const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const InfoDisclosingView = require('../../InfoDisclosingView/Views/InfoDisclosingView.web')
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
 const TransactionDetailsView = require('./TransactionDetailsView.web')
 const ImportTransactionsModalView = require('./ImportTransactionsModalView.web')
-const FundsRequestQRDisplayView = require('../../RequestFunds/Views/FundsRequestQRDisplayView.web')
 const Currencies = require('../../CcyConversionRates/Currencies')
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 
@@ -199,7 +196,6 @@ class WalletDetailsView extends View {
       self.context,
       entitled,
       '',
-      self.context.pasteboard,
       'N/A',
       isTruncatedPreviewForm === true,
       false // isSecretData - NOTE: I have re-enabled copy on secret data for usability purposes
@@ -286,56 +282,6 @@ class WalletDetailsView extends View {
     }
     self.account_InfoDisclosingView = infoDisclosingView
     self.addSubview(infoDisclosingView)
-  }
-
-  _setup_actionButton_receive () {
-    const self = this
-    const buttonView = commonComponents_actionButtons.New_ActionButtonView(
-      'Receive',
-      './src/assets/img/actionButton_iconImage__request@3x.png', // relative to index.html
-      // TODO?: borrowing another module's asset. sort of bad
-      false,
-      function (layer, e) {
-        const requestForWallet = self.context.fundsRequestsListController.records.find(function (r) { // we'll just assume this is booted as well by now
-          return r.is_displaying_local_wallet === true && r.to_address === self.wallet.public_address
-        })
-        if (typeof requestForWallet === 'undefined') {
-          throw Error('Expected requestForWallet to be non nil')
-        }
-        //
-        // hook into existing push functionality to get stuff like reference tracking
-        const view = new FundsRequestQRDisplayView({
-          fundsRequest: requestForWallet,
-          presentedModally: true
-        }, self.context)
-        self.currentlyPresented_qrDisplayView = view
-        const navigationView = new StackAndModalNavigationView({}, self.context)
-        navigationView.SetStackViews([view])
-        self.navigationController.PresentView(navigationView, true)
-      },
-      self.context,
-      undefined,
-      undefined,
-      '16px 16px'
-    )
-    self.actionButtonsContainerView.addSubview(buttonView)
-  }
-
-  _setup_actionButton_send () {
-    const self = this
-    const buttonView = commonComponents_actionButtons.New_ActionButtonView(
-      'Send',
-      './src/assets/img/actionButton_iconImage__send@3x.png', // relative to index.html
-      true,
-      function (layer, e) {
-        self.context.walletAppCoordinator.Trigger_sendFundsFromWallet(self.wallet)
-      },
-      self.context,
-      undefined,
-      undefined,
-      '16px 16px'
-    )
-    self.actionButtonsContainerView.addSubview(buttonView)
   }
 
   _setup_layers_transactionsListLayerContainerLayer () {
