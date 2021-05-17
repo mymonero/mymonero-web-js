@@ -1337,10 +1337,10 @@ div.exchange-button {
   font-size: 12px;
 }
 
-input#XMRcurrencyInput {
+input#inCurrencyValue {
   min-width: 104px;
 }
-input#BTCcurrencyInput {
+input#outCurrencyValue {
   text-align: right;
   width: 112px;
   padding: 0px 10px 0px 0px;
@@ -1959,8 +1959,8 @@ div#currency-table {
   right: 5px;
   left: auto;
 }
-input#XMRcurrencyInput,
-input#BTCcurrencyInput {
+input#inCurrencyValue,
+input#outCurrencyValue {
   width: calc(100% - 70px);
   padding: 0px 0px;
   text-indent: 148px;
