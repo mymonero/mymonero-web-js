@@ -10,6 +10,9 @@ window.BootApp = function () { // encased in a function to prevent scope being l
     getVersion: function () {
       return '1.1.21' // TODO: read from config.. don't want to ship package.json with app though
     },
+    getApiUrl: function () {
+      return 'api.mymonero.com'
+    },
     getName: function () {
       return 'MyMonero'
     },
