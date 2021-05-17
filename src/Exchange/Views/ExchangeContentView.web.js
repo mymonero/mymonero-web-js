@@ -150,17 +150,17 @@ class ExchangeContentView extends View {
       view.layer.appendChild(layer)
       contentContainerLayer = layer
       // layer.classList.add("xmr_input");
-      const html = `
-            <style>
-                .NavigationBarView + div {}
-            </style>
-            <div class="exchangeScreen exchange-page-panel">
-                <div class="content-container exchange-page-content-container">
-                    <div id="server-rates-messages"></div>
-                    <div id="loader" class="active">
-                        <!-- gets replaced by loader -->
-                    </div>`
-      layer.innerHTML = html
+      // const html = `
+      //       <style>
+      //           .NavigationBarView + div {}
+      //       </style>
+      //       <div class="exchangeScreen exchange-page-panel">
+      //           <div class="content-container exchange-page-content-container">
+      //               <div id="server-rates-messages"></div>
+      //               <div id="loader" class="active">
+      //                   <!-- gets replaced by loader -->
+      //               </div>`
+      // layer.innerHTML = html
       
     }
 
@@ -350,14 +350,24 @@ class ExchangeContentView extends View {
       // }
 
       const outCurrencyValueKeydownListener = function (event) {
-        if (event.which == 8 || event.which == 110 || event.which == 46 || event.which == 190) { return }
-
-        if ((event.which >= 48 && event.which <= 57) || (event.which >= 96 && event.which <= 105)) {
+        // We need to limit the number of decimals based on the selected currency
+        let currencyTickerCode = document.getElementById("outCurrencySelectList").value;
+        console.log(event.which);
+        // arrow keys, delete, backspace
+        if (event.which == 37 || event.which == 39 || event.which == 46 || event.which == 8) {
+          return
+        }
+        // checkDecimals returns false if we exceed the second parameter in decimal places
+        if (!checkDecimals(outCurrencyValue.value, exchangeHelper.currencyMetadata[currencyTickerCode].precision)) {
+          console.log("Decimal limit reached");
+          event.preventDefault()
           return
         }
 
-        if (!checkDecimals(outCurrencyValue.value, 8)) {
-          event.preventDefault()
+        if (event.which == 8 || event.which == 110 || event.which == 46 || event.which == 190) { return }
+
+        // numpad and numeric
+        if ((event.which >= 48 && event.which <= 57) || (event.which >= 96 && event.which <= 105)) {
           return
         }
 
@@ -701,6 +711,7 @@ class ExchangeContentView extends View {
       
 
       function checkDecimals (value, decimals) {
+        console.log("checkDecimals:", value, decimals);
         const str = value.toString()
         const strArr = str.split('.')
         if (strArr.length > 1) {
@@ -796,7 +807,7 @@ class ExchangeContentView extends View {
                   const minutesElement = document.getElementById('minutesRemaining')
                   if (secondsElement !== null) {
                     const minutesElement = document.getElementById('minutesRemaining')
-                    const timeRemaining = exchangeHelper.TimerHelper.getTimeRemaining(expiryTime)
+                    const timeRemaining = exchangeHelper.timerHelper.getTimeRemaining(expiryTime)
                     minutesElement.innerHTML = timeRemaining.minutes
                     if (timeRemaining.seconds <= 9) {
                       timeRemaining.seconds = '0' + timeRemaining.seconds
@@ -857,24 +868,19 @@ class ExchangeContentView extends View {
 
       } else {
 
-        function clearValidationMessages(callbackFunction = null) {
-          if (typeof(callbackFunction) === "function") {
-            callbackFunction('test');
-          }
-        }
-
-        function alertValid(message) {
-          console.log("Great success:", message)
-        }
-
-        console.log(exchangeHelper.eventListeners)
+        // function clearValidationMessages(callbackFunction = null) {
+        //   if (typeof(callbackFunction) === "function") {
+        //     callbackFunction('test');
+        //   }
+        // }
 
         // bind to listener that will update the coin labels when the outCurrency is changed
         document.getElementById('outCurrencySelectList').addEventListener('change', exchangeHelper.eventListeners.updateCurrencyLabels);
 
         outAddressInput.addEventListener('input', exchangeHelper.eventListeners.outAddressInputListener)
         inCurrencyValue.addEventListener('keydown', exchangeHelper.eventListeners.inCurrencyValueKeydownListener)
-        outCurrencyValue.addEventListener('keydown', exchangeHelper.eventListeners.outCurrencyValueKeydownListener)
+        //outCurrencyValue.addEventListener('keydown', exchangeHelper.eventListeners.outCurrencyValueKeydownListener)
+        outCurrencyValue.addEventListener('keydown', outCurrencyValueKeydownListener)
         console.log(orderBtn);
         console.log("OrderBtnBindNext");
         //console.log(exchangeHelper.eventListeners.orderBtnClickedListener.bind())
@@ -882,7 +888,7 @@ class ExchangeContentView extends View {
         orderBtn.addEventListener('click', orderBtnClicked)
 
         outCurrencyValue.addEventListener('keyup', function (event) {
-          clearValidationMessages(alertValid);
+          //clearValidationMessages(alertValid);
           validationMessages.innerHTML = ''
           if (outCurrencyValue.value.length > 0) {
             btcBalanceChecks()
