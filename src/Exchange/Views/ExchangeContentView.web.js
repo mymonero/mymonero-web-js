@@ -113,9 +113,8 @@ class ExchangeContentView extends View {
     console.log(self.walletsListController.records);
     if (self.walletsListController.records.length > 0) {
       let walletHtml = exchangeHelper.walletSelectorTemplate(self)
-    } else {
-      // wallets not initialized, do nothing
     }
+    // wallets not initialized, do nothing
   }
 
   _setup_emptyStateContainerView (context) {
@@ -162,6 +161,7 @@ class ExchangeContentView extends View {
                         <!-- gets replaced by loader -->
                     </div>`
       layer.innerHTML = html
+      
     }
 
     {
@@ -189,12 +189,12 @@ class ExchangeContentView extends View {
       // we use ES6's spread operator (...buttonClasses) to invoke the addition of classes -- cleaner than a foreach
       const buttonClasses = ['base-button', 'hoverable-cell', 'navigation-blue-button-enabled', 'action', 'right-add-button', 'exchange-button']
       layer.classList.add(...buttonClasses)
-      layer.id = 'exchange-xmr'
+      layer.id = 'exchangePage'
       layer.innerText = 'Exchange XMR'
       const orderSent = false
       layer.addEventListener('click', function (orderSent) {
-        const exchangeXmrDiv = document.getElementById('exchange-xmr')
-        exchangeXmrDiv.classList.remove('active')
+        const exchangePageDiv = document.getElementById('exchangePage')
+        exchangePageDiv.classList.remove('active')
 
         /* 
                     * We define the status update and the response handling function here, since we need to update the DOM with status feedback from the monero-daemon.
@@ -264,6 +264,8 @@ class ExchangeContentView extends View {
       console.log(contentContainerLayer)
     }
     console.log("This ran?");
+    let e = document.getElementById("exchangePage");
+    console.log(e);
     self.emptyStateMessageContainerView = view
     self.addSubview(view)
 
@@ -286,7 +288,7 @@ class ExchangeContentView extends View {
       const outAddressInput = document.getElementById('outAddress')
       const walletSelector = document.getElementById('wallet-selector')
       const walletOptions = document.getElementById('wallet-options')
-      const exchangeXmrDiv = document.getElementById('exchange-xmr')
+      const exchangePageDiv = document.getElementById('exchangePage')
       let orderStarted = false
       const orderCreated = false
       const orderStatusPage = document.getElementById('orderStatusPage')
@@ -531,24 +533,25 @@ class ExchangeContentView extends View {
 
       const handleOfferError = function(error) {
         console.log("handleOfferError invoked")
-          validationMessages.innerHTML = "";
-          serverValidation.innerHTML = "";
-          let errorDiv = document.createElement('div');
-          errorDiv.classList.add('message-label');
-          let errorMessage = "";
-          if (typeof(error.response.status) == "undefined") {
-              errorMessage = error.message
-          } else {
-              // We may have a value in error.response.data.Error
-              if (typeof(error.response.data) !== "undefined" && typeof(error.response.data.Error !== "undefined")) {
-                  errorMessage = error.response.data.Error
-              } else {
-                  errorMessage = error.message
-              }
-          }
-          errorDiv.id = 'server-invalid';
-          errorDiv.innerHTML = `There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>` + errorMessage;
-          serverValidation.appendChild(errorDiv);      
+        console.log(error);
+        validationMessages.innerHTML = "";
+        serverValidation.innerHTML = "";
+        let errorDiv = document.createElement('div');
+        errorDiv.classList.add('message-label');
+        let errorMessage = "";
+        if (typeof(error.response.status) == "undefined") {
+            errorMessage = error.message
+        } else {
+            // We may have a value in error.response.data.Error
+            if (typeof(error.response.data) !== "undefined" && typeof(error.response.data.Error !== "undefined")) {
+                errorMessage = error.response.data.Error
+            } else {
+                errorMessage = error.message
+            }
+        }
+        errorDiv.id = 'server-invalid';
+        errorDiv.innerHTML = `There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>` + errorMessage;
+        serverValidation.appendChild(errorDiv);      
       }
 
       const xmrBalanceChecks = function () {
@@ -664,7 +667,7 @@ class ExchangeContentView extends View {
         }).finally(() => {
           ExchangeFunctions.initialiseExchangeConfiguration().then((response) => {
             // Data returned by resolve
-            // If we get an error, we assume localmonero 
+            // If we get an error, we assume localmonero should be enabled 
             const localmoneroDiv = document.getElementById('localmonero')
             const localmoneroAnchor = document.getElementById('localmonero-anchor')
             localmoneroAnchor.setAttribute('referrer_id', response.data.referrer_info.localmonero.referrer_id)
@@ -775,10 +778,14 @@ class ExchangeContentView extends View {
             const selectedWallet = document.getElementById('selected-wallet')
 
             ExchangeFunctions.createOrder(btc_dest_address, selectedWallet.dataset.walletpublicaddress).then((response) => {
-              document.getElementById('orderStatusPage').classList.remove('active')
+              //document.getElementById('orderStatusPage').classList.remove('active')
+              let e = document.getElementById('orderStatusPage');
+              console.log(e);
+              e = document.getElementById('orderStatusPage');
+              console.log(e);
               loaderPage.classList.remove('active')
               orderStatusDiv.classList.add('active')
-              exchangeXmrDiv.classList.add('active')
+              exchangePageDiv.classList.add('active')
               // backBtn.innerHTML = `<div class="base-button hoverable-cell utility grey-menu-button disableable left-back-button" style="cursor: default; -webkit-app-region: no-drag; position: absolute; opacity: 1; left: 0px;"></div>`;
               orderTimer = setInterval(() => {
                 if (orderStatusResponse.hasOwnProperty('expires_at')) {
@@ -826,20 +833,18 @@ class ExchangeContentView extends View {
               }, 1000)
               document.getElementById('orderStatusPage').classList.remove('active')
             }).catch((error) => {
-              const errorDiv = document.createElement('div')
-              errorDiv.classList.add('message-label')
-              errorDiv.id = 'server-invalid'
-              errorDiv.innerHTML = 'There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>' + error
-              serverValidation.appendChild(errorDiv)
+              handleOfferError(error);
               orderBtn.style.display = 'block'
+              // const errorDiv = document.createElement('div')
+              // errorDiv.classList.add('message-label')
+              // errorDiv.id = 'server-invalid'
+              // errorDiv.innerHTML = 'There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>' + error
+              // serverValidation.appendChild(errorDiv)
+              // orderBtn.style.display = 'block'
               orderStarted = false
             })
           }).catch((error) => {
-            const errorDiv = document.createElement('div')
-            errorDiv.classList.add('message-label')
-            errorDiv.id = 'server-invalid'
-            errorDiv.innerHTML = 'There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>' + error
-            serverValidation.appendChild(errorDiv)
+            handleOfferError(error);
             orderBtn.style.display = 'block'
             orderStarted = false
           })
