@@ -112,7 +112,8 @@ class ImportTransactionsModalView extends View {
 
   _setup_form_walletSelectLayer () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('FROM', self.context)
       div.appendChild(labelLayer)
@@ -170,7 +171,8 @@ class ImportTransactionsModalView extends View {
 
   _setup_form_addressInputLayer () { // Request funds from sender
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.paddingTop = '22px'
     //
     const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('TO', self.context)
@@ -207,7 +209,8 @@ class ImportTransactionsModalView extends View {
 
   _setup_form_manualPaymentIDInputLayer () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.paddingTop = '4px'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('PAYMENT ID (REQUIRED)', self.context)

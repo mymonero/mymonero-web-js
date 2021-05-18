@@ -74,7 +74,8 @@ class SettingsView extends View {
 
   _setup_form_field_appTimeoutSlider () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.paddingTop = '5px' // special case
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('APP TIMEOUT', self.context)
@@ -127,7 +128,8 @@ class SettingsView extends View {
   _setup_form_field_displayCcy () {
     const self = this
 
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('DISPLAY CURRENCY', self.context)
       div.appendChild(labelLayer)

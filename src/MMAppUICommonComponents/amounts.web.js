@@ -20,7 +20,8 @@ function New_AmountInputFieldPKG (
   const ccySelect_label_margin_left = 6
   const selectLayer_w = ccySelect_label_margin_left + 32/* text */ + 4 + ccySelect_disclosureArrow_w + ccySelect_disclosureArrow_margin_right
   //
-  const div = commonComponents_forms.New_fieldContainerLayer()
+  const div = document.createElement('div')
+  div.className = 'form_field'
   div.style.position = 'relative' // to have layout reset origin of any position=absolute items
   div.style.left = '0'
   div.style.top = '0'

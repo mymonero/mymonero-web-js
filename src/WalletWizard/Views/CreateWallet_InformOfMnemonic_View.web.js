@@ -62,7 +62,8 @@ class CreateWallet_InformOfMnemonic_View extends BaseView_AWalletWizardScreen {
     const selectLayer_w = 142
     const selectLayer_h = 32
     //
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('LANGUAGE', self.context)
       div.appendChild(labelLayer)

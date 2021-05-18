@@ -4,13 +4,6 @@ const View = require('../Views/View.web')
 const activityIndicators = require('./activityIndicators.web')
 const commonComponents_forms = require('./forms.web')
 
-function New_fieldContainerLayer (context) {
-  const layer = document.createElement('div')
-  layer.className = 'table_field'
-  return layer
-}
-exports.New_fieldContainerLayer = New_fieldContainerLayer
-
 function New_clickableLinkButtonView (buttonTitle, context, clicked_fn, optl__mouseEnter_fn, optl__mouseLeave_fn) {
   clicked_fn = clicked_fn || function () {}
   const mouseEnter_fn = optl__mouseEnter_fn || function () {}
@@ -385,7 +378,8 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
   //
   const isValueNil = value === null || typeof value === 'undefined' || value === ''
   const valueToDisplay = isValueNil === false ? value : valueToDisplayIfValueNil_orDefault
-  const div = New_fieldContainerLayer()
+  const div = document.createElement('div')
+  div.className = 'table_field'
   const padding_btm = isTruncatedPreviewForm ? 12 : 19
   div.style.padding = `15px 0 ${padding_btm}px 0`
   const labelLayer = New_fieldTitle_labelLayer(fieldLabelTitle, context)

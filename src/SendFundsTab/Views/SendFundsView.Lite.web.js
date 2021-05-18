@@ -154,7 +154,8 @@ class SendFundsView extends View {
 
   _setup_form_walletSelectLayer () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('FROM', self.context)
       {
@@ -270,7 +271,8 @@ class SendFundsView extends View {
 
   _setup_form_contactOrAddressPickerLayer () { // Request funds from sender
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     //
     const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('TO', self.context)
     labelLayer.style.marginTop = '17px' // to square with MEMO field on Send Funds
@@ -316,7 +318,21 @@ class SendFundsView extends View {
         labelLayer.style.marginTop = '12px' // instead of 15
         fieldContainerLayer.appendChild(labelLayer)
         //
-        const valueLayer = commonComponents_forms.New_NonEditable_ValueDisplayLayer_BreakChar('', self.context) // zero val for now
+        const valueLayer = document.createElement('div')
+        valueLayer.value = '' // setting this so there is a common interface with _textView above - some consumers rely on it. this should be standardized into a Value() method of a View
+        valueLayer.style.borderRadius = '3px'
+        valueLayer.style.backgroundColor = '#383638'
+        valueLayer.style.padding = '8px 11px'
+        valueLayer.style.boxSizing = 'border-box'
+        valueLayer.style.width = '100%'
+        valueLayer.style.height = 'auto'
+        valueLayer.style.color = '#7C7A7C'
+        valueLayer.style.fontSize = '13px'
+        valueLayer.style.fontWeight = '100'
+        valueLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        valueLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+        valueLayer.innerHTML = ''
+        valueLayer.style.wordBreak = 'break-all'
         self.resolvedAddress_valueLayer = valueLayer
         fieldContainerLayer.appendChild(valueLayer)
       }
@@ -331,11 +347,32 @@ class SendFundsView extends View {
         labelLayer.style.marginTop = '6px' // instead of 15
         fieldContainerLayer.appendChild(labelLayer)
         //
-        const valueLayer = commonComponents_forms.New_NonEditable_ValueDisplayLayer_BreakChar('', self.context) // zero val for now
+        const valueLayer = document.createElement('div')
+        valueLayer.value = '' // setting this so there is a common interface with _textView above - some consumers rely on it. this should be standardized into a Value() method of a View
+        valueLayer.style.borderRadius = '3px'
+        valueLayer.style.backgroundColor = '#383638'
+        valueLayer.style.padding = '8px 11px'
+        valueLayer.style.boxSizing = 'border-box'
+        valueLayer.style.width = '100%'
+        valueLayer.style.height = 'auto'
+        valueLayer.style.color = '#7C7A7C'
+        valueLayer.style.fontSize = '13px'
+        valueLayer.style.fontWeight = '100'
+        valueLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        valueLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+        valueLayer.innerHTML = ''
+        valueLayer.style.wordBreak = 'break-all'
         self.resolvedPaymentID_valueLayer = valueLayer
         fieldContainerLayer.appendChild(valueLayer)
         //
-        const detectedMessage = commonComponents_forms.New_Detected_IconAndMessageLayer(self.context)
+        const detectedMessage = document.createElement('div')
+        detectedMessage.classList.add('iconAndMessageLayer')
+        detectedMessage.innerHTML = `<img src="./src/assets/img/detectedCheckmark@3x.png" width="9px" height="7px" />&nbsp;<span>Detected</span>`
+        detectedMessage.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        detectedMessage.style.webkitFontSmoothing = 'subpixel-antialiased'
+        detectedMessage.style.fontSize = '11px'
+        detectedMessage.style.fontWeight = '100'
+        detectedMessage.style.color = '#8D8B8D'
         fieldContainerLayer.appendChild(detectedMessage)
       }
     }
@@ -365,7 +402,8 @@ class SendFundsView extends View {
 
   _setup_form_manualPaymentIDInputLayer () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.display = 'none' // initial
     {
       const labelRowContainer = document.createElement('div')
@@ -424,7 +462,8 @@ class SendFundsView extends View {
     const selectLayer_w = 122
     const selectLayer_h = 32
     //
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('PRIORITY', self.context)
       labelLayer.style.marginTop = '4px'

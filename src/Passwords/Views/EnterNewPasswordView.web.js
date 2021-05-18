@@ -60,7 +60,8 @@ class EnterNewPasswordView extends View {
 
   _setup_form_passwordInputField () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.paddingBottom = '10px' // extra spacer
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('PIN OR PASSWORD', self.context)
@@ -100,7 +101,8 @@ class EnterNewPasswordView extends View {
 
   _setup_form_confirmPasswordInputField () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('CONFIRM', self.context)
       div.appendChild(labelLayer)
