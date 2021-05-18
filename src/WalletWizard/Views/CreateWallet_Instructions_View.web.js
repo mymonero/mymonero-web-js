@@ -133,7 +133,14 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
         layer.style.width = '85px'
       }
       layer.style.height = `${32 - 10 * 2}px`
-      self.context.themeController.StyleLayer_FontAsMessageBearingSmallLightMonospace(layer)
+      layer.style.fontSize = '11px' // we need this to visually stand out slightly more given how it's used
+      if (self.context.ThemeController_isMobileBrowser === true) {
+        layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+        layer.style.fontWeight = 'lighter'
+      } else {
+        layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        layer.style.fontWeight = '100' // instead of 500, cause this color, white, is rendered strong
+      }
       layer.style.color = '#f8f7f8'
       layer.style.background = '#383638'
       if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {

@@ -104,7 +104,16 @@ function New_AmountInputFieldPKG (
   const ccySelectLayer = commonComponents_ccySelect.new_selectLayer()
   let ccySelect_disclosureArrow_layer // will be set
   {
-    context.themeController.StyleLayer_FontAsSmallSemiboldSansSerif(ccySelectLayer)
+    ccySelectLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+    if (context.ThemeController_isMobileBrowser === true) {
+      ccySelectLayer.style.fontSize = '11px'
+      ccySelectLayer.style.fontWeight = '600' // semibold desired but "semibold" doesn't apparently work
+    } else {
+      ccySelectLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+      ccySelectLayer.style.fontSize = '11px'
+      ccySelectLayer.style.fontWeight = '400' // semibold desired
+      ccySelectLayer.style.letterSpacing = '0.5px'
+    }
     //
     // TODO: move these into class + css rules
     //

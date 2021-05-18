@@ -11,7 +11,6 @@ const Persister = require('../../DocumentPersister/DocumentPersister.InMemory')
 const BackgroundAPIResponseParser = require('@mymonero/mymonero-response-parser-utils')
 const HostedMoneroAPIClient = require('@mymonero/mymonero-hosted-api')
 const OpenAliasResolver = require('../../OpenAlias/OpenAliasResolver')
-const ThemeController = require('../../Theme/ThemeController')
 const PasswordController = require('../../Passwords/Controllers/PasswordController.Lite')
 const SettingsController = require('../../Settings/Controllers/SettingsController')
 const UserIdleInWindowController = require('../../UserIdle/UserIdleInWindowController')
@@ -47,7 +46,6 @@ function NewHydratedContext (initialContext) {
   context.openAliasResolver = new OpenAliasResolver({
     txtRecordResolver: txtRecordResolver
   }, context)
-  context.themeController = new ThemeController({}, context)
   context.passwordController = new PasswordController({}, context)
   context.settingsController = new SettingsController({}, context)
   context.userIdleInWindowController = new UserIdleInWindowController({}, context)

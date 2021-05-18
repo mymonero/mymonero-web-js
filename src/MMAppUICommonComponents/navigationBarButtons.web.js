@@ -47,7 +47,16 @@ function New_GreyButtonView (context) {
   }
   layer.style.backgroundColor = '#383638'
   layer.style.color = '#FCFBFC'
-  context.themeController.StyleLayer_FontAsMiddlingSemiboldSansSerif(layer)
+  layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+  if (context.ThemeController_isMobileBrowser === true) {
+    layer.style.fontSize = '13px'
+    layer.style.fontWeight = '600' // semibold desired but "semibold" doesn't apparently work
+  } else {
+    layer.style.webkitFontSmoothing = 'subpixel-antialiased'
+    layer.style.fontSize = '12px' // design says 13 but chrome/desktop renders it too large
+    layer.style.fontWeight = '400' // semibold desired
+    layer.style.letterSpacing = '0.5px'
+  }
   layer.classList.add('disableable') // allowing this to be auto-styled as disabled
   return view
 }
@@ -164,7 +173,21 @@ function New_RightSide_ValueDisplayLabelButtonView (context) {
   layer.style.width = 'auto'
   layer.style.height = 'auto'
   layer.style.textDecoration = 'none'
-  context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
+  if (context.ThemeController_isMobileBrowser === true) {
+    layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+    layer.style.fontSize = '11px'
+    layer.style.fontWeight = 'lighter'
+  } else {
+    layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+    layer.style.webkitFontSmoothing = 'subpixel-antialiased' // for chrome browser
+    layer.style.fontSize = '10px'
+    layer.style.letterSpacing = '0.5px'
+    if (typeof process !== 'undefined' && process.platform === 'linux') {
+      layer.style.fontWeight = '700' // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
+    } else {
+      layer.style.fontWeight = '300'
+    }
+  }
   layer.style.color = '#9E9C9E'
   layer.style.lineHeight = '200%' // % extra to get + aligned properly
   layer.style.textAlign = 'center'

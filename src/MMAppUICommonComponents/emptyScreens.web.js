@@ -32,7 +32,15 @@ function New_EmptyStateMessageContainerView (emojiSrc, optl_messageText, context
 
   const messageLayer = document.createElement('div')
   messageLayer.classList.add('message-label')
-  context.themeController.StyleLayer_FontAsMiddlingNormalSansSerif(messageLayer)
+  messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+  messageLayer.style.letterSpacing = '0'
+  messageLayer.style.fontSize = '13px'
+  if (context.ThemeController_isMobileBrowser === true) {
+    messageLayer.style.fontWeight = 'normal'
+  } else {
+    messageLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+    messageLayer.style.fontWeight = '300'
+  }
   messageLayer.innerHTML = messageText
 
   contentContainerLayer.appendChild(messageLayer)

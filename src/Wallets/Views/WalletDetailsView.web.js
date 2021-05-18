@@ -925,7 +925,21 @@ class WalletDetailsView extends View {
         progressLabelLayer.style.right = '19px'
         progressLabelLayer.style.top = '8px'
         //
-        self.context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
+        if (self.context.ThemeController_isMobileBrowser === true) {
+          layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+          layer.style.fontSize = '11px'
+          layer.style.fontWeight = 'lighter'
+        } else {
+          layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+          layer.style.webkitFontSmoothing = 'subpixel-antialiased' // for chrome browser
+          layer.style.fontSize = '10px'
+          layer.style.letterSpacing = '0.5px'
+          if (typeof process !== 'undefined' && process.platform === 'linux') {
+            layer.style.fontWeight = '700' // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
+          } else {
+            layer.style.fontWeight = '300'
+          }
+        }
         //
         progressLabelLayer.style.color = '#9E9C9E'
         layer.appendChild(progressLabelLayer)

@@ -46,10 +46,8 @@ class SendFundsView extends View {
 
   _isUsingRelativeNotFixedActionButtonsContainer () {
     const self = this
-    if (self.context.themeController.TabBarView_isHorizontalBar() === false) {
-      return false
-    }
-    return true
+    
+    return self.context.TabBarView_isHorizontalBar
   }
 
   setup_views () {
@@ -66,7 +64,7 @@ class SendFundsView extends View {
     { // action buttons toolbar
       let view
       if (self._isUsingRelativeNotFixedActionButtonsContainer() === false) {
-        const margin_fromWindowLeft = self.context.themeController.TabBarView_thickness() + 16 // we need this for a position:fixed, width:100% container
+        const margin_fromWindowLeft = self.context.TabBarView_thickness + 16 // we need this for a position:fixed, width:100% container
         view = commonComponents_actionButtons.New_ActionButtonsContainerView(
           margin_fromWindowLeft,
           16,
@@ -486,10 +484,17 @@ class SendFundsView extends View {
         selectLayer.style.MozAppearance = 'none'
         selectLayer.style.msAppearance = 'none'
         selectLayer.style.appearance = 'none'
-        self.context.themeController.StyleLayer_FontAsMiddlingButtonContentSemiboldSansSerif(
-          selectLayer,
-          true // bright content, dark bg
-        )
+        selectLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+        if (self.context.ThemeController_isMobileBrowser === true) {
+          selectLayer.style.fontSize = '13px'
+          selectLayer.style.letterSpacing = '0'
+          selectLayer.style.fontWeight = '600'
+        } else { // chrome/desktop/electron:
+          selectLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+          selectLayer.style.fontSize = '12px' // appears slightly too small but 13 is far to big
+          selectLayer.style.letterSpacing = '0.5px'
+          selectLayer.style.fontWeight = '400'
+        }
         if (typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
           selectLayer.style.textIndent = '4px'
         } else {
