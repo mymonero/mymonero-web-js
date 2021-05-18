@@ -245,13 +245,10 @@ class ImportTransactionsModalView extends View {
     const self = this
     const layer = document.createElement('div')
     layer.style.background = 'rgba(245,230,125,0.05)'
-    const padding_h = 8
-    const margin_h = 24
-    layer.style.width = `calc(100% - ${2 * margin_h}px - ${2 * 1}px - ${2 * padding_h}px)`
     layer.style.borderRadius = '5px'
     layer.style.border = '1px solid rgba(245,230,125,0.30)'
-    layer.style.padding = `6px ${padding_h}px 7px ${padding_h}px`
-    layer.style.margin = `4px ${margin_h}px 8px ${margin_h}px`
+    layer.style.padding = `6px 8px 7px 8px`
+    layer.style.margin = `4px 24px 8px 24px`
     layer.style.fontWeight = '300'
     layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
     layer.style.fontSize = '11px'
@@ -321,9 +318,7 @@ class ImportTransactionsModalView extends View {
     self.disable_submitButton()
     const layer = view.layer
     layer.innerHTML = 'Send'
-    layer.addEventListener(
-      'click',
-      function (e) {
+    layer.addEventListener('click', function (e) {
         e.preventDefault()
         if (self.isSubmitButtonDisabled !== true) { // button is enabled
           self._tryToGenerateSend()

@@ -1,8 +1,6 @@
 'use strict'
 
-const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
-const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emptyScreens.web')
 const commonComponents_actionButtons = require('../../MMAppUICommonComponents/actionButtons.web')
 
 const BaseView_AWalletWizardScreen = require('./BaseView_AWalletWizardScreen.web')
@@ -21,13 +19,46 @@ class PickCreateOrUseExisting_Landing_View extends BaseView_AWalletWizardScreen 
 
   _setup_emptyStateMessageContainerView () {
     const self = this
-    const view = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
-      '🤔',
-      'How would you like to</br>add a wallet?',
-      self.context,
-      16,
-      19
-    )
+    const margin_h = 16
+    const margin_v = 19
+    const view = new View({}, self.context)
+    view.__EmptyStateMessageContainerView_margin_h = margin_h
+    view.__EmptyStateMessageContainerView_margin_v = margin_v
+  
+    const layerEmpty = view.layer
+    layerEmpty.classList.add('emptyScreens')
+    layerEmpty.style.width = `calc(100% - 32px - 2px)` // -2px for border
+    layerEmpty.style.height = `calc(100% - 38px - 2px)` // -2px for border
+    layerEmpty.style.margin = `19px 16px`
+  
+    const contentContainerLayer = document.createElement('div')
+    contentContainerLayer.classList.add('content-container')
+    contentContainerLayer.style.display = 'table-cell'
+    contentContainerLayer.style.verticalAlign = 'middle'
+    const translateY_px = -16
+    contentContainerLayer.style.transform = 'translateY(' + translateY_px + 'px)' // pull everything up per design
+    view.layer.appendChild(contentContainerLayer)
+  
+    const emojiLayer = document.createElement('div')
+    emojiLayer.classList.add('emoji-label')
+    emojiLayer.innerHTML = '🤔'
+    contentContainerLayer.appendChild(emojiLayer)
+  
+    const messageLayer = document.createElement('div')
+    messageLayer.classList.add('message-label')
+    messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+    messageLayer.style.letterSpacing = '0'
+    messageLayer.style.fontSize = '13px'
+    if (self.context.ThemeController_isMobileBrowser === true) {
+      messageLayer.style.fontWeight = 'normal'
+    } else {
+      messageLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+      messageLayer.style.fontWeight = '300'
+    }
+    messageLayer.innerHTML = 'How would you like to</br>add a wallet?'
+  
+    contentContainerLayer.appendChild(messageLayer)
+
     const layer = view.layer
     layer.style.marginBottom = '0' // not going to use margin on the btm because action bar is there
     self.emptyStateMessageContainerView = view

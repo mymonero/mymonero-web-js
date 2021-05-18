@@ -5,7 +5,6 @@ const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger
 const View = require('../../Views/View.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
-const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emptyScreens.web')
 const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const InfoDisclosingView = require('../../InfoDisclosingView/Views/InfoDisclosingView.web')
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
@@ -681,14 +680,44 @@ class WalletDetailsView extends View {
     }
     const stateCachedTransactions = wallet.New_StateCachedTransactions()
     if (stateCachedTransactions.length === 0) {
-      const view = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
-        '😴',
-        "You don't have any<br/>transactions yet.",
-        self.context,
-        0, // explicit margin h
-        0, // explicit margin v
-        -12 // content translate y
-      )
+      const margin_h = 0
+      const margin_v = 0
+      const view = new View({}, self.context)
+      
+      const layerEmpty = view.layer
+      layerEmpty.classList.add('emptyScreens')
+      layerEmpty.style.width = `calc(100% - ${2 * margin_h}px - 2px)` // -2px for border
+      layerEmpty.style.height = `calc(100% - ${2 * margin_v}px - 2px)` // -2px for border
+      layerEmpty.style.margin = `${margin_v}px ${margin_h}px`
+    
+      const contentContainerLayer = document.createElement('div')
+      contentContainerLayer.classList.add('content-container')
+      contentContainerLayer.style.display = 'table-cell'
+      contentContainerLayer.style.verticalAlign = 'middle'
+      const translateY_px = -12
+      contentContainerLayer.style.transform = 'translateY(' + translateY_px + 'px)' // pull everything up per design
+      view.layer.appendChild(contentContainerLayer)
+    
+      const emojiLayer = document.createElement('div')
+      emojiLayer.classList.add('emoji-label')
+      emojiLayer.innerHTML = '😴'
+      contentContainerLayer.appendChild(emojiLayer)
+    
+      const messageLayer = document.createElement('div')
+      messageLayer.classList.add('message-label')
+      messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+      messageLayer.style.letterSpacing = '0'
+      messageLayer.style.fontSize = '13px'
+      if (self.context.ThemeController_isMobileBrowser === true) {
+        messageLayer.style.fontWeight = 'normal'
+      } else {
+        messageLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+        messageLayer.style.fontWeight = '300'
+      }
+      messageLayer.innerHTML = "You don't have any<br/>transactions yet."
+    
+      contentContainerLayer.appendChild(messageLayer)
+        
       const layer = view.layer
       layer.style.margin = '16px 0 16px 0'
       self.noTransactions_emptyStateView = view
