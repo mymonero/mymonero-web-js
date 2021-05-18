@@ -87,8 +87,21 @@ class EnterNewPasswordView extends View {
         }
       )
       div.appendChild(layer)
-      //
-      const messageLayer = commonComponents_forms.New_fieldAccessory_messageLayer(self.context)
+      
+      const messageLayer = document.createElement('p')
+      messageLayer.style.fontSize = '11px' // we need this to visually stand out slightly more given how it's used
+      if (self.context.ThemeController_isMobileBrowser === true) {
+        messageLayer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+        messageLayer.style.fontWeight = 'lighter'
+      } else {
+        messageLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        messageLayer.style.fontWeight = '100' // instead of 500, cause this color, white, is rendered strong
+      }
+      messageLayer.style.lineHeight = '15px'
+      messageLayer.style.margin = '7px 7px 0 7px'
+      messageLayer.style.color = '#8d8b8d'
+      messageLayer.style.wordBreak = 'break-word'
+      messageLayer.style.webkitUserSelect = 'none'
       messageLayer.innerHTML = "Used to encrypt your on-device data, and to lock your app when idle. Don't forget it!<br/>Six character&nbsp;minimum."
       div.appendChild(messageLayer)
     }
@@ -127,8 +140,22 @@ class EnterNewPasswordView extends View {
         }
       )
       div.appendChild(layer)
-      //
-      const validationMessageLayer = commonComponents_forms.New_fieldAccessory_validationMessageLayer(self.context)
+      
+      const validationMessageLayer = document.createElement('p')
+      validationMessageLayer.style.fontSize = '11px' // we need this to visually stand out slightly more given how it's used
+      if (self.context.ThemeController_isMobileBrowser === true) {
+        validationMessageLayer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+        validationMessageLayer.style.fontWeight = 'lighter'
+      } else {
+        validationMessageLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        validationMessageLayer.style.fontWeight = '100' // instead of 500, cause this color, white, is rendered strong
+      }
+      validationMessageLayer.style.lineHeight = '15px'
+      validationMessageLayer.style.margin = '7px 7px 0 7px'
+      validationMessageLayer.style.color = '#8d8b8d'
+      validationMessageLayer.style.wordBreak = 'break-word'
+      validationMessageLayer.style.webkitUserSelect = 'none'
+      validationMessageLayer.style.color = '#f97777'
       validationMessageLayer.style.display = 'none'
       self.validationMessageLayer = validationMessageLayer
       div.appendChild(validationMessageLayer)
