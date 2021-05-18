@@ -32,7 +32,6 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       nettype: require('@mymonero/mymonero-nettype').network_type.MAINNET, // critical setting
       app: app,
       isDebug: isDebug,
-      isLiteApp: true, // used sparingly for to disable (but not redact) functionality
       isMobile: isMobile,
       TabBarView_thickness: isMobile ? 48 : 79,
       TabBarView_isHorizontalBar: isMobile,

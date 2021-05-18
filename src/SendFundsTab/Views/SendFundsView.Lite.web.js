@@ -2145,9 +2145,6 @@ class SendFundsView extends View {
     if (absoluteFilePath != null && absoluteFilePath != '' && typeof absoluteFilePath !== 'undefined') {
       self._shared_didPickQRCodeAtPath(absoluteFilePath)
     } else if (file_size) { // going to assume we're in a browser
-      if (self.context.isLiteApp != true) {
-        throw 'Expected this to be Lite app aka browser'
-      }
       if (!/^image\//.test(file.type)) {
         self.validationMessageLayer.SetValidationError('Please select a QR code image file.')
         return
