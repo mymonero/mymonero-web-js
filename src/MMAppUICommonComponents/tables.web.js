@@ -95,47 +95,6 @@ function New_fieldTitle_labelLayer (labelText, context) {
   return layer
 }
 exports.New_fieldTitle_labelLayer = New_fieldTitle_labelLayer
-//
-function New_fieldValue_labelLayer (labelText, context) {
-  const layer = document.createElement('span')
-  layer.innerHTML = labelText
-  layer.className = 'field_value'
-  layer.style.float = 'right'
-  layer.style.textAlign = 'right'
-  layer.style.fontSize = '13px'
-  layer.style.color = '#9E9C9E'
-  layer.style.fontWeight = '100'
-  layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
-  layer.Component_SetValue = function (value) {
-    layer.innerHTML = value
-  }
-  //
-  return layer
-}
-exports.New_fieldValue_labelLayer = New_fieldValue_labelLayer
-//
-function New_fieldValue_base64DataImageLayer (imageData_base64String, context) {
-  const layer = document.createElement('img')
-  layer.className = 'field_value'
-  layer.style.backgroundColor = 'black' // not strictly necessary… mostly for debug
-  layer.Component_SetValue = function (to__imageData_base64String) {
-    layer.src = to__imageData_base64String
-  }
-  layer.Component_SetValue(imageData_base64String)
-  //
-  return layer
-}
-exports.New_fieldValue_base64DataImageLayer = New_fieldValue_base64DataImageLayer
-//
-function New_separatorLayer (context) {
-  const layer = document.createElement('div')
-  layer.style.width = '100%'
-  layer.style.height = '0.5px'
-  layer.style.backgroundColor = '#494749'
-
-  return layer
-}
-exports.New_separatorLayer = New_separatorLayer
 
 function New_customButton_aLayer (context, buttonTitleText, enabled_orTrue, clicked_fn) {
   const layer = document.createElement('a')
@@ -293,23 +252,6 @@ function New_createNewRecordNamedButtonView (lowercased_humanReadable_recordName
 }
 exports.New_createNewRecordNamedButtonView = New_createNewRecordNamedButtonView
 
-function New_clearingBreakLayer () {
-  const layer = document.createElement('br')
-  layer.clear = 'both'
-
-  return layer
-}
-exports.New_clearingBreakLayer = New_clearingBreakLayer
-
-function New_spacerLayer () {
-  const layer = document.createElement('div')
-  layer.style.width = '100%'
-  layer.style.height = '40px' // just tentative - feel free to customize
-
-  return layer
-}
-exports.New_spacerLayer = New_spacerLayer
-
 function New_inlineMessageDialogLayer (context, messageString, optl_immediatelyVisible, optl_wantsXButtonHidden) {
   const immediatelyVisible = optl_immediatelyVisible === true // These are configured to not by default be initially visible
   const layer = document.createElement('div')
@@ -393,7 +335,19 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
       isValueNil === false
     )
   }
-  const valueLayer = New_fieldValue_labelLayer('' + valueToDisplay, context)
+  const valueLayer = document.createElement('span')
+  valueLayer.innerHTML = '' + valueToDisplay
+  valueLayer.className = 'field_value'
+  valueLayer.style.float = 'right'
+  valueLayer.style.textAlign = 'right'
+  valueLayer.style.fontSize = '13px'
+  valueLayer.style.color = '#9E9C9E'
+  valueLayer.style.fontWeight = '100'
+  valueLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+  valueLayer.Component_SetValue = function (value) {
+    valueLayer.innerHTML = value
+  }
+
   if (isSecretData == false) { // changed from 'canSupportCopyButton' b/c even if the copy button is allowed, users may expect they can select the text
     // if (isSecretData == false) { // only if this is not secret data
     // ^-- commented for now b/c users want to be able to copy it
@@ -435,7 +389,9 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
       div.appendChild(copy_buttonLayer)
     }
   }
-  div.appendChild(New_clearingBreakLayer()) // preserve height; better way?
+  const breaker = document.createElement('br')
+  breaker.clear = 'both'
+  div.appendChild(breaker)
   div.Component_SetValue = function (to_value) {
     const to_value_isNil = to_value === null || typeof to_value === 'undefined' || to_value === ''
     const to_valueToDisplay = !to_value_isNil ? '' + to_value : valueToDisplayIfValueNil_orDefault
@@ -451,28 +407,3 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
   return div
 }
 exports.New_copyable_longStringValueField_component_fieldContainerLayer = New_copyable_longStringValueField_component_fieldContainerLayer
-
-function New_tableCell_accessoryChevronLayer (context) {
-  const layer = document.createElement('img')
-  layer.src = './src/assets/img/list_rightside_chevron@3x.png'
-  layer.style.position = 'absolute'
-  layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
-  layer.style.width = '7px'
-  layer.style.height = '12px'
-  layer.style.right = '16px'
-  layer.style.top = 'calc(50% - 6px)'
-  return layer
-}
-exports.New_tableCell_accessoryChevronLayer = New_tableCell_accessoryChevronLayer
-
-function New_tableCell_accessoryActivityIndicatorLayer (isOnAccentBackground) {
-  const layer = activityIndicators.New_Graphic_ActivityIndicatorLayer(isOnAccentBackground)
-  layer.style.position = 'absolute'
-  layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
-  layer.style.width = '16px'
-  layer.style.height = '14px'
-  layer.style.right = '16px'
-  layer.style.top = 'calc(50% - 7px)'
-  return layer
-}
-exports.New_tableCell_accessoryActivityIndicatorLayer = New_tableCell_accessoryActivityIndicatorLayer

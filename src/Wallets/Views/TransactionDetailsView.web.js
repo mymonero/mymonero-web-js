@@ -107,14 +107,27 @@ class TransactionDetailsView extends View {
     self.___styleLabelLayerAsFieldHeader(labelLayer)
     div.appendChild(labelLayer)
     //
-    const valueLayer = commonComponents_tables.New_fieldValue_labelLayer(value, self.context)
+    const valueLayer = document.createElement('span')
+    valueLayer.innerHTML = value
+    valueLayer.className = 'field_value'
+    valueLayer.style.float = 'right'
+    valueLayer.style.textAlign = 'right'
+    valueLayer.style.fontSize = '13px'
+    valueLayer.style.color = '#9E9C9E'
+    valueLayer.style.fontWeight = '100'
+    valueLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+    valueLayer.Component_SetValue = function (value) {
+      valueLayer.innerHTML = value
+    }
     if (typeof optl_color !== 'undefined' && optl_color) {
       valueLayer.style.color = optl_color
     }
     valueLayer.style.marginTop = '-1px'
     valueLayer.style.maxWidth = '75%' // should wrap
     div.appendChild(valueLayer)
-    div.appendChild(commonComponents_tables.New_clearingBreakLayer()) // preserve height; better way?
+    const breaker = document.createElement('br')
+    breaker.clear = 'both'
+    div.appendChild(breaker) // preserve height; better way?
     div.Component_SetValue = function (value) {
       valueLayer.Component_SetValue(value)
     }

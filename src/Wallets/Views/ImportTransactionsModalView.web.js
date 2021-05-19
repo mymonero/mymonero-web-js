@@ -192,7 +192,9 @@ class ImportTransactionsModalView extends View {
       self.copyButtonLayerFor_addressInput = buttonLayer
       div.appendChild(buttonLayer)
     }
-    div.appendChild(commonComponents_tables.New_clearingBreakLayer())
+    const breaker = document.createElement('br')
+    breaker.clear = 'both'
+    div.appendChild(breaker)
 
     const layer = commonComponents_forms.New_fieldValue_textInputLayer(
       self.context,
@@ -230,7 +232,9 @@ class ImportTransactionsModalView extends View {
         self.copyButtonLayerFor_paymentID = buttonLayer
         div.appendChild(buttonLayer)
       }
-      div.appendChild(commonComponents_tables.New_clearingBreakLayer())
+      const breaker = document.createElement('br')
+      breaker.clear = 'both'
+      div.appendChild(breaker)
       //
       const valueLayer = commonComponents_forms.New_fieldValue_textInputLayer(self.context, {
         placeholderText: 'Loading…'

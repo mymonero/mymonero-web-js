@@ -761,7 +761,15 @@ class WalletDetailsView extends View {
               return false
             }
           )
-          listItemLayer.appendChild(commonComponents_tables.New_tableCell_accessoryChevronLayer(self.context))
+          const layer = document.createElement('img')
+          layer.src = './src/assets/img/list_rightside_chevron@3x.png'
+          layer.style.position = 'absolute'
+          layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
+          layer.style.width = '7px'
+          layer.style.height = '12px'
+          layer.style.right = '16px'
+          layer.style.top = 'calc(50% - 6px)'
+          listItemLayer.appendChild(layer)
           //
           const layer1 = document.createElement('div')
           layer1.style.width = '100%'

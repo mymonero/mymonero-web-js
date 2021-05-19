@@ -36,7 +36,9 @@ function New_AmountInputFieldPKG (
     const accessoryLabel = commonComponents_forms.New_fieldTitle_rightSide_accessoryLayer('optional', context)
     div.appendChild(accessoryLabel)
     //
-    div.appendChild(commonComponents_tables.New_clearingBreakLayer())
+    const breaker = document.createElement('br')
+    breaker.clear = 'both'
+    div.appendChild(breaker)
   }
   //
   const valueLayer_amountPlaceholderText = '00.00'
@@ -150,9 +152,8 @@ function New_AmountInputFieldPKG (
     selectLayer.style.webkitAppearance = 'none' // apparently necessary in order to activate the following style.border…Radius
     selectLayer.style.MozAppearance = 'none'
     selectLayer.style.msAppearance = 'none'
-    const cornerRadius = 4
-    selectLayer.style.borderTopRightRadius = cornerRadius + 'px'
-    selectLayer.style.borderBottomRightRadius = cornerRadius + 'px'
+    selectLayer.style.borderTopRightRadius = '4px'
+    selectLayer.style.borderBottomRightRadius = '4px'
     selectLayer.style.borderBottomLeftRadius = '0px'
     selectLayer.style.borderTopLeftRadius = '0px'
   }
@@ -259,7 +260,9 @@ function New_AmountInputFieldPKG (
     }
   }
   //
-  div.appendChild(commonComponents_tables.New_clearingBreakLayer())
+  const breaker = document.createElement('br')
+  breaker.clear = 'both'
+  div.appendChild(breaker)
 
   return {
     containerLayer: div,

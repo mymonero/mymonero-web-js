@@ -6,23 +6,7 @@ const loader_innerHTML =
 	'<div class="block block2"></div>' +
 	'<div class="block block3"></div>' +
 '</div>'
-//
-function New_Graphic_ActivityIndicatorLayer (isOnAccentBackground) {
-  const layer = document.createElement('div')
-  layer.classList.add('graphicOnly')
-  layer.classList.add('activityIndicators')
-  if (isOnAccentBackground) {
-    layer.classList.add('on-accent-background')
-  } else {
-    layer.classList.add('on-normal-background')
-  }
-  layer.innerHTML = loader_innerHTML
 
-  //
-  return layer
-}
-exports.New_Graphic_ActivityIndicatorLayer = New_Graphic_ActivityIndicatorLayer
-//
 function New_Graphic_ActivityIndicatorLayer_htmlString (customCSSByKey, isOnAccentBackground) {
   let style_str = ''
   customCSSByKey = customCSSByKey || {}
@@ -80,6 +64,7 @@ function New_GraphicAndLabel_ActivityIndicatorLayer (messageText, context) { // 
   return layer
 }
 exports.New_GraphicAndLabel_ActivityIndicatorLayer = New_GraphicAndLabel_ActivityIndicatorLayer
+
 function New_Resolving_ActivityIndicatorLayer (context) {
   const layer = New_GraphicAndLabel_ActivityIndicatorLayer( // will call `__inject…`
     'RESOLVING…',

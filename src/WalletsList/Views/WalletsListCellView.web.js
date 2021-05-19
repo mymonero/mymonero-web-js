@@ -40,14 +40,36 @@ class WalletsListCellView extends ListCellView {
       // layer.style.border = "1px solid yellow"
     }
     {
-      const layer = commonComponents_tables.New_tableCell_accessoryChevronLayer(self.context)
+      const layer = document.createElement('img')
+      layer.src = './src/assets/img/list_rightside_chevron@3x.png'
+      layer.style.position = 'absolute'
+      layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
+      layer.style.width = '7px'
+      layer.style.height = '12px'
+      layer.style.right = '16px'
+      layer.style.top = 'calc(50% - 6px)'
       self.accessoryChevronLayer = layer
       self.layer.appendChild(layer)
     }
     {
-      const layer = commonComponents_tables.New_tableCell_accessoryActivityIndicatorLayer(
-        true // is on dark bg
-      )
+      const loader_innerHTML =
+      '<div class="loader">' +
+        '<div class="block block1"></div>' +
+        '<div class="block block2"></div>' +
+        '<div class="block block3"></div>' +
+      '</div>'
+
+      const layer = document.createElement('div')
+      layer.classList.add('graphicOnly')
+      layer.classList.add('activityIndicators')
+      layer.classList.add('on-accent-background')
+      layer.innerHTML = loader_innerHTML
+      layer.style.position = 'absolute'
+      layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
+      layer.style.width = '16px'
+      layer.style.height = '14px'
+      layer.style.right = '16px'
+      layer.style.top = 'calc(50% - 7px)'
       layer.style.display = 'none'
       self.accessoryActivityIndicatorLayer = layer
       self.layer.appendChild(layer)
