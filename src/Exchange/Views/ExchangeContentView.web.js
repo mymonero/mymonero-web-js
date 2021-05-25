@@ -28,6 +28,7 @@ class ExchangeContentView extends View {
 
     ecvSelf._setup_emptyStateContainerView(context)
     ecvSelf._setup_views()
+    ecvSelf._refresh_sending_fee()
     ecvSelf.observerIsSet = false
 
     // Do we really need to update the wallet repeatedly when we're refactoring to update on tab button click?
@@ -45,34 +46,12 @@ class ExchangeContentView extends View {
     // ecvSelf.keepExchangeOptionsUpdated = interval
   }
 
-  _setup_walletExchangeOptions (context) {
-    // const self = this
-    // const walletDiv = document.getElementById('wallet-selector')
-    // if (walletDiv === null) {
-    //   return
-    // }
-    // // if the user has selected a wallet, we update the balances for the
-
-    // // get oldest wallet based on how wallets are inserted into wallets as a zero element, changing indexes backwards
-    // const defaultOffset = 0
-    // const defaultWallet = context.walletsListController.records[defaultOffset]
-    // const walletSelectOptions = `
-    //     <div data-walletoffset="0" data-walletpublicaddress="${defaultWallet.public_address}" data-walletLabel="${defaultWallet.walletLabel}" data-swatch="${defaultWallet.swatch.substr(1)}" data-walletbalance="${self.UnlockedBalance_FormattedString(defaultWallet)}" data-walletid="${defaultWallet._id}" id="selected-wallet" class="hoverable-cell utility selectionDisplayCellView" style="">
-    //             <div id="selected-wallet-icon" class="walletIcon medium-32" style="background-image: url(./src/assets/img/wallet-00C6FF@3x.png)"></div>
-    //             <div id="selected-wallet-label" class="walletName">${defaultWallet.walletLabel}</div>
-    //             <div id="selected-wallet-balance" class="description-label">${self.UnlockedBalance_FormattedString(defaultWallet)} XMR available</div>
-    //         </div>
-    //         <div id="wallet-options" class="options_containerView">
-    //             <div class="options_cellViews_containerView" style="position: relative; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 20; overflow-y: auto; max-height: 174.9px;">
-    //             </div>
-    //         </div>
-    //     `
-    // walletDiv.innerHTML = walletSelectOptions
-  }
-
   _refresh_sending_fee () {
+    console.log("refreshSendingFeeInvoked");
     const self = this
+    
     const tx_fee = document.getElementById('tx-fee')
+    console.log(tx_fee);
     if (tx_fee !== null) {
       tx_fee.dataset.txFee = self._new_estimatedNetworkFee_displayString()
       tx_fee.innerHTML = `<span class="field_title form-field-title" style="margin-top: 8px; color: rgb(158, 156, 158); display: inline-block;">+ ${self._new_estimatedNetworkFee_displayString()} XMR EST. FEE</span>`
@@ -81,7 +60,7 @@ class ExchangeContentView extends View {
 
   _setup_views () {
     // // to do -- clean up interval timers a bit.
-    // const self = this
+     const self = this
     // super._setup_views()
     // self._setup_emptyStateContainerView()
     // self.observerIsSet = false;
@@ -94,6 +73,8 @@ class ExchangeContentView extends View {
     //     self._refresh_sending_fee();
     // }, 4000);
     // self.keepExchangeOptionsUpdated = interval; // we use a named interval attached to the view so that we can stop it if we ever want to;
+    self._refresh_sending_fee();
+    console.log("Setup view stuff");
   }
 
   // New refactored
@@ -101,20 +82,30 @@ class ExchangeContentView extends View {
     const self = this;
     console.log("Setting up tab button click listener");
     let tabElement = document.getElementById('tabButton-exchange');
-    tabElement.addEventListener('click', self.renderExchangeForm.bind(context))
-    
+    //tabElement.addEventListener('click', self.renderExchangeForm.bind(context))
+  }
+
+  _renderWalletSelector() {
+    const self = this;
+    if (self.context.walletsListController.records.length > 0) {
+      let walletHtml = exchangeHelper.walletSelectorTemplate(self.context.walletsListController.records)
+      console.log(walletHtml);
+      let walletSelector = document.getElementById('wallet-selector');
+      walletSelector.innerHTML = walletHtml;
+    }   
   }
 
   // New refactored
   renderExchangeForm(context) {
-    // Let's check whether we're unlocked, and if yes, render the wallet selector
+    // Let's check whether we're unlocked, and if yes, refresh the wallet selector
     const self = this 
-    console.log(self.walletsListController);
-    console.log(self.walletsListController.records);
+    console.log(self.exchangeFormTemplate);
     if (self.walletsListController.records.length > 0) {
       let walletHtml = exchangeHelper.walletSelectorTemplate(self)
-    }
-    // wallets not initialized, do nothing
+      console.log(walletHtml);
+      let walletSelector = document.getElementById('wallet-selector');
+      walletSelector.innerHTML = walletHtml;
+    }   
   }
 
   _setup_emptyStateContainerView (context) {
@@ -254,14 +245,9 @@ class ExchangeContentView extends View {
 
       // We clone the first element of the template so that we get an instance of the first element, rather than a document fragment. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template
       let html = self.exchangeFormTemplate.content.firstElementChild.cloneNode(true);
-      console.log(html);
-      console.log(self);
-      console.log(exchangeHelper.outCurrencySelector);
-      console.log("Get the base form here");
-      console.log(contentContainerLayer)
+      console.log("We have just cloned the form template")
       layer.appendChild(html)
       contentContainerLayer.appendChild(layer)
-      console.log(contentContainerLayer)
     }
     console.log("This ran?");
     let e = document.getElementById("exchangePage");
@@ -272,7 +258,7 @@ class ExchangeContentView extends View {
     const a = document.getElementById('server-invalid')
 
     let initialized = false
-
+    // addEventListnere
     const exchangeInitTimer = setInterval((context, options) => {
       const loaderPage = document.getElementById('loader')
       if (typeof (loaderPage) === undefined) {
@@ -352,7 +338,6 @@ class ExchangeContentView extends View {
       const outCurrencyValueKeydownListener = function (event) {
         // We need to limit the number of decimals based on the selected currency
         let currencyTickerCode = document.getElementById("outCurrencySelectList").value;
-        console.log(event.which);
         // arrow keys, delete, backspace
         if (event.which == 37 || event.which == 39 || event.which == 46 || event.which == 8) {
           return
@@ -640,6 +625,12 @@ class ExchangeContentView extends View {
       }
 
       function getRates () {
+        // it's safe to refresh the sending fee here, because we know the HTML exists in the DOM
+        self._refresh_sending_fee();
+        console.log(self);
+        console.log("What do we have access to in this var?")
+        //self.renderExchangeForm(self.context)
+        self._renderWalletSelector();
         serverRatesValidation.innerHTML = ''
         const retry = document.getElementById('retry-rates')
         const errorDiv = document.getElementById('retry-error')
@@ -651,6 +642,9 @@ class ExchangeContentView extends View {
           loaderPage.classList.remove('active')
           exchangePage.classList.add('active')
         }).catch((error) => {
+          /**/
+          loaderPage.classList.remove('active')
+          exchangePage.classList.add('active')
           if (retry !== null) {
             retry.classList.remove('hidden')
             errorDiv.classList.remove('hidden')
@@ -844,14 +838,8 @@ class ExchangeContentView extends View {
               }, 1000)
               document.getElementById('orderStatusPage').classList.remove('active')
             }).catch((error) => {
-              handleOfferError(error);
+              exchangeHelper.ErrorHelper.handleOfferError(error);
               orderBtn.style.display = 'block'
-              // const errorDiv = document.createElement('div')
-              // errorDiv.classList.add('message-label')
-              // errorDiv.id = 'server-invalid'
-              // errorDiv.innerHTML = 'There was a problem communicating with the server. <br>If this problem keeps occurring, please contact support with a screenshot of the following error: <br>' + error
-              // serverValidation.appendChild(errorDiv)
-              // orderBtn.style.display = 'block'
               orderStarted = false
             })
           }).catch((error) => {
@@ -868,11 +856,11 @@ class ExchangeContentView extends View {
 
       } else {
 
-        // function clearValidationMessages(callbackFunction = null) {
-        //   if (typeof(callbackFunction) === "function") {
-        //     callbackFunction('test');
-        //   }
-        // }
+        function clearValidationMessages(callbackFunction = null) {
+          if (typeof(callbackFunction) === "function") {
+            callbackFunction('test');
+          }
+        }
 
         // bind to listener that will update the coin labels when the outCurrency is changed
         document.getElementById('outCurrencySelectList').addEventListener('change', exchangeHelper.eventListeners.updateCurrencyLabels);
@@ -899,7 +887,7 @@ class ExchangeContentView extends View {
         //inCurrencyValue.addEventListener('keyup', () => clearValidationMessages(exchangeHelper.eventListeners.xmrBalanceChecks))
 
         inCurrencyValue.addEventListener('keyup', function (event) {
-          clearValidationMessages();
+          //exchangeHelper.clearValidationMessages();
           validationMessages.innerHTML = ''
           if (inCurrencyValue.value.length > 0) {
             xmrBalanceChecks()
@@ -914,72 +902,72 @@ class ExchangeContentView extends View {
     }, 5000)
   }
 
-  Balance_JSBigInt (wallet) {
-    const self = this
-    let total_received = wallet.total_received
-    let total_sent = wallet.total_sent
-    if (typeof total_received === 'undefined') {
-      total_received = new JSBigInt(0) // patch up to avoid crash as this doesn't need to be fatal
-    }
-    if (typeof total_sent === 'undefined') {
-      total_sent = new JSBigInt(0) // patch up to avoid crash as this doesn't need to be fatal
-    }
-    const balance_JSBigInt = total_received.subtract(total_sent)
-    if (balance_JSBigInt.compare(0) < 0) {
-      return new JSBigInt(0)
-    }
-    return balance_JSBigInt
-  }
+  // Balance_JSBigInt (wallet) {
+  //   const self = this
+  //   let total_received = wallet.total_received
+  //   let total_sent = wallet.total_sent
+  //   if (typeof total_received === 'undefined') {
+  //     total_received = new JSBigInt(0) // patch up to avoid crash as this doesn't need to be fatal
+  //   }
+  //   if (typeof total_sent === 'undefined') {
+  //     total_sent = new JSBigInt(0) // patch up to avoid crash as this doesn't need to be fatal
+  //   }
+  //   const balance_JSBigInt = total_received.subtract(total_sent)
+  //   if (balance_JSBigInt.compare(0) < 0) {
+  //     return new JSBigInt(0)
+  //   }
+  //   return balance_JSBigInt
+  // }
 
-  UnlockedBalance_FormattedString (wallet) { // provided for convenience mainly so consumers don't have to require monero_utils
-    const self = this
-    const balance_JSBigInt = self.UnlockedBalance_JSBigInt(wallet)
-    return monero_amount_format_utils.formatMoney(balance_JSBigInt)
-  }
+  // UnlockedBalance_FormattedString (wallet) { // provided for convenience mainly so consumers don't have to require monero_utils
+  //   const self = this
+  //   const balance_JSBigInt = self.UnlockedBalance_JSBigInt(wallet)
+  //   return monero_amount_format_utils.formatMoney(balance_JSBigInt)
+  // }
 
-  Balance_FormattedString (wallet) { // provided for convenience mainly so consumers don't have to require monero_utils
-    const self = this
-    const balance_JSBigInt = self.Balance_JSBigInt(wallet)
-    return monero_amount_format_utils.formatMoney(balance_JSBigInt)
-  }
+  // Balance_FormattedString (wallet) { // provided for convenience mainly so consumers don't have to require monero_utils
+  //   const self = this
+  //   const balance_JSBigInt = self.Balance_JSBigInt(wallet)
+  //   return monero_amount_format_utils.formatMoney(balance_JSBigInt)
+  // }
 
-  Balance_DoubleNumber (wallet) {
-    const self = wallet
-    return parseFloat(self.Balance_FormattedString()) // is this appropriate and safe?
-  }
+  // Balance_DoubleNumber (wallet) {
+  //   const self = wallet
+  //   return parseFloat(self.Balance_FormattedString()) // is this appropriate and safe?
+  // }
 
-  UnlockedBalance_JSBigInt (wallet) {
-    const self = wallet
-    const difference = self.Balance_JSBigInt().subtract(
-      self.locked_balance || new JSBigInt(0)
-    )
-    if (difference.compare(0) < 0) {
-      return new JSBigInt(0)
-    }
-    return difference
-  }
+  // UnlockedBalance_JSBigInt (wallet) {
+  //   const self = wallet
+  //   const difference = self.Balance_JSBigInt().subtract(
+  //     self.locked_balance || new JSBigInt(0)
+  //   )
+  //   if (difference.compare(0) < 0) {
+  //     return new JSBigInt(0)
+  //   }
+  //   return difference
+  // }
 
-  LockedBalance_JSBigInt (wallet) {
-    const self = wallet
-    let lockedBalance_JSBigInt = self.locked_balance
-    if (typeof lockedBalance_JSBigInt === 'undefined') {
-      lockedBalance_JSBigInt = new JSBigInt(0)
-    }
-    //
-    return lockedBalance_JSBigInt
-  }
+  // LockedBalance_JSBigInt (wallet) {
+  //   const self = wallet
+  //   let lockedBalance_JSBigInt = self.locked_balance
+  //   if (typeof lockedBalance_JSBigInt === 'undefined') {
+  //     lockedBalance_JSBigInt = new JSBigInt(0)
+  //   }
+  //   //
+  //   return lockedBalance_JSBigInt
+  // }
 
-  LockedBalance_FormattedString () { // provided for convenience mainly so consumers don't have to require monero_utils
-    const self = this
-    const lockedBalance_JSBigInt = self.LockedBalance_JSBigInt()
-    //
-    return monero_amount_format_utils.formatMoney(lockedBalance_JSBigInt)
-  }
+  // LockedBalance_FormattedString () { // provided for convenience mainly so consumers don't have to require monero_utils
+  //   const self = this
+  //   const lockedBalance_JSBigInt = self.LockedBalance_JSBigInt()
+  //   //
+  //   return monero_amount_format_utils.formatMoney(lockedBalance_JSBigInt)
+  // }
 
-  LockedBalance_DoubleNumber () {
-    const self = this
-    return parseFloat(self.LockedBalance_FormattedString()) // is this appropriate and safe?
-  }
+  // LockedBalance_DoubleNumber () {
+  //   const self = this
+  //   return parseFloat(self.LockedBalance_FormattedString()) // is this appropriate and safe?
+  // }
 
   new_xmr_estFeeAmount () {
     const self = this
