@@ -2070,60 +2070,6 @@ class SendFundsView extends View {
 
   //
   //
-  // Runtime - Delegation - Request URI string picking - Entrypoints
-  //
-  __didSelect_actionButton_chooseFile () {
-    const self = this
-    self.context.userIdleInWindowController.TemporarilyDisable_userIdle() // TODO: this is actually probably a bad idea - remove this and ensure that file picker canceled on app teardown
-    if (typeof self.context.Cordova_disallowLockDownOnAppPause !== 'undefined') {
-      self.context.Cordova_disallowLockDownOnAppPause += 1 // place lock so Android app doesn't tear down UI and mess up flow
-    }
-    // ^ so we don't get torn down while dialog open
-    self.context.filesystemUI.PresentDialogToOpenOneImageFile(
-      'Open Monero Request',
-      function (err, absoluteFilePath) {
-        self.context.userIdleInWindowController.ReEnable_userIdle()
-        if (typeof self.context.Cordova_disallowLockDownOnAppPause !== 'undefined') {
-          self.context.Cordova_disallowLockDownOnAppPause -= 1 // remove lock
-        }
-        //
-        if (err) {
-          self.validationMessageLayer.SetValidationError(err.toString() || 'Error while picking QR code from file.')
-          return
-        }
-        if (absoluteFilePath === null || absoluteFilePath === '' || typeof absoluteFilePath === 'undefined') {
-          self.validationMessageLayer.ClearAndHideMessage() // clear to resolve ambiguity in case existing error is displaying
-          return // nothing picked / canceled
-        }
-        self._shared_didPickQRCodeAtPath(absoluteFilePath)
-      }
-    )
-  }
-
-  __didSelect_actionButton_useCamera () {
-    const self = this
-    // Cordova_disallowLockDownOnAppPause is handled within qrScanningUI
-    self.context.qrScanningUI.PresentUIToScanOneQRCodeString(
-      function (err, possibleUriString) {
-        if (err) {
-          self.validationMessageLayer.SetValidationError('' + err)
-          return
-        }
-        if (possibleUriString == null) { // err and possibleUriString are null - treat as a cancellation
-          self.validationMessageLayer.ClearAndHideMessage() // clear to resolve ambiguity in case existing error is displaying
-          return
-        }
-        if (!possibleUriString) { // if not explicitly null but "" or undefined…
-          self.validationMessageLayer.SetValidationError('No scanned QR code content found.')
-          return
-        }
-        self._shared_didPickPossibleRequestURIStringForAutofill(possibleUriString)
-      }
-    )
-  }
-
-  //
-  //
   // Runtime - Delegation - Request URI string picking - Entrypoints - Proxied drag & drop
   //
   __shared_isAllowedToPerformDropOrURLOpeningOps () {
