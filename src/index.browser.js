@@ -38,7 +38,8 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       ThemeController_isMobileBrowser: isMobile,
       Tooltips_nonHoveringBehavior: isMobile, // be able to dismiss on clicks etc
       // TODO: detect if Mac … if so, render w/o native emoji (need holistic fallback solution though - see Gitlab post referenced by https://github.com/mymonero/mymonero-app-js/issues/194)
-      appDownloadLink_domainAndPath: 'mymonero.com',
+      appDownloadLink_domainAndPath: 'https://mymonero.com',
+      appRepoLink: 'https://www.github.com/mymonero/mymonero-app-js/releases/latest',
       HostedMoneroAPIClient_DEBUGONLY_mockSendTransactionSuccess: false,
       Views_selectivelyEnableMobileRenderingOptimizations: isMobile,
       CommonComponents_Forms_scrollToInputOnFocus: isMobile,
