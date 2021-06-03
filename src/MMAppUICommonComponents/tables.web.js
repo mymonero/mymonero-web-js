@@ -16,7 +16,7 @@ function New_clickableLinkButtonView (buttonTitle, context, clicked_fn, optl__mo
   a.style.color = '#11bbec'
   a.style.cursor = 'pointer'
   a.style.webkitUserSelect = 'none' // disable selection
-  if (context.ThemeController_isMobileBrowser === true) {
+  if (context.isMobile === true) {
     a.style.fontFamily = 'Native-Regular, input, menlo, monospace'
     a.style.fontSize = '11px'
     a.style.fontWeight = 'lighter'
@@ -81,7 +81,7 @@ function New_fieldTitle_labelLayer (labelText, context) {
   layer.style.float = 'left'
   layer.style.textAlign = 'left'
   layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-  if (context.ThemeController_isMobileBrowser === true) {
+  if (context.isMobile === true) {
     layer.style.fontSize = '13px'
     layer.style.fontWeight = '600' // semibold desired but "semibold" doesn't apparently work
   } else {
@@ -191,7 +191,7 @@ function New_redTextButtonView (text, context) {
   layer.style.clear = 'left' // but do not let it have 100% width
   layer.style.marginLeft = '32px'
   layer.style.color = '#F97777'
-  if (context.ThemeController_isMobileBrowser === true) {
+  if (context.isMobile === true) {
     layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
     layer.style.fontSize = '11px'
     layer.style.fontWeight = 'lighter'

@@ -77,7 +77,7 @@ class WalletsListView extends ListView {
       messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
       messageLayer.style.letterSpacing = '0'
       messageLayer.style.fontSize = '13px'
-      if (self.context.ThemeController_isMobileBrowser === true) {
+      if (self.context.isMobile === true) {
         messageLayer.style.fontWeight = 'normal'
       } else {
         messageLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
@@ -92,7 +92,7 @@ class WalletsListView extends ListView {
     }
     { // action buttons toolbar
       let actionButtonsContainerView
-      if (self.context.TabBarView_isHorizontalBar === false) {
+      if (self.context.isMobile === false) {
         const margin_fromWindowLeft = self.context.TabBarView_thickness + 16 // we need this for a position:fixed, width:100% container
         const margin_fromWindowRight = 16
         actionButtonsContainerView = commonComponents_actionButtons.New_ActionButtonsContainerView(
@@ -116,8 +116,8 @@ class WalletsListView extends ListView {
       view.addSubview(actionButtonsContainerView)
     }
     { // essential: update empty state message container to accommodate
-      const actionBar_style_height = commonComponents_actionButtons.ActionButtonsContainerView_h
-      const actionBar_style_marginBottom = commonComponents_actionButtons.ActionButtonsContainerView_bottomMargin
+      const actionBar_style_height = 32
+      const actionBar_style_marginBottom = 8
       const actionBarFullHeightDisplacement = 16 + actionBar_style_height + actionBar_style_marginBottom
       const style_height = `calc(100% - ${actionBarFullHeightDisplacement}px)`
       self.emptyStateMessageContainerView.layer.style.height = style_height

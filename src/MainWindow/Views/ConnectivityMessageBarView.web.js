@@ -27,7 +27,7 @@ class ConnectivityMessageBarView extends View {
     layer.style.position = 'fixed'
     layer.style.zIndex = 100
     let leftMargin = 16
-    if (self.context.TabBarView_isHorizontalBar !== true) {
+    if (self.context.isMobile !== true) {
       leftMargin += self.context.TabBarView_thickness
     }
     layer.style.width = `calc(100% - ${leftMargin}px - 16px)`
@@ -44,7 +44,7 @@ class ConnectivityMessageBarView extends View {
     layer.style.color = '#F5E67E'
     layer.style.wordBreak = 'break-word'
     layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-    if (self.context.ThemeController_isMobileBrowser === true) {
+    if (self.context.isMobile === true) {
       layer.style.fontSize = '11px'
       layer.style.fontWeight = '600' // semibold desired but "semibold" doesn't apparently work
     } else {

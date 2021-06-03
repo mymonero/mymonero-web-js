@@ -114,7 +114,7 @@ class CreateWallet_InformOfMnemonic_View extends BaseView_AWalletWizardScreen {
         selectLayer.style.msAppearance = 'none'
         selectLayer.style.appearance = 'none'
         selectLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-        if (self.context.ThemeController_isMobileBrowser === true) {
+        if (self.context.isMobile === true) {
           selectLayer.style.fontSize = '13px'
           selectLayer.style.letterSpacing = '0'
           selectLayer.style.fontWeight = '600'

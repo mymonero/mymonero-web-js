@@ -107,7 +107,7 @@ class WalletCellContentsView extends View {
     layer.style.overflow = 'hidden'
     layer.style.textOverflow = 'ellipsis'
     layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-    if (self.context.ThemeController_isMobileBrowser === true) {
+    if (self.context.isMobile === true) {
       layer.style.fontSize = '13px'
       layer.style.fontWeight = '600' // semibold desired but "semibold" doesn't apparently work
     } else {

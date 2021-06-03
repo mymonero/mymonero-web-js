@@ -47,7 +47,7 @@ class SendFundsView extends View {
   _isUsingRelativeNotFixedActionButtonsContainer () {
     const self = this
     
-    return self.context.TabBarView_isHorizontalBar
+    return self.context.isMobile
   }
 
   setup_views () {
@@ -115,9 +115,7 @@ class SendFundsView extends View {
     const containerLayer = document.createElement('div')
     let paddingBottom
     if (self._isUsingRelativeNotFixedActionButtonsContainer() == false) {
-      paddingBottom = commonComponents_actionButtons.ActionButtonsContainerView_h +
-      commonComponents_actionButtons.ActionButtonsContainerView_bottomMargin +
-      10
+      paddingBottom = 50
     } else {
       paddingBottom = 0
     }
@@ -524,7 +522,7 @@ class SendFundsView extends View {
         selectLayer.style.msAppearance = 'none'
         selectLayer.style.appearance = 'none'
         selectLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-        if (self.context.ThemeController_isMobileBrowser === true) {
+        if (self.context.isMobile === true) {
           selectLayer.style.fontSize = '13px'
           selectLayer.style.letterSpacing = '0'
           selectLayer.style.fontWeight = '600'

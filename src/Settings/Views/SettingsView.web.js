@@ -119,7 +119,7 @@ class SettingsView extends View {
       
       const messageLayer = document.createElement('p')
       messageLayer.style.fontSize = '11px' // we need this to visually stand out slightly more given how it's used
-      if (self.context.ThemeController_isMobileBrowser === true) {
+      if (self.context.isMobile === true) {
         messageLayer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
         messageLayer.style.fontWeight = 'lighter'
       } else {

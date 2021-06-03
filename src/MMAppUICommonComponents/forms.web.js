@@ -24,7 +24,7 @@ function New_fieldTitle_rightSide_accessoryLayer (labelText, context) {
   layer.style.margin = '15px 0 8px 8px'
   layer.style.textAlign = 'left'
   //
-  if (context.ThemeController_isMobileBrowser === true) {
+  if (context.isMobile === true) {
     layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
     layer.style.fontSize = '11px'
     layer.style.fontWeight = 'lighter'
@@ -67,6 +67,7 @@ exports.ScrollCurrentFormElementIntoView = ScrollCurrentFormElementIntoView
 
 let LocalVendor_ScrollPositionEndFixed_Animate = null
 function _shared_scrollConformingElementIntoView (inputLayer) {
+  LocalVendor_ScrollPositionEndFixed_Animate = require('velocity-animate');
   const selector = `.ClassNameForScrollingAncestorOfScrollToAbleElement`
   const scrollingAncestor = inputLayer.closest(selector)
   if (!scrollingAncestor || typeof scrollingAncestor === 'undefined') {
@@ -103,29 +104,26 @@ function New_fieldValue_textInputLayer (context, params) {
   if (typeof placeholderText !== 'undefined' && placeholderText !== null) {
     layer.placeholder = placeholderText
   }
-  //
-  layer.Component_default_padding_h = function () { return 7 } // H for horizontal
-  const padding_h = layer.Component_default_padding_h()
-  //
+  
   layer.Component_default_h = function () { return 29 } // H for height
   layer.style.height = layer.Component_default_h() + 'px'
-  const borderWidth = 1
+
   if (typeof params.target_width !== 'undefined') {
-    const width = params.target_width - 2 * borderWidth - 2 * padding_h
+    const width = params.target_width - 2 * 1 - 2 * 7
     layer.style.width = width + 'px'
   } else {
-    layer.style.width = `calc(100% - ${2 * borderWidth}px - ${2 * padding_h}px)`
+    layer.style.width = `calc(100% - 2px - 14px)`
   }
   layer.style.borderRadius = '4px'
-  layer.style.border = `${borderWidth}px solid rgba(0,0,0,0)` // transparent border to preserve layout while showing validation clr border
+  layer.style.border = `1px solid rgba(0,0,0,0)` // transparent border to preserve layout while showing validation clr border
   layer.style.textAlign = 'left'
   layer.style.fontSize = '13px'
   layer.style.fontWeight = '200'
-  layer.style.padding = `0 ${padding_h}px`
+  layer.style.padding = `0 7px`
   layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
   layer.style.outline = 'none' // no focus ring
   // editable:true
-  if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+  if (context.isMobile !== true) {
     layer.style.boxShadow = '0 0.5px 0 0 rgba(56,54,56,0.50), inset 0 0.5px 0 0 #161416'
   } else { // avoiding shadow
     layer.style.boxShadow = 'inset 0 0.5px 0 0 #161416'
@@ -137,13 +135,10 @@ function New_fieldValue_textInputLayer (context, params) {
     const this_layer = this
     _shared_scrollConformingElementIntoView(this_layer)
   }
-  if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
-    layer.addEventListener(
-      'focus',
-      function () {
-        layer.Component_ScrollIntoViewInFormContainerParent()
-      }
-    )
+  if (context.isMobile === true) {
+    layer.addEventListener('focus', function () {
+      layer.Component_ScrollIntoViewInFormContainerParent()
+    })
   }
   return layer
 }
@@ -178,7 +173,7 @@ function New_fieldValue_textAreaView (params, context) {
   //
   view.SetEnabled = function (isEnabled) {
     if (isEnabled) {
-      if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (context.isMobile !== true) {
         layer.style.boxShadow = '0 0.5px 0 0 rgba(56,54,56,0.50), inset 0 0.5px 0 0 #161416'
       } else { // avoiding shadow
         layer.style.boxShadow = 'inset 0 0.5px 0 0 #161416'
@@ -203,7 +198,7 @@ function New_fieldValue_textAreaView (params, context) {
     const this_layer = this
     _shared_scrollConformingElementIntoView(this_layer)
   }
-  if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
+  if (context.isMobile === true) {
     layer.addEventListener('focus', function () {
         // TODO: retain cycle?
         layer.Component_ScrollIntoViewInFormContainerParent()

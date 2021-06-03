@@ -77,7 +77,7 @@ class WalletDetailsView extends View {
       layer.style.height = '71px'
       layer.style.marginTop = '16px'
       layer.style.padding = '17px 17px'
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         layer.style.boxShadow = '0 0.5px 1px 0 rgba(0,0,0,0.20), inset 0 0.5px 0 0 rgba(255,255,255,0.20)'
       } else { // avoiding shadow
         layer.style.boxShadow = 'inset 0 0.5px 0 0 rgba(255,255,255,0.20)'
@@ -708,7 +708,7 @@ class WalletDetailsView extends View {
       messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
       messageLayer.style.letterSpacing = '0'
       messageLayer.style.fontSize = '13px'
-      if (self.context.ThemeController_isMobileBrowser === true) {
+      if (self.context.isMobile === true) {
         messageLayer.style.fontWeight = 'normal'
       } else {
         messageLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
@@ -730,7 +730,7 @@ class WalletDetailsView extends View {
     self.transactions_listContainerLayer = listContainerLayer
     listContainerLayer.style.margin = '16px 0 16px 0'
     listContainerLayer.style.background = '#383638'
-    if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+    if (self.context.isMobile !== true) {
       listContainerLayer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
     } else { // avoiding shadow
       listContainerLayer.style.boxShadow = 'inset 0 0.5px 0 0 #494749'
@@ -962,7 +962,7 @@ class WalletDetailsView extends View {
         progressLabelLayer.style.right = '19px'
         progressLabelLayer.style.top = '8px'
         //
-        if (self.context.ThemeController_isMobileBrowser === true) {
+        if (self.context.isMobile === true) {
           layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
           layer.style.fontSize = '11px'
           layer.style.fontWeight = 'lighter'

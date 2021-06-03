@@ -49,7 +49,7 @@ class PickCreateOrUseExisting_Landing_View extends BaseView_AWalletWizardScreen 
     messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
     messageLayer.style.letterSpacing = '0'
     messageLayer.style.fontSize = '13px'
-    if (self.context.ThemeController_isMobileBrowser === true) {
+    if (self.context.isMobile === true) {
       messageLayer.style.fontWeight = 'normal'
     } else {
       messageLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
@@ -117,22 +117,6 @@ class PickCreateOrUseExisting_Landing_View extends BaseView_AWalletWizardScreen 
     self.actionButtonsContainerView.addSubview(buttonView)
   }
 
-  _setup_startObserving () {
-    super._setup_startObserving()
-  }
-
-  //
-  //
-  // Lifecycle - Teardown
-  //
-  TearDown () {
-    super.TearDown()
-  }
-
-  //
-  //
-  // Runtime - Accessors - Navigation
-  //
   Navigation_Title () {
     return 'Add Wallet'
   }
@@ -148,9 +132,5 @@ class PickCreateOrUseExisting_Landing_View extends BaseView_AWalletWizardScreen 
     })
     return view
   }
-  //
-  //
-  // Runtime - Imperatives -
-  //
 }
 module.exports = PickCreateOrUseExisting_Landing_View

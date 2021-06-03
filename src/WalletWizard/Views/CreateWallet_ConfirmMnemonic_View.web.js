@@ -86,7 +86,7 @@ class CreateWallet_ConfirmMnemonic_View extends BaseView_AWalletWizardScreen {
       layer.style.wordBreak = 'break-word'
       layer.innerHTML = 'That’s not right. You can try again or start over with a new mnemonic.'
       { // v-- this padding is added to accommodate the action bar in case the screen is too short and scrolling happens
-        const paddingBottom = commonComponents_actionButtons.ActionButtonsContainerView_h + commonComponents_actionButtons.ActionButtonsContainerView_bottomMargin + 10
+        const paddingBottom = 50
         layer.style.paddingBottom = `${paddingBottom}px`
       }
       self.mnemonicConfirmation_validationErrorLabelLayer = layer
@@ -95,7 +95,7 @@ class CreateWallet_ConfirmMnemonic_View extends BaseView_AWalletWizardScreen {
     { // action buttons toolbar
       const margin_h = 16
       let actionButtonsContainerView
-      if (self.context.TabBarView_isHorizontalBar === false) {
+      if (self.context.isMobile === false) {
         const margin_fromWindowLeft = self.context.TabBarView_thickness + margin_h // we need this for a position:fixed, width:100% container
         const margin_fromWindowRight = margin_h
         actionButtonsContainerView = commonComponents_actionButtons.New_ActionButtonsContainerView(

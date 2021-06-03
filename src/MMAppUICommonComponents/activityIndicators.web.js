@@ -36,7 +36,7 @@ function New_GraphicAndLabel_ActivityIndicatorLayer (messageText, context) { // 
   layer.classList.add('graphicAndLabel')
   layer.classList.add('activityIndicators')
   layer.classList.add('on-normal-background')
-  if (context.ThemeController_isMobileBrowser === true) {
+  if (context.isMobile === true) {
     layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
     layer.style.fontSize = '11px'
     layer.style.fontWeight = 'lighter'

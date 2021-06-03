@@ -51,7 +51,7 @@ class NavigationBarView extends View {
       layer.style.position = 'absolute'
       layer.style.top = '-1px'
       layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-      if (self.context.ThemeController_isMobileBrowser === true) {
+      if (self.context.isMobile === true) {
         layer.style.fontSize = '13px'
         layer.style.fontWeight = 'bold'
       } else {
@@ -554,7 +554,7 @@ class NavigationBarView extends View {
     const self = this
     if (self.isShowingScrollShadow !== false) {
       self.isShowingScrollShadow = false
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         self.layer.style.boxShadow = 'none'
       } else {
         self.layer.style.backgroundColor = 'none'
@@ -566,7 +566,7 @@ class NavigationBarView extends View {
     const self = this
     if (self.isShowingScrollShadow !== true) {
       self.isShowingScrollShadow = true
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         self.layer.style.boxShadow = '0 1px 0 0 rgba(0,0,0,0.60), 0 3px 6px 0 rgba(0,0,0,0.40)'
       } else { // avoiding shadow
         self.layer.style.backgroundColor = 'black'

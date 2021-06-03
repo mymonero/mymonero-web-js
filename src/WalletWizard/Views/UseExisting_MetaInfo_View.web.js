@@ -1,6 +1,5 @@
 'use strict'
 
-const View = require('../../Views/View.web')
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
@@ -202,7 +201,7 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
   _setup_form_toggleLoginModeLayer () {
     const self = this
     const layer = document.createElement('div')
-    if (self.context.ThemeController_isMobileBrowser === true) {
+    if (self.context.isMobile === true) {
       layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
       layer.style.fontSize = '11px'
       layer.style.fontWeight = 'lighter'
@@ -304,16 +303,13 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
     }
     const view = commonComponents_navigationBarButtons.New_LeftSide_CancelButtonView(self.context)
     const layer = view.layer
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        if (view.isEnabled !== false) {
-          self.wizardController._fromScreen_userPickedCancel()
-        }
-        return false
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      if (view.isEnabled !== false) {
+        self.wizardController._fromScreen_userPickedCancel()
       }
-    )
+      return false
+    })
     return view
   }
 

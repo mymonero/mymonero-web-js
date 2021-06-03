@@ -29,7 +29,7 @@ class WalletsListCellView extends ListCellView {
       layer.style.width = `calc(100% - ${2 * margin_h}px)`
       layer.style.height = '80px'
       layer.style.background = '#383638'
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         layer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
       } else { // avoiding shadow
         layer.style.boxShadow = 'inset 0 0.5px 0 0 #494749'

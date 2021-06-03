@@ -40,18 +40,15 @@ function New_GreyButtonView (context) {
   )
   const layer = view.layer
   layer.classList.add('utility')
-  if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
-    layer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
-  } else { // avoiding shadow
-    layer.style.boxShadow = 'inset 0 0.5px 0 0 #494749'
-  }
   layer.style.backgroundColor = '#383638'
   layer.style.color = '#FCFBFC'
   layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-  if (context.ThemeController_isMobileBrowser === true) {
+  if (context.isMobile === true) {
+    layer.style.boxShadow = 'inset 0 0.5px 0 0 #494749'
     layer.style.fontSize = '13px'
     layer.style.fontWeight = '600' // semibold desired but "semibold" doesn't apparently work
   } else {
+    layer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
     layer.style.webkitFontSmoothing = 'subpixel-antialiased'
     layer.style.fontSize = '12px' // design says 13 but chrome/desktop renders it too large
     layer.style.fontWeight = '400' // semibold desired
@@ -69,7 +66,7 @@ function New_BlueButtonView (context) {
       const layer = thisView.layer
       if (thisView.isEnabled) {
         layer.style.backgroundColor = '#00c6ff'
-        if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+        if (context.isMobile !== true) {
           layer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 rgba(255,255,255,0.20)'
         } else { // avoiding shadow
           layer.style.boxShadow = 'inset 0 0.5px 0 0 rgba(255,255,255,0.20)'
@@ -173,7 +170,7 @@ function New_RightSide_ValueDisplayLabelButtonView (context) {
   layer.style.width = 'auto'
   layer.style.height = 'auto'
   layer.style.textDecoration = 'none'
-  if (context.ThemeController_isMobileBrowser === true) {
+  if (context.isMobile === true) {
     layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
     layer.style.fontSize = '11px'
     layer.style.fontWeight = 'lighter'

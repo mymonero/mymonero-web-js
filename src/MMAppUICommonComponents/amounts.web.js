@@ -51,7 +51,7 @@ function New_AmountInputFieldPKG (
   valueLayer.float = 'left' // because we want it to be on the same line as the "XMR" label
   valueLayer.style.display = 'inline-block' // so we can have the XMR label on the right
   valueLayer.style.width = amountInput_baseW + 'px'
-  const paddingRight = valueLayer.Component_default_padding_h() + selectLayer_w
+  const paddingRight = 7 + selectLayer_w
   valueLayer.style.paddingRight = paddingRight + 'px' // make room for the currency select
   valueLayer.addEventListener('keyup', function (e) {
     const keyCode = e.which || e.keyCode
@@ -90,25 +90,22 @@ function New_AmountInputFieldPKG (
     const this_layer = this
     commonComponents_forms._shared_scrollConformingElementIntoView(this_layer)
   }
-  if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
-    valueLayer.addEventListener(
-      'focus',
-      function () {
-        valueLayer.Component_ScrollIntoViewInFormContainerParent()
-      }
-    )
+  if (context.isMobile === true) {
+    valueLayer.addEventListener('focus', function () {
+      valueLayer.Component_ScrollIntoViewInFormContainerParent()
+    })
   }
   //
   // Currency picker
   // TODO: move these into class + css rules
-  const selectLayer_left = 22 + amountInput_baseW + 2 * valueLayer.Component_default_padding_h() + 1.5
+  const selectLayer_left = 22 + amountInput_baseW + 2 * 7 + 1.5
   const selectLayer_h = valueLayer.Component_default_h() + 0.5
   const ccySelect_disclosureArrow_h = 13
   const ccySelectLayer = commonComponents_ccySelect.new_selectLayer()
   let ccySelect_disclosureArrow_layer // will be set
   {
     ccySelectLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
-    if (context.ThemeController_isMobileBrowser === true) {
+    if (context.isMobile === true) {
       ccySelectLayer.style.fontSize = '11px'
       ccySelectLayer.style.fontWeight = '600' // semibold desired but "semibold" doesn't apparently work
     } else {

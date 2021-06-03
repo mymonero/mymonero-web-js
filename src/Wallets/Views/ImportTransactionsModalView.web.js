@@ -296,8 +296,6 @@ class ImportTransactionsModalView extends View {
   stopObserving () {
   }
 
-  //
-  // Runtime - Accessors - Navigation
   Navigation_Title () {
     return 'Import Transactions'
   }
