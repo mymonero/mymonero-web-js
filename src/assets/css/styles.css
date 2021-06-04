@@ -1640,6 +1640,7 @@ div#currency-table {
 }
 #wallet-selector {
   position: relative;
+  padding: 0px;
 }
 #exchangePage #state {
   display: block;
@@ -2706,4 +2707,8 @@ div.customSelect {}
   height: 16px;
   margin: 0 auto;
   background-image: url(../img/Smiley.jpg)
+}
+
+.selectIndicator {
+  pointer-events: none; border: none; position: absolute; width: 8px; height: 13px;  z-index: 9; background-image: url(../img/smallSelect_disclosureArrow@3x.png); background-repeat: no-repeat; background-position: center center; background-size: 8px 13px; 
 }
