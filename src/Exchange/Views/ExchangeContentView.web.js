@@ -1,8 +1,6 @@
 // "use strict"
 
 const Utils = require('../Javascript/ExchangeUtilityFunctions')
-const ExchangeLibrary = require('mymonero-exchange')
-const ExchangeFunctions = new ExchangeLibrary()
 const ExchangeUtils = require('../Javascript/ExchangeUtilityFunctions')
 const ValidationLibrary = require('wallet-address-validator')
 const View = require('../../Views/View.web')
