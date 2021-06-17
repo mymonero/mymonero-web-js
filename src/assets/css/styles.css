@@ -1849,7 +1849,16 @@ div#currency-table {
   -webkit-font-smoothing: subpixel-antialiased;
   word-break: break-all;
 }
-
+/* Exchange styles */
+#minimum-fee {
+  float: right;
+}
+#minimum-fee-text, #tx-fee, #addressValidationLoaderText {
+  font-size: 10px;
+}
+#localmonero {
+  clear: left;
+}
 #localmonero a,
 #indacoin a {
   margin: 8px 0px 0px 0px !important;
