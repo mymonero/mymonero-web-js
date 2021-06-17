@@ -10,7 +10,6 @@ const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger // important: g
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 const ExchangeHelper = require("@mymonero/mymonero-exchange-helper")
 let exchangeHelper = new ExchangeHelper();
-
 //let handleOfferError = exchangeHelper.ErrorHelper.handleOfferError;
 
 let handleOfferError = exchangeHelper.errorHelper.handleOfferError;
@@ -55,15 +54,13 @@ class ExchangeContentView extends View {
   }
 
   _setup_views () {
-    const self = this
-    //self._refresh_sending_fee();
-    console.log("Setup view stuff");
+    // candidate for removal
   }
 
   // New refactored
   _setup_tabButtonClickListener(context) {
     const self = this;
-    console.log("Setting up tab button click listener");
+    //console.log("Setting up tab button click listener");
     let tabElement = document.getElementById('tabButton-exchange');
     //tabElement.addEventListener('click', self.renderExchangeForm.bind(context))
   }
@@ -72,10 +69,8 @@ class ExchangeContentView extends View {
   renderExchangeForm(context) {
     // Let's check whether we're unlocked, and if yes, refresh the wallet selector
     const self = this 
-    console.log(self.exchangeFormTemplate);
     if (self.walletsListController.records.length > 0) {
       let walletHtml = exchangeHelper.walletSelectorTemplate(self)
-      console.log(walletHtml);
       let walletSelector = document.getElementById('wallet-selector');
       walletSelector.innerHTML = walletHtml;
     }   
@@ -162,7 +157,7 @@ class ExchangeContentView extends View {
           // No cancel handler code since we don't provide a cancel method
         }
         
-        let sendFunds = ExchangeUtils.sendFunds;
+        let sendFunds = ExchangeUtils.default.sendFunds;
 
         const in_amount = document.getElementById('in_amount_remaining').innerHTML
         const send_address = document.getElementById('receiving_subaddress').innerHTML
@@ -192,7 +187,6 @@ class ExchangeContentView extends View {
       // layer.classList.add("xmr_input");
       // We clone the first element of the template so that we get an instance of the first element, rather than a document fragment. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template
       let html = self.exchangeFormTemplate.content.firstElementChild.cloneNode(true);
-      console.log("We have just cloned the form template")
       layer.appendChild(html)
       contentContainerLayer.appendChild(layer)
     }
