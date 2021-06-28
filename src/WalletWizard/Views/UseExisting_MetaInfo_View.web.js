@@ -56,6 +56,7 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
       view.layer.autocomplete = 'off'
       view.layer.autocapitalize = 'none'
       view.layer.spellcheck = 'false'
+      view.layer.value = "domestic hitched aztec motherly friendly agnostic ionic uneven family beyond portents gave nibs waxing tuxedo giving bugs yeti wield tsunami mews drying zodiac zodiac bugs"
       div.appendChild(view.layer)
       self.mnemonicTextAreaView = view
       view.layer.addEventListener('keypress', function (event) {
