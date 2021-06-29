@@ -4,8 +4,6 @@ const View = require('../Views/View.web')
 
 class TabBarItemButtonView extends View {
   constructor (options, context) {
-    console.log('TBIV constructor');
-    console.log(options);
     options.tag = 'a'
     //
     super(options, context)
