@@ -6,6 +6,7 @@ const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web'
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger
+const WalletDetailView = require('../../Components/WalletDetailView');
 
 class TransactionDetailsView extends View {
   constructor (options, context) {
@@ -48,34 +49,38 @@ class TransactionDetailsView extends View {
       self.layer.appendChild(layer)
     }
     // v- NOTE: only specifying commonComponents_forms here to get the styling, so that's somewhat fragile
-    const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('DETAILS', self.context)
-    labelLayer.style.marginTop = '15px'
-    labelLayer.style.marginBottom = '0'
-    labelLayer.style.paddingTop = '0'
-    labelLayer.style.paddingBottom = '0'
-    labelLayer.style.display = 'block'
-    labelLayer.style.color = '#9E9C9E' // special case
-    labelLayer.style.fontWeight = '500' // to get specific visual weight w color
-    self.layer.appendChild(labelLayer)
+    // const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('DETAILS', self.context)
+    // labelLayer.style.marginTop = '15px'
+    // labelLayer.style.marginBottom = '0'
+    // labelLayer.style.paddingTop = '0'
+    // labelLayer.style.paddingBottom = '0'
+    // labelLayer.style.display = 'block'
+    // labelLayer.style.color = '#9E9C9E' // special case
+    // labelLayer.style.fontWeight = '500' // to get specific visual weight w color
+    // self.layer.appendChild(labelLayer)
     //
-    const containerLayer = document.createElement('div')
-    self.tableSection_containerLayer = containerLayer
-    containerLayer.style.margin = '8px 0'
-    containerLayer.style.boxSizing = 'border-box'
-    containerLayer.style.padding = '0 16px 4px 16px'
-    containerLayer.style.border = '0.5px solid #494749'
-    containerLayer.style.borderRadius = '5px'
-    {
-      self._addTableFieldLayer_date()
-      self._addTableFieldLayer_amountsFeesAndTotals()
-      self._addTableFieldLayer_to()
-      self._addTableFieldLayer_paymentID()
-      self._addTableFieldLayer_transactionHash()
-      self._addTableFieldLayer_transactionKey()
-      self._addTableFieldLayer_ringsize()
-    }
-    self.layer.appendChild(containerLayer)
-    // self.DEBUG_BorderChildLayers()
+    // const containerLayer = document.createElement('div')
+    // self.tableSection_containerLayer = containerLayer
+    // containerLayer.style.margin = '8px 0'
+    // containerLayer.style.boxSizing = 'border-box'
+    // containerLayer.style.padding = '0 16px 4px 16px'
+    // containerLayer.style.border = '0.5px solid #494749'
+    // containerLayer.style.borderRadius = '5px'
+    // {
+    //   self._addTableFieldLayer_date()
+    //   self._addTableFieldLayer_amountsFeesAndTotals()
+    //   self._addTableFieldLayer_to()
+    //   self._addTableFieldLayer_paymentID()
+    //   self._addTableFieldLayer_transactionHash()
+    //   self._addTableFieldLayer_transactionKey()
+    //   self._addTableFieldLayer_ringsize()
+    // }
+    // self.layer.appendChild(containerLayer)
+    // // self.DEBUG_BorderChildLayers()
+    let newDetailView = document.createElement('wallet-detail-view');
+    newDetailView.context = self.context;
+    newDetailView.transaction = self.transaction;
+    self.layer.appendChild(newDetailView);
   }
 
   setup_self_layer () {
@@ -98,123 +103,123 @@ class TransactionDetailsView extends View {
   }
 
   __new_tableFieldLayer_simpleValue (value, title, optl_color) {
-    const self = this
-    const div = commonComponents_tables.New_fieldContainerLayer(self.context)
-    div.style.padding = '17px 0'
-    //
-    const labelLayer = commonComponents_tables.New_fieldTitle_labelLayer(title, self.context)
-    self.___styleLabelLayerAsFieldHeader(labelLayer)
-    div.appendChild(labelLayer)
-    //
-    const valueLayer = commonComponents_tables.New_fieldValue_labelLayer(value, self.context)
-    if (typeof optl_color !== 'undefined' && optl_color) {
-      valueLayer.style.color = optl_color
-    }
-    valueLayer.style.marginTop = '-1px'
-    valueLayer.style.maxWidth = '75%' // should wrap
-    div.appendChild(valueLayer)
-    div.appendChild(commonComponents_tables.New_clearingBreakLayer()) // preserve height; better way?
-    div.Component_SetValue = function (value) {
-      valueLayer.Component_SetValue(value)
-    }
-    div.Component_SetColor = function (color) {
-      valueLayer.style.color = color
-    }
-    return div
+    // const self = this
+    // const div = commonComponents_tables.New_fieldContainerLayer(self.context)
+    // div.style.padding = '17px 0'
+    // //
+    // const labelLayer = commonComponents_tables.New_fieldTitle_labelLayer(title, self.context)
+    // self.___styleLabelLayerAsFieldHeader(labelLayer)
+    // div.appendChild(labelLayer)
+    // //
+    // const valueLayer = commonComponents_tables.New_fieldValue_labelLayer(value, self.context)
+    // if (typeof optl_color !== 'undefined' && optl_color) {
+    //   valueLayer.style.color = optl_color
+    // }
+    // valueLayer.style.marginTop = '-1px'
+    // valueLayer.style.maxWidth = '75%' // should wrap
+    // div.appendChild(valueLayer)
+    // div.appendChild(commonComponents_tables.New_clearingBreakLayer()) // preserve height; better way?
+    // div.Component_SetValue = function (value) {
+    //   valueLayer.Component_SetValue(value)
+    // }
+    // div.Component_SetColor = function (color) {
+    //   valueLayer.style.color = color
+    // }
+    // return div
   }
 
   _addTableFieldLayer_date () {
-    const self = this
-    const title = 'Date'
-    const div = self.__new_tableFieldLayer_simpleValue('', title)
-    self.tableFieldLayer__date = div
-    self.tableSection_containerLayer.appendChild(div)
+    // const self = this
+    // const title = 'Date'
+    // const div = self.__new_tableFieldLayer_simpleValue('', title)
+    // self.tableFieldLayer__date = div
+    // self.tableSection_containerLayer.appendChild(div)
   }
 
   _addTableFieldLayer_amountsFeesAndTotals () {
-    const self = this
-    const title = 'Total'
-    const div = self.__new_tableFieldLayer_simpleValue('', title)
-    self.tableFieldLayer__amountsFeesAndTotals = div
-    self.tableSection_containerLayer.appendChild(div)
+    // const self = this
+    // const title = 'Total'
+    // const div = self.__new_tableFieldLayer_simpleValue('', title)
+    // self.tableFieldLayer__amountsFeesAndTotals = div
+    // self.tableSection_containerLayer.appendChild(div)
   }
 
   _addTableFieldLayer_ringsize () {
-    const self = this
-    const title = 'Ring size'
-    const div = self.__new_tableFieldLayer_simpleValue('', title)
-    self.tableFieldLayer__ringsize = div
-    self.tableSection_containerLayer.appendChild(div)
+    // const self = this
+    // const title = 'Ring size'
+    // const div = self.__new_tableFieldLayer_simpleValue('', title)
+    // self.tableFieldLayer__ringsize = div
+    // self.tableSection_containerLayer.appendChild(div)
   }
 
   _addTableFieldLayer_transactionHash () {
-    const self = this
-    const fieldLabelTitle = 'Transaction ID'
-    const valueToDisplayIfValueNil = 'N/A'
-    const div = commonComponents_tables.New_copyable_longStringValueField_component_fieldContainerLayer(
-      self.context,
-      fieldLabelTitle,
-      '', // for now
-      self.context.pasteboard,
-      valueToDisplayIfValueNil
-    )
-    self.valueLayer__transactionHash = div
-    const labelLayer = div.Component_GetLabelLayer()
-    self.___styleLabelLayerAsFieldHeader(labelLayer)
-    self.tableSection_containerLayer.appendChild(div)
+    // const self = this
+    // const fieldLabelTitle = 'Transaction ID'
+    // const valueToDisplayIfValueNil = 'N/A'
+    // const div = commonComponents_tables.New_copyable_longStringValueField_component_fieldContainerLayer(
+    //   self.context,
+    //   fieldLabelTitle,
+    //   '', // for now
+    //   self.context.pasteboard,
+    //   valueToDisplayIfValueNil
+    // )
+    // self.valueLayer__transactionHash = div
+    // const labelLayer = div.Component_GetLabelLayer()
+    // self.___styleLabelLayerAsFieldHeader(labelLayer)
+    // self.tableSection_containerLayer.appendChild(div)
   }
 
   _addTableFieldLayer_transactionKey () {
-    const self = this
-    const fieldLabelTitle = 'Secret Key'
-    const valueToDisplayIfValueNil = 'Unknown'
-    const div = commonComponents_tables.New_copyable_longStringValueField_component_fieldContainerLayer(
-      self.context,
-      fieldLabelTitle,
-      '', // for now
-      self.context.pasteboard,
-      valueToDisplayIfValueNil,
-      false // not truncated - functions and looks better
-    )
-    self.valueLayer__transactionKey = div
-    const labelLayer = div.Component_GetLabelLayer()
-    self.___styleLabelLayerAsFieldHeader(labelLayer)
-    self.tableSection_containerLayer.appendChild(div)
+    // const self = this
+    // const fieldLabelTitle = 'Secret Key'
+    // const valueToDisplayIfValueNil = 'Unknown'
+    // const div = commonComponents_tables.New_copyable_longStringValueField_component_fieldContainerLayer(
+    //   self.context,
+    //   fieldLabelTitle,
+    //   '', // for now
+    //   self.context.pasteboard,
+    //   valueToDisplayIfValueNil,
+    //   false // not truncated - functions and looks better
+    // )
+    // self.valueLayer__transactionKey = div
+    // const labelLayer = div.Component_GetLabelLayer()
+    // self.___styleLabelLayerAsFieldHeader(labelLayer)
+    // self.tableSection_containerLayer.appendChild(div)
   }
 
   _addTableFieldLayer_paymentID () {
-    const self = this
-    const fieldLabelTitle = 'Payment ID'
-    const valueToDisplayIfValueNil = 'None'
-    const div = commonComponents_tables.New_copyable_longStringValueField_component_fieldContainerLayer(
-      self.context,
-      fieldLabelTitle,
-      '', // for now
-      self.context.pasteboard,
-      valueToDisplayIfValueNil
-    )
-    self.valueLayer__paymentID = div
-    const labelLayer = div.Component_GetLabelLayer()
-    self.___styleLabelLayerAsFieldHeader(labelLayer)
-    self.tableSection_containerLayer.appendChild(div)
+    // const self = this
+    // const fieldLabelTitle = 'Payment ID'
+    // const valueToDisplayIfValueNil = 'None'
+    // const div = commonComponents_tables.New_copyable_longStringValueField_component_fieldContainerLayer(
+    //   self.context,
+    //   fieldLabelTitle,
+    //   '', // for now
+    //   self.context.pasteboard,
+    //   valueToDisplayIfValueNil
+    // )
+    // self.valueLayer__paymentID = div
+    // const labelLayer = div.Component_GetLabelLayer()
+    // self.___styleLabelLayerAsFieldHeader(labelLayer)
+    // self.tableSection_containerLayer.appendChild(div)
   }
 
   _addTableFieldLayer_to () {
-    const self = this
-    const fieldLabelTitle = 'To'
-    const valueToDisplayIfValueNil = 'Unknown'
-    const div = commonComponents_tables.New_copyable_longStringValueField_component_fieldContainerLayer(
-      self.context,
-      fieldLabelTitle,
-      '', // for now
-      self.context.pasteboard,
-      valueToDisplayIfValueNil,
-      false // it looks weird to have truncated fields next to non-truncated fields, presently
-    )
-    self.valueLayer__to = div
-    const labelLayer = div.Component_GetLabelLayer()
-    self.___styleLabelLayerAsFieldHeader(labelLayer)
-    self.tableSection_containerLayer.appendChild(div)
+    // const self = this
+    // const fieldLabelTitle = 'To'
+    // const valueToDisplayIfValueNil = 'Unknown'
+    // const div = commonComponents_tables.New_copyable_longStringValueField_component_fieldContainerLayer(
+    //   self.context,
+    //   fieldLabelTitle,
+    //   '', // for now
+    //   self.context.pasteboard,
+    //   valueToDisplayIfValueNil,
+    //   false // it looks weird to have truncated fields next to non-truncated fields, presently
+    // )
+    // self.valueLayer__to = div
+    // const labelLayer = div.Component_GetLabelLayer()
+    // self.___styleLabelLayerAsFieldHeader(labelLayer)
+    // self.tableSection_containerLayer.appendChild(div)
   }
 
   //
@@ -330,6 +335,7 @@ class TransactionDetailsView extends View {
       throw Error(self.constructor.name + ' opened while wallet failed to init or boot.')
     }
     const transaction = self.transaction
+
     if (transaction.isUnlocked !== true) {
       if (self.validationMessageLayer__isLocked.userHasClosedThisLayer !== true) {
         const lockedReason = self.wallet.TransactionLockedReason(self.transaction)
@@ -357,58 +363,58 @@ class TransactionDetailsView extends View {
       // then it'll effectively be called for us after init
     }
     // Configuring table fields
-    { // Date
-      let date = self.transaction.timestamp
-      if (typeof date === 'string') {
-        date = new Date(date)
-      }
-      const dateString = date.toLocaleDateString(
-        'en-US'/* for now */,
-        { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }
-      ).toUpperCase()
-      const value = dateString
-      self.tableFieldLayer__date.Component_SetValue(value)
-    }
-    if (typeof self.transaction.target_address !== 'undefined' && self.transaction.target_address) {
-      self.valueLayer__to.Component_SetValue(self.transaction.target_address) // in case we have it
-      self.valueLayer__to.style.display = 'block'
-    } else {
-      self.valueLayer__to.style.display = 'none'
-    }
-    const isOutgoing = self.transaction.approx_float_amount < 0
-    { // Total
-      const tx = self.transaction
-      const received_JSBigInt = tx.total_received ? (typeof tx.total_received === 'string' ? new JSBigInt(tx.total_received) : tx.total_received) : new JSBigInt('0')
-      const sent_JSBigInt = tx.total_sent ? (typeof tx.total_sent === 'string' ? new JSBigInt(tx.total_sent) : tx.total_sent) : new JSBigInt('0')
-      const value = monero_amount_format_utils.formatMoney(received_JSBigInt.subtract(sent_JSBigInt))
-      let color
-      if (isOutgoing) {
-        color = '#F97777'
-      } else {
-        color = '#FCFBFC'
-      }
-      self.tableFieldLayer__amountsFeesAndTotals.Component_SetValue(value)
-      self.tableFieldLayer__amountsFeesAndTotals.Component_SetColor(color)
-    }
-    { // Ringsize
-      const value = parseInt(self.transaction.mixin) + 1 // b/c ringsize = mixin + 1
-      self.tableFieldLayer__ringsize.Component_SetValue(value)
-    }
-    { // TX hash
-      const value = self.transaction.hash
-      self.valueLayer__transactionHash.Component_SetValue(value)
-    }
-    if (typeof self.transaction.tx_key !== 'undefined' && self.transaction.tx_key) { // outgoing .. we might have own tx key
-      const value = self.transaction.tx_key
-      self.valueLayer__transactionKey.Component_SetValue(value)
-      self.valueLayer__transactionKey.style.display = 'block'
-    } else {
-      self.valueLayer__transactionKey.style.display = 'none'
-    }
-    { // Payment ID
-      const value = self.transaction.payment_id
-      self.valueLayer__paymentID.Component_SetValue(value)
-    }
+    // { // Date
+    //   let date = self.transaction.timestamp
+    //   if (typeof date === 'string') {
+    //     date = new Date(date)
+    //   }
+    //   const dateString = date.toLocaleDateString(
+    //     'en-US'/* for now */,
+    //     { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }
+    //   ).toUpperCase()
+    //   const value = dateString
+    //   self.tableFieldLayer__date.Component_SetValue(value)
+    // }
+    // if (typeof self.transaction.target_address !== 'undefined' && self.transaction.target_address) {
+    //   self.valueLayer__to.Component_SetValue(self.transaction.target_address) // in case we have it
+    //   self.valueLayer__to.style.display = 'block'
+    // } else {
+    //   self.valueLayer__to.style.display = 'none'
+    // }
+    // const isOutgoing = self.transaction.approx_float_amount < 0
+    // { // Total
+    //   const tx = self.transaction
+    //   const received_JSBigInt = tx.total_received ? (typeof tx.total_received === 'string' ? new JSBigInt(tx.total_received) : tx.total_received) : new JSBigInt('0')
+    //   const sent_JSBigInt = tx.total_sent ? (typeof tx.total_sent === 'string' ? new JSBigInt(tx.total_sent) : tx.total_sent) : new JSBigInt('0')
+    //   const value = monero_amount_format_utils.formatMoney(received_JSBigInt.subtract(sent_JSBigInt))
+    //   let color
+    //   if (isOutgoing) {
+    //     color = '#F97777'
+    //   } else {
+    //     color = '#FCFBFC'
+    //   }
+    //   self.tableFieldLayer__amountsFeesAndTotals.Component_SetValue(value)
+    //   self.tableFieldLayer__amountsFeesAndTotals.Component_SetColor(color)
+    // }
+    // { // Ringsize
+    //   const value = parseInt(self.transaction.mixin) + 1 // b/c ringsize = mixin + 1
+    //   self.tableFieldLayer__ringsize.Component_SetValue(value)
+    // }
+    // { // TX hash
+    //   const value = self.transaction.hash
+    //   self.valueLayer__transactionHash.Component_SetValue(value)
+    // }
+    // if (typeof self.transaction.tx_key !== 'undefined' && self.transaction.tx_key) { // outgoing .. we might have own tx key
+    //   const value = self.transaction.tx_key
+    //   self.valueLayer__transactionKey.Component_SetValue(value)
+    //   self.valueLayer__transactionKey.style.display = 'block'
+    // } else {
+    //   self.valueLayer__transactionKey.style.display = 'none'
+    // }
+    // { // Payment ID
+    //   const value = self.transaction.payment_id
+    //   self.valueLayer__paymentID.Component_SetValue(value)
+    // }
   }
 
   //

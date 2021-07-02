@@ -438,7 +438,7 @@ class NavigationBarView extends View {
           layer.style.opacity = '0' // first make invisible
           layer.style.left = ifAnimated_isFromRightNotLeft ? buttonOffsetForTransition_incomingButtons_fromRight : '-' + buttonOffsetForTransition_incomingButtons_fromLeft
           self.leftBarButtonHolderView.addSubview(buttonView) // then add to the view
-          self.leftBarButtonHolderView.classList.add("nav-button-left-container");
+          //self.leftBarButtonHolderView.classList.add("nav-button-left-container");
           // then fade in
           Animate(
             layer,

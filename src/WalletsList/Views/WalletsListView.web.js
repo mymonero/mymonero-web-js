@@ -57,7 +57,7 @@ class WalletsListView extends ListView {
     {
       const emptyStateMessageContainerView = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
         '<div class="smiley"></div>',
-        "Welcome to MyMonero!<br/>Let's get started.",
+        "<landing-page-greeting></landing-page-greeting>",
         self.context,
         0,
         0

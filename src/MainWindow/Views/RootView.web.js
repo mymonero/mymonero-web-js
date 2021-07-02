@@ -4,7 +4,7 @@ const View = require('../../Views/View.web')
 const RootFooterView = require('./RootFooterView.web')
 const ConnectivityMessageBarView = require('./ConnectivityMessageBarView.web')
 const RootTabBarAndContentView = require('./RootTabBarAndContentView.web')
-
+const LandingPageGreeting = require('../../Components/LandingPageGreeting')
 class RootView extends View {
   constructor (options, context) {
     super(options, context)
