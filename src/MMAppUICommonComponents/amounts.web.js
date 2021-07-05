@@ -20,7 +20,8 @@ function New_AmountInputFieldPKG (
   const ccySelect_label_margin_left = 6
   const selectLayer_w = ccySelect_label_margin_left + 32/* text */ + 4 + ccySelect_disclosureArrow_w + ccySelect_disclosureArrow_margin_right
   //
-  const div = commonComponents_forms.New_fieldContainerLayer()
+  const div = document.createElement('div')
+  div.className = 'form_field'
   div.style.position = 'relative' // to have layout reset origin of any position=absolute items
   div.style.left = '0'
   div.style.top = '0'
@@ -35,7 +36,9 @@ function New_AmountInputFieldPKG (
     const accessoryLabel = commonComponents_forms.New_fieldTitle_rightSide_accessoryLayer('optional', context)
     div.appendChild(accessoryLabel)
     //
-    div.appendChild(commonComponents_tables.New_clearingBreakLayer())
+    const breaker = document.createElement('br')
+    breaker.clear = 'both'
+    div.appendChild(breaker)
   }
   //
   const valueLayer_amountPlaceholderText = '00.00'
@@ -48,7 +51,7 @@ function New_AmountInputFieldPKG (
   valueLayer.float = 'left' // because we want it to be on the same line as the "XMR" label
   valueLayer.style.display = 'inline-block' // so we can have the XMR label on the right
   valueLayer.style.width = amountInput_baseW + 'px'
-  const paddingRight = valueLayer.Component_default_padding_h() + selectLayer_w
+  const paddingRight = 7 + selectLayer_w
   valueLayer.style.paddingRight = paddingRight + 'px' // make room for the currency select
   valueLayer.addEventListener('keyup', function (e) {
     const keyCode = e.which || e.keyCode
@@ -87,24 +90,30 @@ function New_AmountInputFieldPKG (
     const this_layer = this
     commonComponents_forms._shared_scrollConformingElementIntoView(this_layer)
   }
-  if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
-    valueLayer.addEventListener(
-      'focus',
-      function () {
-        valueLayer.Component_ScrollIntoViewInFormContainerParent()
-      }
-    )
+  if (context.isMobile === true) {
+    valueLayer.addEventListener('focus', function () {
+      valueLayer.Component_ScrollIntoViewInFormContainerParent()
+    })
   }
   //
   // Currency picker
   // TODO: move these into class + css rules
-  const selectLayer_left = 22 + amountInput_baseW + 2 * valueLayer.Component_default_padding_h() + 1.5
+  const selectLayer_left = 22 + amountInput_baseW + 2 * 7 + 1.5
   const selectLayer_h = valueLayer.Component_default_h() + 0.5
   const ccySelect_disclosureArrow_h = 13
   const ccySelectLayer = commonComponents_ccySelect.new_selectLayer()
   let ccySelect_disclosureArrow_layer // will be set
   {
-    context.themeController.StyleLayer_FontAsSmallSemiboldSansSerif(ccySelectLayer)
+    ccySelectLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+    if (context.isMobile === true) {
+      ccySelectLayer.style.fontSize = '11px'
+      ccySelectLayer.style.fontWeight = '600' // semibold desired but "semibold" doesn't apparently work
+    } else {
+      ccySelectLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+      ccySelectLayer.style.fontSize = '11px'
+      ccySelectLayer.style.fontWeight = '400' // semibold desired
+      ccySelectLayer.style.letterSpacing = '0.5px'
+    }
     //
     // TODO: move these into class + css rules
     //
@@ -140,9 +149,8 @@ function New_AmountInputFieldPKG (
     selectLayer.style.webkitAppearance = 'none' // apparently necessary in order to activate the following style.border…Radius
     selectLayer.style.MozAppearance = 'none'
     selectLayer.style.msAppearance = 'none'
-    const cornerRadius = 4
-    selectLayer.style.borderTopRightRadius = cornerRadius + 'px'
-    selectLayer.style.borderBottomRightRadius = cornerRadius + 'px'
+    selectLayer.style.borderTopRightRadius = '4px'
+    selectLayer.style.borderBottomRightRadius = '4px'
     selectLayer.style.borderBottomLeftRadius = '0px'
     selectLayer.style.borderTopLeftRadius = '0px'
   }
@@ -249,7 +257,9 @@ function New_AmountInputFieldPKG (
     }
   }
   //
-  div.appendChild(commonComponents_tables.New_clearingBreakLayer())
+  const breaker = document.createElement('br')
+  breaker.clear = 'both'
+  div.appendChild(breaker)
 
   return {
     containerLayer: div,

@@ -62,7 +62,8 @@ class CreateWallet_InformOfMnemonic_View extends BaseView_AWalletWizardScreen {
     const selectLayer_w = 142
     const selectLayer_h = 32
     //
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('LANGUAGE', self.context)
       div.appendChild(labelLayer)
@@ -112,10 +113,17 @@ class CreateWallet_InformOfMnemonic_View extends BaseView_AWalletWizardScreen {
         selectLayer.style.MozAppearance = 'none'
         selectLayer.style.msAppearance = 'none'
         selectLayer.style.appearance = 'none'
-        self.context.themeController.StyleLayer_FontAsMiddlingButtonContentSemiboldSansSerif(
-          selectLayer,
-          true // bright content, dark bg
-        )
+        selectLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+        if (self.context.isMobile === true) {
+          selectLayer.style.fontSize = '13px'
+          selectLayer.style.letterSpacing = '0'
+          selectLayer.style.fontWeight = '600'
+        } else { // chrome/desktop/electron:
+          selectLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+          selectLayer.style.fontSize = '12px' // appears slightly too small but 13 is far to big
+          selectLayer.style.letterSpacing = '0.5px'
+          selectLayer.style.fontWeight = '400'
+        }
         selectLayer.style.textIndent = '11px'
         { // hover effects/classes
           selectLayer.classList.add('hoverable-cell')

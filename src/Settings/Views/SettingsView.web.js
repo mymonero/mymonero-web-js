@@ -74,7 +74,8 @@ class SettingsView extends View {
 
   _setup_form_field_appTimeoutSlider () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.paddingTop = '5px' // special case
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('APP TIMEOUT', self.context)
@@ -115,8 +116,21 @@ class SettingsView extends View {
       view.layer.style.width = 'calc(100% - 10px)'
       self.appTimeoutRangeInputView = view // NOTE: This must be torn down manually; see TearDown()
       div.appendChild(view.layer)
-      //
-      const messageLayer = commonComponents_forms.New_fieldAccessory_messageLayer(self.context)
+      
+      const messageLayer = document.createElement('p')
+      messageLayer.style.fontSize = '11px' // we need this to visually stand out slightly more given how it's used
+      if (self.context.isMobile === true) {
+        messageLayer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+        messageLayer.style.fontWeight = 'lighter'
+      } else {
+        messageLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        messageLayer.style.fontWeight = '100' // instead of 500, cause this color, white, is rendered strong
+      }
+      messageLayer.style.lineHeight = '15px'
+      messageLayer.style.margin = '7px 7px 0 7px'
+      messageLayer.style.color = '#8d8b8d'
+      messageLayer.style.wordBreak = 'break-word'
+      messageLayer.style.webkitUserSelect = 'none'
       messageLayer.style.wordBreak = 'break-word'
       self.appTimeoutSlider_messageLayer = messageLayer
       div.appendChild(messageLayer)
@@ -127,7 +141,8 @@ class SettingsView extends View {
   _setup_form_field_displayCcy () {
     const self = this
 
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('DISPLAY CURRENCY', self.context)
       div.appendChild(labelLayer)
