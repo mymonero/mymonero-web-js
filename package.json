@@ -17,11 +17,7 @@
   "dependencies": {
     "@mymonero/mymonero-app-bridge": "^1.0.11",
     "@mymonero/mymonero-bigint": "^1.0.5",
-<<<<<<< HEAD
-    "@mymonero/mymonero-exchange": "^1.1.11",
-=======
->>>>>>> origin/exchange-revamp-rc1
-    "@mymonero/mymonero-exchange-helper": "^1.1.13",
+    "@mymonero/mymonero-exchange-helper": "^1.1.14",
     "@mymonero/mymonero-hosted-api": "^1.1.5",
     "@mymonero/mymonero-keyimage-cache": "^1.0.5",
     "@mymonero/mymonero-locales": "^1.0.5",
