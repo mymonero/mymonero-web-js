@@ -3,7 +3,6 @@
 const TXTRecordResolver = require('../../OpenAlias/TXTResolver.web')
 const txtRecordResolver = new TXTRecordResolver({})
 
-const Pasteboard = require('../../Pasteboard/Pasteboard.browser')
 const FilesystemUI = require('../../FilesystemUI/FilesystemUI.browser')
 const WindowDialogs = require('../../WindowDialogs/WindowDialogs.browser')
 const CCyConversionRates = require('../../CcyConversionRates/Controller')
@@ -12,13 +11,13 @@ const Persister = require('../../DocumentPersister/DocumentPersister.InMemory')
 const BackgroundAPIResponseParser = require('@mymonero/mymonero-response-parser-utils')
 const HostedMoneroAPIClient = require('@mymonero/mymonero-hosted-api')
 const OpenAliasResolver = require('../../OpenAlias/OpenAliasResolver')
-const ThemeController = require('../../Theme/ThemeController')
 const PasswordController = require('../../Passwords/Controllers/PasswordController.Lite')
 const SettingsController = require('../../Settings/Controllers/SettingsController')
 const UserIdleInWindowController = require('../../UserIdle/UserIdleInWindowController')
 const WalletsListController = require('../../WalletsList/Controllers/WalletsListController.Lite')
 const WalletAppCoordinator = require('../../WalletAppCoordinator/WalletAppCoordinator')
 const ExceptionAlerting = require('../../MainWindow/Controllers/ExceptionAlerting.browser.web.js')
+const ClipboardJS = require('clipboard')
 
 function NewHydratedContext (initialContext) {
   initialContext = initialContext || {}
@@ -29,7 +28,7 @@ function NewHydratedContext (initialContext) {
 
   const context = initialContext != null ? initialContext : {}
 
-  context.pasteboard = new Pasteboard({}, context)
+  context.clipboard = new ClipboardJS('.copy-trigger')
   context.filesystemUI = new FilesystemUI({}, context)
   context.windowDialogs = new WindowDialogs({}, context)
   context.CcyConversionRates_Controller_shared = new CCyConversionRates({}, context)
@@ -47,7 +46,6 @@ function NewHydratedContext (initialContext) {
   context.openAliasResolver = new OpenAliasResolver({
     txtRecordResolver: txtRecordResolver
   }, context)
-  context.themeController = new ThemeController({}, context)
   context.passwordController = new PasswordController({}, context)
   context.settingsController = new SettingsController({}, context)
   context.userIdleInWindowController = new UserIdleInWindowController({}, context)

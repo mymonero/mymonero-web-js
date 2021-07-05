@@ -37,15 +37,16 @@ module.exports = {
     })
   ],
   resolve: {
-    alias: {
-      process: 'process/browser'
-    },
+    // alias: {
+    //   process: 'process/browser'
+    // },
     fallback: {
       fs: false,
       util: require.resolve('util/'),
       crypto: require.resolve('crypto-browserify'),
       stream: require.resolve('stream-browserify'),
-      path: require.resolve('path-browserify')
+      path: require.resolve('path-browserify'),
+      process: require.resolve('process/browser')
     }
   }
 }

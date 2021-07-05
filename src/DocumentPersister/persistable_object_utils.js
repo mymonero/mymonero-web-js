@@ -1,6 +1,5 @@
 const uuidV1 = require('uuid/v1')
-const string_cryptor = require('../symmetric_cryptor/symmetric_string_cryptor')
-//
+
 function read (
   string_cryptor__background,
   persister,
