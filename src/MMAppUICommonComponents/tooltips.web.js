@@ -44,7 +44,7 @@ function New_TooltipSpawningButtonView(tooltipText, context) {
     shadowOffset: [0, 19],
     shadowColor: 'rgba(0,0,0,0.26)'
   }
-  if (context.Tooltips_nonHoveringBehavior == true) {
+  if (context.isMobile == true) {
     tooltip_options.showOn = 'click'
     tooltip_options.hideOn = 'click'
     _once_listenForTouchStartToDismissTooltip()

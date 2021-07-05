@@ -5,10 +5,7 @@ const WalletCellContentsView = require('../../Wallets/Views/WalletCellContentsVi
 const commonComponents_walletIcons = require('../../MMAppUICommonComponents/walletIcons.web')
 
 function _fromContext_wantsHoverAndSelectable (context) {
-  if (context.isLiteApp == true) {
     return false // special case - b/c we'll only ever have max 1 wallet
-  }
-  return true
 }
 //
 class WalletsSelectView extends ListCustomSelectView {
@@ -44,7 +41,7 @@ class WalletsSelectView extends ListCustomSelectView {
     {
       const layer = self.selectionDisplayCellView.layer
       layer.style.backgroundColor = 'none'
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         layer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
       } else { // avoiding shadow
         layer.style.boxShadow = 'inset 0 0.5px 0 0 #494749'
@@ -61,9 +58,7 @@ class WalletsSelectView extends ListCustomSelectView {
       layer.className = 'background'
       self.options_containerView.layer.appendChild(layer)
     }
-    if (self.context.isLiteApp == true) {
-      self.disclosureArrowLayer.style.display = 'none'
-    }
+    self.disclosureArrowLayer.style.display = 'none'
   }
 
   // Overrides

@@ -4,13 +4,6 @@ const View = require('../Views/View.web')
 const activityIndicators = require('./activityIndicators.web')
 const commonComponents_forms = require('./forms.web')
 
-function New_fieldContainerLayer (context) {
-  const layer = document.createElement('div')
-  layer.className = 'table_field'
-  return layer
-}
-exports.New_fieldContainerLayer = New_fieldContainerLayer
-
 function New_clickableLinkButtonView (buttonTitle, context, clicked_fn, optl__mouseEnter_fn, optl__mouseLeave_fn) {
   clicked_fn = clicked_fn || function () {}
   const mouseEnter_fn = optl__mouseEnter_fn || function () {}
@@ -23,7 +16,21 @@ function New_clickableLinkButtonView (buttonTitle, context, clicked_fn, optl__mo
   a.style.color = '#11bbec'
   a.style.cursor = 'pointer'
   a.style.webkitUserSelect = 'none' // disable selection
-  context.themeController.StyleLayer_FontAsSmallRegularMonospace(a)
+  if (context.isMobile === true) {
+    a.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+    a.style.fontSize = '11px'
+    a.style.fontWeight = 'lighter'
+  } else {
+    a.style.fontFamily = 'Native-Light, input, menlo, monospace'
+    a.style.webkitFontSmoothing = 'subpixel-antialiased' // for chrome browser
+    a.style.fontSize = '10px'
+    a.style.letterSpacing = '0.5px'
+    if (typeof process !== 'undefined' && process.platform === 'linux') {
+      a.style.fontWeight = '700' // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
+    } else {
+      a.style.fontWeight = '300'
+    }
+  }
   a.style.width = 'auto'
   a.style.display = 'block'
   a.style.clear = 'both'
@@ -73,54 +80,21 @@ function New_fieldTitle_labelLayer (labelText, context) {
   layer.innerHTML = labelText
   layer.style.float = 'left'
   layer.style.textAlign = 'left'
-  context.themeController.StyleLayer_FontAsMiddlingSemiboldSansSerif(layer)
-  layer.style.color = '#FFFFFF'
   layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+  if (context.isMobile === true) {
+    layer.style.fontSize = '13px'
+    layer.style.fontWeight = '600' // semibold desired but "semibold" doesn't apparently work
+  } else {
+    layer.style.webkitFontSmoothing = 'subpixel-antialiased'
+    layer.style.fontSize = '12px' // design says 13 but chrome/desktop renders it too large
+    layer.style.fontWeight = '400' // semibold desired
+    layer.style.letterSpacing = '0.5px'
+  }
+  layer.style.color = '#FFFFFF'
   //
   return layer
 }
 exports.New_fieldTitle_labelLayer = New_fieldTitle_labelLayer
-//
-function New_fieldValue_labelLayer (labelText, context) {
-  const layer = document.createElement('span')
-  layer.innerHTML = labelText
-  layer.className = 'field_value'
-  layer.style.float = 'right'
-  layer.style.textAlign = 'right'
-  layer.style.fontSize = '13px'
-  layer.style.color = '#9E9C9E'
-  layer.style.fontWeight = '100'
-  layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
-  layer.Component_SetValue = function (value) {
-    layer.innerHTML = value
-  }
-  //
-  return layer
-}
-exports.New_fieldValue_labelLayer = New_fieldValue_labelLayer
-//
-function New_fieldValue_base64DataImageLayer (imageData_base64String, context) {
-  const layer = document.createElement('img')
-  layer.className = 'field_value'
-  layer.style.backgroundColor = 'black' // not strictly necessary… mostly for debug
-  layer.Component_SetValue = function (to__imageData_base64String) {
-    layer.src = to__imageData_base64String
-  }
-  layer.Component_SetValue(imageData_base64String)
-  //
-  return layer
-}
-exports.New_fieldValue_base64DataImageLayer = New_fieldValue_base64DataImageLayer
-//
-function New_separatorLayer (context) {
-  const layer = document.createElement('div')
-  layer.style.width = '100%'
-  layer.style.height = '0.5px'
-  layer.style.backgroundColor = '#494749'
-
-  return layer
-}
-exports.New_separatorLayer = New_separatorLayer
 
 function New_customButton_aLayer (context, buttonTitleText, enabled_orTrue, clicked_fn) {
   const layer = document.createElement('a')
@@ -172,7 +146,7 @@ function New_customButton_aLayer (context, buttonTitleText, enabled_orTrue, clic
 }
 exports.New_customButton_aLayer = New_customButton_aLayer
 
-function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_orTrue, pasteboard) { // defaults to 'text' content type
+function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_orTrue) { // defaults to 'text' content type
   // state var declarations - hopefully this won't go out of scope?
   let runtime_valueToCopy // gets set below
   //
@@ -180,15 +154,7 @@ function New_copyButton_aLayer (context, value__orValuesByContentType, enabled_o
     context,
     'COPY',
     enabled_orTrue,
-    function () {
-      if (typeof runtime_valueToCopy === 'string') {
-        pasteboard.CopyString(runtime_valueToCopy)
-      } else if (typeof runtime_valueToCopy === 'object') {
-        pasteboard.CopyValuesByType(runtime_valueToCopy)
-      } else {
-        throw Error(`unrecognized typeof value to copy ${typeof runtime_valueToCopy} in New_copyButton_aLayer`)
-      }
-    }
+    function () {}
   )
   layer.classList.add('copy-trigger')
   function _setValueToCopy (to_value__orValuesByContentType) {
@@ -225,7 +191,21 @@ function New_redTextButtonView (text, context) {
   layer.style.clear = 'left' // but do not let it have 100% width
   layer.style.marginLeft = '32px'
   layer.style.color = '#F97777'
-  context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
+  if (context.isMobile === true) {
+    layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+    layer.style.fontSize = '11px'
+    layer.style.fontWeight = 'lighter'
+  } else {
+    layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+    layer.style.webkitFontSmoothing = 'subpixel-antialiased' // for chrome browser
+    layer.style.fontSize = '10px'
+    layer.style.letterSpacing = '0.5px'
+    if (typeof process !== 'undefined' && process.platform === 'linux') {
+      layer.style.fontWeight = '700' // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
+    } else {
+      layer.style.fontWeight = '300'
+    }
+  }
   layer.style.textDecoration = 'none'
   //
   layer.addEventListener('mouseenter', function () {
@@ -271,23 +251,6 @@ function New_createNewRecordNamedButtonView (lowercased_humanReadable_recordName
   return layer
 }
 exports.New_createNewRecordNamedButtonView = New_createNewRecordNamedButtonView
-
-function New_clearingBreakLayer () {
-  const layer = document.createElement('br')
-  layer.clear = 'both'
-
-  return layer
-}
-exports.New_clearingBreakLayer = New_clearingBreakLayer
-
-function New_spacerLayer () {
-  const layer = document.createElement('div')
-  layer.style.width = '100%'
-  layer.style.height = '40px' // just tentative - feel free to customize
-
-  return layer
-}
-exports.New_spacerLayer = New_spacerLayer
 
 function New_inlineMessageDialogLayer (context, messageString, optl_immediatelyVisible, optl_wantsXButtonHidden) {
   const immediatelyVisible = optl_immediatelyVisible === true // These are configured to not by default be initially visible
@@ -347,7 +310,6 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
   context,
   fieldLabelTitle,
   value,
-  pasteboard,
   valueToDisplayIfValueNil_orDefault,
   optl_isTruncatedPreviewForm, // single line, … trunc, etc
   optl_isSecretData // IMPORTANT: defaults to false if undefined
@@ -358,26 +320,34 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
   //
   const isValueNil = value === null || typeof value === 'undefined' || value === ''
   const valueToDisplay = isValueNil === false ? value : valueToDisplayIfValueNil_orDefault
-  const div = New_fieldContainerLayer()
+  const div = document.createElement('div')
+  div.className = 'table_field'
   const padding_btm = isTruncatedPreviewForm ? 12 : 19
   div.style.padding = `15px 0 ${padding_btm}px 0`
   const labelLayer = New_fieldTitle_labelLayer(fieldLabelTitle, context)
   const canSupportCopyButton = wantsCopyButton
-  if (canSupportCopyButton == false) {
-    if (wantsCopyButton && context.isLiteApp !== true) {
-      throw Error('Expected this to be lite app when unable to support copy button')
-    }
-  }
+  
   let copy_buttonLayer
   if (canSupportCopyButton) {
     copy_buttonLayer = New_copyButton_aLayer(
       context,
       value,
-      isValueNil === false,
-      pasteboard
+      isValueNil === false
     )
   }
-  const valueLayer = New_fieldValue_labelLayer('' + valueToDisplay, context)
+  const valueLayer = document.createElement('span')
+  valueLayer.innerHTML = '' + valueToDisplay
+  valueLayer.className = 'field_value'
+  valueLayer.style.float = 'right'
+  valueLayer.style.textAlign = 'right'
+  valueLayer.style.fontSize = '13px'
+  valueLayer.style.color = '#9E9C9E'
+  valueLayer.style.fontWeight = '100'
+  valueLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+  valueLayer.Component_SetValue = function (value) {
+    valueLayer.innerHTML = value
+  }
+
   if (isSecretData == false) { // changed from 'canSupportCopyButton' b/c even if the copy button is allowed, users may expect they can select the text
     // if (isSecretData == false) { // only if this is not secret data
     // ^-- commented for now b/c users want to be able to copy it
@@ -419,7 +389,9 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
       div.appendChild(copy_buttonLayer)
     }
   }
-  div.appendChild(New_clearingBreakLayer()) // preserve height; better way?
+  const breaker = document.createElement('br')
+  breaker.clear = 'both'
+  div.appendChild(breaker)
   div.Component_SetValue = function (to_value) {
     const to_value_isNil = to_value === null || typeof to_value === 'undefined' || to_value === ''
     const to_valueToDisplay = !to_value_isNil ? '' + to_value : valueToDisplayIfValueNil_orDefault
@@ -435,28 +407,3 @@ function New_copyable_longStringValueField_component_fieldContainerLayer (
   return div
 }
 exports.New_copyable_longStringValueField_component_fieldContainerLayer = New_copyable_longStringValueField_component_fieldContainerLayer
-
-function New_tableCell_accessoryChevronLayer (context) {
-  const layer = document.createElement('img')
-  layer.src = './src/assets/img/list_rightside_chevron@3x.png'
-  layer.style.position = 'absolute'
-  layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
-  layer.style.width = '7px'
-  layer.style.height = '12px'
-  layer.style.right = '16px'
-  layer.style.top = 'calc(50% - 6px)'
-  return layer
-}
-exports.New_tableCell_accessoryChevronLayer = New_tableCell_accessoryChevronLayer
-
-function New_tableCell_accessoryActivityIndicatorLayer (isOnAccentBackground) {
-  const layer = activityIndicators.New_Graphic_ActivityIndicatorLayer(isOnAccentBackground)
-  layer.style.position = 'absolute'
-  layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
-  layer.style.width = '16px'
-  layer.style.height = '14px'
-  layer.style.right = '16px'
-  layer.style.top = 'calc(50% - 7px)'
-  return layer
-}
-exports.New_tableCell_accessoryActivityIndicatorLayer = New_tableCell_accessoryActivityIndicatorLayer

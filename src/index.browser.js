@@ -10,6 +10,9 @@ window.BootApp = function () { // encased in a function to prevent scope being l
     getVersion: function () {
       return '1.1.21' // TODO: read from config.. don't want to ship package.json with app though
     },
+    getApiUrl: function () {
+      return 'api.mymonero.com'
+    },
     getName: function () {
       return 'MyMonero'
     },
@@ -29,17 +32,12 @@ window.BootApp = function () { // encased in a function to prevent scope being l
       nettype: require('@mymonero/mymonero-nettype').network_type.MAINNET, // critical setting
       app: app,
       isDebug: isDebug,
-      isLiteApp: true, // used sparingly for to disable (but not redact) functionality
       isMobile: isMobile,
       TabBarView_thickness: isMobile ? 48 : 79,
-      TabBarView_isHorizontalBar: isMobile,
-      ThemeController_isMobileBrowser: isMobile,
-      Tooltips_nonHoveringBehavior: isMobile, // be able to dismiss on clicks etc
       // TODO: detect if Mac … if so, render w/o native emoji (need holistic fallback solution though - see Gitlab post referenced by https://github.com/mymonero/mymonero-app-js/issues/194)
-      appDownloadLink_domainAndPath: 'mymonero.com',
+      appDownloadLink_domainAndPath: 'https://mymonero.com',
+      appRepoLink: 'https://www.github.com/mymonero/mymonero-app-js/releases/latest',
       HostedMoneroAPIClient_DEBUGONLY_mockSendTransactionSuccess: false,
-      Views_selectivelyEnableMobileRenderingOptimizations: isMobile,
-      CommonComponents_Forms_scrollToInputOnFocus: isMobile,
       monero_utils: coreBridge_instance
     })
     window.MyMonero_context = context

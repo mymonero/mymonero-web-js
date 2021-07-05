@@ -5,15 +5,11 @@ const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger
 const View = require('../../Views/View.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
-const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
-const commonComponents_actionButtons = require('../../MMAppUICommonComponents/actionButtons.web')
-const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emptyScreens.web')
 const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const InfoDisclosingView = require('../../InfoDisclosingView/Views/InfoDisclosingView.web')
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
 const TransactionDetailsView = require('./TransactionDetailsView.web')
 const ImportTransactionsModalView = require('./ImportTransactionsModalView.web')
-const FundsRequestQRDisplayView = require('../../RequestFunds/Views/FundsRequestQRDisplayView.web')
 const Currencies = require('../../CcyConversionRates/Currencies')
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 
@@ -81,7 +77,7 @@ class WalletDetailsView extends View {
       layer.style.height = '71px'
       layer.style.marginTop = '16px'
       layer.style.padding = '17px 17px'
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         layer.style.boxShadow = '0 0.5px 1px 0 rgba(0,0,0,0.20), inset 0 0.5px 0 0 rgba(255,255,255,0.20)'
       } else { // avoiding shadow
         layer.style.boxShadow = 'inset 0 0.5px 0 0 rgba(255,255,255,0.20)'
@@ -199,7 +195,6 @@ class WalletDetailsView extends View {
       self.context,
       entitled,
       '',
-      self.context.pasteboard,
       'N/A',
       isTruncatedPreviewForm === true,
       false // isSecretData - NOTE: I have re-enabled copy on secret data for usability purposes
@@ -286,56 +281,6 @@ class WalletDetailsView extends View {
     }
     self.account_InfoDisclosingView = infoDisclosingView
     self.addSubview(infoDisclosingView)
-  }
-
-  _setup_actionButton_receive () {
-    const self = this
-    const buttonView = commonComponents_actionButtons.New_ActionButtonView(
-      'Receive',
-      './src/assets/img/actionButton_iconImage__request@3x.png', // relative to index.html
-      // TODO?: borrowing another module's asset. sort of bad
-      false,
-      function (layer, e) {
-        const requestForWallet = self.context.fundsRequestsListController.records.find(function (r) { // we'll just assume this is booted as well by now
-          return r.is_displaying_local_wallet === true && r.to_address === self.wallet.public_address
-        })
-        if (typeof requestForWallet === 'undefined') {
-          throw Error('Expected requestForWallet to be non nil')
-        }
-        //
-        // hook into existing push functionality to get stuff like reference tracking
-        const view = new FundsRequestQRDisplayView({
-          fundsRequest: requestForWallet,
-          presentedModally: true
-        }, self.context)
-        self.currentlyPresented_qrDisplayView = view
-        const navigationView = new StackAndModalNavigationView({}, self.context)
-        navigationView.SetStackViews([view])
-        self.navigationController.PresentView(navigationView, true)
-      },
-      self.context,
-      undefined,
-      undefined,
-      '16px 16px'
-    )
-    self.actionButtonsContainerView.addSubview(buttonView)
-  }
-
-  _setup_actionButton_send () {
-    const self = this
-    const buttonView = commonComponents_actionButtons.New_ActionButtonView(
-      'Send',
-      './src/assets/img/actionButton_iconImage__send@3x.png', // relative to index.html
-      true,
-      function (layer, e) {
-        self.context.walletAppCoordinator.Trigger_sendFundsFromWallet(self.wallet)
-      },
-      self.context,
-      undefined,
-      undefined,
-      '16px 16px'
-    )
-    self.actionButtonsContainerView.addSubview(buttonView)
   }
 
   _setup_layers_transactionsListLayerContainerLayer () {
@@ -735,14 +680,44 @@ class WalletDetailsView extends View {
     }
     const stateCachedTransactions = wallet.New_StateCachedTransactions()
     if (stateCachedTransactions.length === 0) {
-      const view = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
-        '😴',
-        "You don't have any<br/>transactions yet.",
-        self.context,
-        0, // explicit margin h
-        0, // explicit margin v
-        -12 // content translate y
-      )
+      const margin_h = 0
+      const margin_v = 0
+      const view = new View({}, self.context)
+      
+      const layerEmpty = view.layer
+      layerEmpty.classList.add('emptyScreens')
+      layerEmpty.style.width = `calc(100% - ${2 * margin_h}px - 2px)` // -2px for border
+      layerEmpty.style.height = `calc(100% - ${2 * margin_v}px - 2px)` // -2px for border
+      layerEmpty.style.margin = `${margin_v}px ${margin_h}px`
+    
+      const contentContainerLayer = document.createElement('div')
+      contentContainerLayer.classList.add('content-container')
+      contentContainerLayer.style.display = 'table-cell'
+      contentContainerLayer.style.verticalAlign = 'middle'
+      const translateY_px = -12
+      contentContainerLayer.style.transform = 'translateY(' + translateY_px + 'px)' // pull everything up per design
+      view.layer.appendChild(contentContainerLayer)
+    
+      const emojiLayer = document.createElement('div')
+      emojiLayer.classList.add('emoji-label')
+      emojiLayer.innerHTML = '😴'
+      contentContainerLayer.appendChild(emojiLayer)
+    
+      const messageLayer = document.createElement('div')
+      messageLayer.classList.add('message-label')
+      messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+      messageLayer.style.letterSpacing = '0'
+      messageLayer.style.fontSize = '13px'
+      if (self.context.isMobile === true) {
+        messageLayer.style.fontWeight = 'normal'
+      } else {
+        messageLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+        messageLayer.style.fontWeight = '300'
+      }
+      messageLayer.innerHTML = "You don't have any<br/>transactions yet."
+    
+      contentContainerLayer.appendChild(messageLayer)
+        
       const layer = view.layer
       layer.style.margin = '16px 0 16px 0'
       self.noTransactions_emptyStateView = view
@@ -755,7 +730,7 @@ class WalletDetailsView extends View {
     self.transactions_listContainerLayer = listContainerLayer
     listContainerLayer.style.margin = '16px 0 16px 0'
     listContainerLayer.style.background = '#383638'
-    if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+    if (self.context.isMobile !== true) {
       listContainerLayer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
     } else { // avoiding shadow
       listContainerLayer.style.boxShadow = 'inset 0 0.5px 0 0 #494749'
@@ -786,7 +761,15 @@ class WalletDetailsView extends View {
               return false
             }
           )
-          listItemLayer.appendChild(commonComponents_tables.New_tableCell_accessoryChevronLayer(self.context))
+          const layer = document.createElement('img')
+          layer.src = './src/assets/img/list_rightside_chevron@3x.png'
+          layer.style.position = 'absolute'
+          layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
+          layer.style.width = '7px'
+          layer.style.height = '12px'
+          layer.style.right = '16px'
+          layer.style.top = 'calc(50% - 6px)'
+          listItemLayer.appendChild(layer)
           //
           const layer1 = document.createElement('div')
           layer1.style.width = '100%'
@@ -979,7 +962,21 @@ class WalletDetailsView extends View {
         progressLabelLayer.style.right = '19px'
         progressLabelLayer.style.top = '8px'
         //
-        self.context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
+        if (self.context.isMobile === true) {
+          layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+          layer.style.fontSize = '11px'
+          layer.style.fontWeight = 'lighter'
+        } else {
+          layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+          layer.style.webkitFontSmoothing = 'subpixel-antialiased' // for chrome browser
+          layer.style.fontSize = '10px'
+          layer.style.letterSpacing = '0.5px'
+          if (typeof process !== 'undefined' && process.platform === 'linux') {
+            layer.style.fontWeight = '700' // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
+          } else {
+            layer.style.fontWeight = '300'
+          }
+        }
         //
         progressLabelLayer.style.color = '#9E9C9E'
         layer.appendChild(progressLabelLayer)

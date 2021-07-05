@@ -2,8 +2,6 @@
 
 const View = require('../../Views/View.web')
 const ListView = require('../../Lists/Views/ListView.web')
-const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
-const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emptyScreens.web')
 const commonComponents_actionButtons = require('../../MMAppUICommonComponents/actionButtons.web')
 const WalletsListCellView = require('./WalletsListCellView.web')
 const WalletDetailsView = require('../../Wallets/Views/WalletDetailsView.web')
@@ -48,29 +46,55 @@ class WalletsListView extends ListView {
     const view = new View({}, self.context)
     self.emptyStateContainerView = view
     const layer = view.layer
-    const margin_side = 16
-    const marginTop = 60 - 41 // TODO: configure this with navigation bar height in VDA/VWA
-    layer.style.marginTop = `${marginTop}px`
-    layer.style.marginLeft = margin_side + 'px'
-    layer.style.width = `calc(100% - ${2 * margin_side}px)`
-    layer.style.height = `calc(100% - ${marginTop}px)`
+    layer.style.marginTop = `19px`
+    layer.style.marginLeft = '16px'
+    layer.style.width = `calc(100% - 32px)`
+    layer.style.height = `calc(100% - 19px)`
     {
-      const emptyStateMessageContainerView = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
-        '<div class="smiley"></div>',
-        "Welcome to MyMonero!<br/>Let's get started.",
-        self.context,
-        0,
-        0
-      )
+      const emptyStateMessageContainerView = new View({}, self.context)
+    
+      const layerEmpty = emptyStateMessageContainerView.layer
+      layerEmpty.classList.add('emptyScreens')
+      layerEmpty.style.width = `calc(100% - 2 * 0px - 2px)` // -2px for border
+      layerEmpty.style.height = `calc(100% - 2 * 0px - 2px)` // -2px for border
+      layerEmpty.style.margin = `0px 0px`
+    
+      const contentContainerLayer = document.createElement('div')
+      contentContainerLayer.classList.add('content-container')
+      contentContainerLayer.style.display = 'table-cell'
+      contentContainerLayer.style.verticalAlign = 'middle'
+      const translateY_px = -16
+      contentContainerLayer.style.transform = 'translateY(' + translateY_px + 'px)' // pull everything up per design
+      emptyStateMessageContainerView.layer.appendChild(contentContainerLayer)
+    
+      const emojiLayer = document.createElement('div')
+      emojiLayer.classList.add('emoji-label')
+      emojiLayer.innerHTML = '<div class="smiley"></div>'
+      contentContainerLayer.appendChild(emojiLayer)
+    
+      const messageLayer = document.createElement('div')
+      messageLayer.classList.add('message-label')
+      messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+      messageLayer.style.letterSpacing = '0'
+      messageLayer.style.fontSize = '13px'
+      if (self.context.isMobile === true) {
+        messageLayer.style.fontWeight = 'normal'
+      } else {
+        messageLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+        messageLayer.style.fontWeight = '300'
+      }
+      messageLayer.innerHTML = "Welcome to MyMonero!<br/>Let's get started."
+    
+      contentContainerLayer.appendChild(messageLayer)
+      
       self.emptyStateMessageContainerView = emptyStateMessageContainerView
       view.addSubview(emptyStateMessageContainerView)
     }
     { // action buttons toolbar
-      const margin_h = margin_side
       let actionButtonsContainerView
-      if (self.context.themeController.TabBarView_isHorizontalBar() === false) {
-        const margin_fromWindowLeft = self.context.themeController.TabBarView_thickness() + margin_h // we need this for a position:fixed, width:100% container
-        const margin_fromWindowRight = margin_h
+      if (self.context.isMobile === false) {
+        const margin_fromWindowLeft = self.context.TabBarView_thickness + 16 // we need this for a position:fixed, width:100% container
+        const margin_fromWindowRight = 16
         actionButtonsContainerView = commonComponents_actionButtons.New_ActionButtonsContainerView(
           margin_fromWindowLeft,
           margin_fromWindowRight,
@@ -92,9 +116,9 @@ class WalletsListView extends ListView {
       view.addSubview(actionButtonsContainerView)
     }
     { // essential: update empty state message container to accommodate
-      const actionBar_style_height = commonComponents_actionButtons.ActionButtonsContainerView_h
-      const actionBar_style_marginBottom = commonComponents_actionButtons.ActionButtonsContainerView_bottomMargin
-      const actionBarFullHeightDisplacement = margin_side + actionBar_style_height + actionBar_style_marginBottom
+      const actionBar_style_height = 32
+      const actionBar_style_marginBottom = 8
+      const actionBarFullHeightDisplacement = 16 + actionBar_style_height + actionBar_style_marginBottom
       const style_height = `calc(100% - ${actionBarFullHeightDisplacement}px)`
       self.emptyStateMessageContainerView.layer.style.height = style_height
     }
@@ -176,7 +200,8 @@ class WalletsListView extends ListView {
   // Runtime - Accessors - Navigation
   //
   Navigation_Title () {
-    return `<a href="https://mymonero.com" target="_blank" style="text-decoration: none; color: rgb(252, 251, 252); "><span style='width: 30px; height: 20px; display: inline-block; margin-right: 6px;'><span class='title-logo'>&nbsp;</span></span>MyMonero v1.1.20</a>`
+    const self = this
+    return `<a href="https://mymonero.com" target="_blank" style="text-decoration: none; color: rgb(252, 251, 252); "><span style='width: 30px; height: 20px; display: inline-block; margin-right: 6px;'><span class='title-logo'>&nbsp;</span></span>MyMonero v${self.context.app.getVersion()}</a>`
   }
 
   Navigation_New_RightBarButtonView () {

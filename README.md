@@ -1,44 +1,23 @@
-# Web Wallet 
+# MyMonero Web Wallet 
 
-![Logo](https://raw.githubusercontent.com/mymonero/mymonero-app-js/master/docs/assets/icon_100.png "Logo")
+<p align="center">
+  <img alt="MyMonero" src="https://user-images.githubusercontent.com/1645428/120083066-8a394a00-c0c6-11eb-9bc5-1ce02784dab3.png">
+</p>
 
+<p align="center">
+  MyMonero Web Wallet
+</p>
 
-### Info
-
-1. License and Copyrights
-2. Downloads
-3. Requirements & Install Locations
-4. Reporting Bugs & Making Feature Requests
-
-### Contributing and Testing
-
-1. Getting the Source Code
-2. Repo Contents Overview
-3. Building for Production
-4. Running in Development Mode
-5. Contributing
-6. Acknowledgements
-
+<p align="center">
+  <a href="https://snyk.io/test/github/mymonero/mymonero-utils"><img src="https://snyk.io/test/github/mymonero/mymonero-web-js/badge.svg"></a>
+  <a href="https://opensource.org/licenses/BSD-3-Clause"><img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg"></a>
+</p>
 
 ## License and Copyrights
 
 See `LICENSE.txt` for license.
 
 All app source code and assets copyright © 2014-2020 by MyMonero. All rights reserved.
-
-
-## Downloads
-
-Download the latest version from our website at [mymonero.com](https://www.mymonero.com) or from the Releases tab.
-
-Developers and pre-release testers who would like to use and work on the app can run it by obtaining the source and running one of the build commands below.
-
-To get set up with the source code, please see **Getting the Source Code** below.
-
-
-### Where is user data saved?
-
-* Browser: None (no data is saved)
 
 
 ## Reporting Bugs & Making Feature Requests
@@ -65,27 +44,12 @@ Please don't use the Issues tracker for general support or inquiries. You can al
 
 4. Install all required `node_modules` by executing `npm install`.
 
+## Browser
 
-## Repo Contents Overview
-* Local, application source code is located in `local_modules/`. This includes bundled/static third-party "Vendor" libraries such as [EmojiOne](http://emojione.com).
-
-* After installation, non-bundled third-party modules will be located in `node_modules/`.
-
-* App package and build process info is located in `package.json`.
-
-* This readme is located at `README.md`, and the license is located at `LICENSE.txt`.
-
-
-## Building for Production
-
-If you want to run the browser build which is provided in the releases, simply unzip it, `cd` into the browser_build directory, then run `python -m SimpleHTTPServer 9100` (replacing the port with one of your choice if needed). Then, open your browser of choice and navigate to `http://localhost:9100`.
-
-
-### Browser (Web wallet)
-
+```bash
 `npm run start`
-
-*Note:* This will run the command `python -m SimpleHTTPServer 9100` to serve `./browser_build`. After this command completes, open your browser of choice and navigate to `http://localhost:9100`.
+```
+*Note:* This will run the command `python -m SimpleHTTPServer 9110`. After this command completes, open your browser of choice and navigate to `http://localhost:9110`.
 
 
 ## Contributing
