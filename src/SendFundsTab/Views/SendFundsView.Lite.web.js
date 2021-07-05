@@ -15,7 +15,7 @@ const monero_openalias_utils = require('../../OpenAlias/monero_openalias_utils')
 const monero_config = require('@mymonero/mymonero-monero-config')
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 const jsQR = require('jsqr')
-const monero_requestURI_utils = require('../../MoneroUtils/monero_requestURI_utils')
+const monero_requestURI_utils = require('@mymonero/mymonero-request-utils')
 const Currencies = require('../../CcyConversionRates/Currencies')
 const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger // important: grab defined export
 const rateServiceDomainText = 'cryptocompare.com'
@@ -46,10 +46,8 @@ class SendFundsView extends View {
 
   _isUsingRelativeNotFixedActionButtonsContainer () {
     const self = this
-    if (self.context.themeController.TabBarView_isHorizontalBar() === false) {
-      return false
-    }
-    return true
+    
+    return self.context.isMobile
   }
 
   setup_views () {
@@ -66,7 +64,7 @@ class SendFundsView extends View {
     { // action buttons toolbar
       let view
       if (self._isUsingRelativeNotFixedActionButtonsContainer() === false) {
-        const margin_fromWindowLeft = self.context.themeController.TabBarView_thickness() + 16 // we need this for a position:fixed, width:100% container
+        const margin_fromWindowLeft = self.context.TabBarView_thickness + 16 // we need this for a position:fixed, width:100% container
         view = commonComponents_actionButtons.New_ActionButtonsContainerView(
           margin_fromWindowLeft,
           16,
@@ -117,9 +115,7 @@ class SendFundsView extends View {
     const containerLayer = document.createElement('div')
     let paddingBottom
     if (self._isUsingRelativeNotFixedActionButtonsContainer() == false) {
-      paddingBottom = commonComponents_actionButtons.ActionButtonsContainerView_h +
-      commonComponents_actionButtons.ActionButtonsContainerView_bottomMargin +
-      10
+      paddingBottom = 50
     } else {
       paddingBottom = 0
     }
@@ -156,7 +152,8 @@ class SendFundsView extends View {
 
   _setup_form_walletSelectLayer () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('FROM', self.context)
       {
@@ -272,7 +269,8 @@ class SendFundsView extends View {
 
   _setup_form_contactOrAddressPickerLayer () { // Request funds from sender
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     //
     const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('TO', self.context)
     labelLayer.style.marginTop = '17px' // to square with MEMO field on Send Funds
@@ -318,7 +316,21 @@ class SendFundsView extends View {
         labelLayer.style.marginTop = '12px' // instead of 15
         fieldContainerLayer.appendChild(labelLayer)
         //
-        const valueLayer = commonComponents_forms.New_NonEditable_ValueDisplayLayer_BreakChar('', self.context) // zero val for now
+        const valueLayer = document.createElement('div')
+        valueLayer.value = '' // setting this so there is a common interface with _textView above - some consumers rely on it. this should be standardized into a Value() method of a View
+        valueLayer.style.borderRadius = '3px'
+        valueLayer.style.backgroundColor = '#383638'
+        valueLayer.style.padding = '8px 11px'
+        valueLayer.style.boxSizing = 'border-box'
+        valueLayer.style.width = '100%'
+        valueLayer.style.height = 'auto'
+        valueLayer.style.color = '#7C7A7C'
+        valueLayer.style.fontSize = '13px'
+        valueLayer.style.fontWeight = '100'
+        valueLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        valueLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+        valueLayer.innerHTML = ''
+        valueLayer.style.wordBreak = 'break-all'
         self.resolvedAddress_valueLayer = valueLayer
         fieldContainerLayer.appendChild(valueLayer)
       }
@@ -333,11 +345,32 @@ class SendFundsView extends View {
         labelLayer.style.marginTop = '6px' // instead of 15
         fieldContainerLayer.appendChild(labelLayer)
         //
-        const valueLayer = commonComponents_forms.New_NonEditable_ValueDisplayLayer_BreakChar('', self.context) // zero val for now
+        const valueLayer = document.createElement('div')
+        valueLayer.value = '' // setting this so there is a common interface with _textView above - some consumers rely on it. this should be standardized into a Value() method of a View
+        valueLayer.style.borderRadius = '3px'
+        valueLayer.style.backgroundColor = '#383638'
+        valueLayer.style.padding = '8px 11px'
+        valueLayer.style.boxSizing = 'border-box'
+        valueLayer.style.width = '100%'
+        valueLayer.style.height = 'auto'
+        valueLayer.style.color = '#7C7A7C'
+        valueLayer.style.fontSize = '13px'
+        valueLayer.style.fontWeight = '100'
+        valueLayer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        valueLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+        valueLayer.innerHTML = ''
+        valueLayer.style.wordBreak = 'break-all'
         self.resolvedPaymentID_valueLayer = valueLayer
         fieldContainerLayer.appendChild(valueLayer)
         //
-        const detectedMessage = commonComponents_forms.New_Detected_IconAndMessageLayer(self.context)
+        const detectedMessage = document.createElement('div')
+        detectedMessage.classList.add('iconAndMessageLayer')
+        detectedMessage.innerHTML = `<img src="./src/assets/img/detectedCheckmark@3x.png" width="9px" height="7px" />&nbsp;<span>Detected</span>`
+        detectedMessage.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        detectedMessage.style.webkitFontSmoothing = 'subpixel-antialiased'
+        detectedMessage.style.fontSize = '11px'
+        detectedMessage.style.fontWeight = '100'
+        detectedMessage.style.color = '#8D8B8D'
         fieldContainerLayer.appendChild(detectedMessage)
       }
     }
@@ -367,7 +400,8 @@ class SendFundsView extends View {
 
   _setup_form_manualPaymentIDInputLayer () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.display = 'none' // initial
     {
       const labelRowContainer = document.createElement('div')
@@ -426,7 +460,8 @@ class SendFundsView extends View {
     const selectLayer_w = 122
     const selectLayer_h = 32
     //
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('PRIORITY', self.context)
       labelLayer.style.marginTop = '4px'
@@ -486,10 +521,17 @@ class SendFundsView extends View {
         selectLayer.style.MozAppearance = 'none'
         selectLayer.style.msAppearance = 'none'
         selectLayer.style.appearance = 'none'
-        self.context.themeController.StyleLayer_FontAsMiddlingButtonContentSemiboldSansSerif(
-          selectLayer,
-          true // bright content, dark bg
-        )
+        selectLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+        if (self.context.isMobile === true) {
+          selectLayer.style.fontSize = '13px'
+          selectLayer.style.letterSpacing = '0'
+          selectLayer.style.fontWeight = '600'
+        } else { // chrome/desktop/electron:
+          selectLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+          selectLayer.style.fontSize = '12px' // appears slightly too small but 13 is far to big
+          selectLayer.style.letterSpacing = '0.5px'
+          selectLayer.style.fontWeight = '400'
+        }
         if (typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
           selectLayer.style.textIndent = '4px'
         } else {
@@ -532,43 +574,6 @@ class SendFundsView extends View {
       div.appendChild(selectContainerLayer)
     }
     self.form_containerLayer.appendChild(div)
-  }
-
-  //
-  _setup_actionButton_useCamera () {
-    const self = this
-    const buttonView = commonComponents_actionButtons.New_ActionButtonView(
-      'Use Camera',
-      './src/assets/img/actionButton_iconImage__useCamera@3x.png',
-      false,
-      function (layer, e) {
-        self.__didSelect_actionButton_useCamera()
-      },
-      self.context,
-      9, // px from top of btn - due to shorter icon
-      undefined,
-      '14px 14px'
-    )
-    self.useCamera_buttonView = buttonView
-    self.actionButtonsContainerView.addSubview(buttonView)
-  }
-
-  _setup_actionButton_chooseFile () {
-    const self = this
-    const buttonView = commonComponents_actionButtons.New_ActionButtonView(
-      'Choose File',
-      './src/assets/img/actionButton_iconImage__chooseFile@3x.png',
-      true,
-      function (layer, e) {
-        self.__didSelect_actionButton_chooseFile()
-      },
-      self.context,
-      undefined,
-      undefined,
-      '16px 16px'
-    )
-    self.chooseFile_buttonView = buttonView
-    self.actionButtonsContainerView.addSubview(buttonView)
   }
 
   //
@@ -2063,60 +2068,6 @@ class SendFundsView extends View {
 
   //
   //
-  // Runtime - Delegation - Request URI string picking - Entrypoints
-  //
-  __didSelect_actionButton_chooseFile () {
-    const self = this
-    self.context.userIdleInWindowController.TemporarilyDisable_userIdle() // TODO: this is actually probably a bad idea - remove this and ensure that file picker canceled on app teardown
-    if (typeof self.context.Cordova_disallowLockDownOnAppPause !== 'undefined') {
-      self.context.Cordova_disallowLockDownOnAppPause += 1 // place lock so Android app doesn't tear down UI and mess up flow
-    }
-    // ^ so we don't get torn down while dialog open
-    self.context.filesystemUI.PresentDialogToOpenOneImageFile(
-      'Open Monero Request',
-      function (err, absoluteFilePath) {
-        self.context.userIdleInWindowController.ReEnable_userIdle()
-        if (typeof self.context.Cordova_disallowLockDownOnAppPause !== 'undefined') {
-          self.context.Cordova_disallowLockDownOnAppPause -= 1 // remove lock
-        }
-        //
-        if (err) {
-          self.validationMessageLayer.SetValidationError(err.toString() || 'Error while picking QR code from file.')
-          return
-        }
-        if (absoluteFilePath === null || absoluteFilePath === '' || typeof absoluteFilePath === 'undefined') {
-          self.validationMessageLayer.ClearAndHideMessage() // clear to resolve ambiguity in case existing error is displaying
-          return // nothing picked / canceled
-        }
-        self._shared_didPickQRCodeAtPath(absoluteFilePath)
-      }
-    )
-  }
-
-  __didSelect_actionButton_useCamera () {
-    const self = this
-    // Cordova_disallowLockDownOnAppPause is handled within qrScanningUI
-    self.context.qrScanningUI.PresentUIToScanOneQRCodeString(
-      function (err, possibleUriString) {
-        if (err) {
-          self.validationMessageLayer.SetValidationError('' + err)
-          return
-        }
-        if (possibleUriString == null) { // err and possibleUriString are null - treat as a cancellation
-          self.validationMessageLayer.ClearAndHideMessage() // clear to resolve ambiguity in case existing error is displaying
-          return
-        }
-        if (!possibleUriString) { // if not explicitly null but "" or undefined…
-          self.validationMessageLayer.SetValidationError('No scanned QR code content found.')
-          return
-        }
-        self._shared_didPickPossibleRequestURIStringForAutofill(possibleUriString)
-      }
-    )
-  }
-
-  //
-  //
   // Runtime - Delegation - Request URI string picking - Entrypoints - Proxied drag & drop
   //
   __shared_isAllowedToPerformDropOrURLOpeningOps () {
@@ -2177,9 +2128,6 @@ class SendFundsView extends View {
     if (absoluteFilePath != null && absoluteFilePath != '' && typeof absoluteFilePath !== 'undefined') {
       self._shared_didPickQRCodeAtPath(absoluteFilePath)
     } else if (file_size) { // going to assume we're in a browser
-      if (self.context.isLiteApp != true) {
-        throw 'Expected this to be Lite app aka browser'
-      }
       if (!/^image\//.test(file.type)) {
         self.validationMessageLayer.SetValidationError('Please select a QR code image file.')
         return

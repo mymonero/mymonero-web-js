@@ -112,7 +112,8 @@ class ImportTransactionsModalView extends View {
 
   _setup_form_walletSelectLayer () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('FROM', self.context)
       div.appendChild(labelLayer)
@@ -170,7 +171,8 @@ class ImportTransactionsModalView extends View {
 
   _setup_form_addressInputLayer () { // Request funds from sender
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.paddingTop = '22px'
     //
     const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('TO', self.context)
@@ -183,15 +185,16 @@ class ImportTransactionsModalView extends View {
       const buttonLayer = commonComponents_tables.New_copyButton_aLayer(
         self.context,
         '', // for now
-        true,
-        self.context.pasteboard
+        true
       )
       buttonLayer.style.margin = '-1px 0 0 0'
       buttonLayer.style.float = 'right'
       self.copyButtonLayerFor_addressInput = buttonLayer
       div.appendChild(buttonLayer)
     }
-    div.appendChild(commonComponents_tables.New_clearingBreakLayer())
+    const breaker = document.createElement('br')
+    breaker.clear = 'both'
+    div.appendChild(breaker)
 
     const layer = commonComponents_forms.New_fieldValue_textInputLayer(
       self.context,
@@ -208,7 +211,8 @@ class ImportTransactionsModalView extends View {
 
   _setup_form_manualPaymentIDInputLayer () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.paddingTop = '4px'
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('PAYMENT ID (REQUIRED)', self.context)
@@ -221,15 +225,16 @@ class ImportTransactionsModalView extends View {
         const buttonLayer = commonComponents_tables.New_copyButton_aLayer(
           self.context,
           '', // for now
-          true,
-          self.context.pasteboard
+          true
         )
         buttonLayer.style.margin = '-1px 0 0 0'
         buttonLayer.style.float = 'right'
         self.copyButtonLayerFor_paymentID = buttonLayer
         div.appendChild(buttonLayer)
       }
-      div.appendChild(commonComponents_tables.New_clearingBreakLayer())
+      const breaker = document.createElement('br')
+      breaker.clear = 'both'
+      div.appendChild(breaker)
       //
       const valueLayer = commonComponents_forms.New_fieldValue_textInputLayer(self.context, {
         placeholderText: 'Loading…'
@@ -247,13 +252,10 @@ class ImportTransactionsModalView extends View {
     const self = this
     const layer = document.createElement('div')
     layer.style.background = 'rgba(245,230,125,0.05)'
-    const padding_h = 8
-    const margin_h = 24
-    layer.style.width = `calc(100% - ${2 * margin_h}px - ${2 * 1}px - ${2 * padding_h}px)`
     layer.style.borderRadius = '5px'
     layer.style.border = '1px solid rgba(245,230,125,0.30)'
-    layer.style.padding = `6px ${padding_h}px 7px ${padding_h}px`
-    layer.style.margin = `4px ${margin_h}px 8px ${margin_h}px`
+    layer.style.padding = `6px 8px 7px 8px`
+    layer.style.margin = `4px 24px 8px 24px`
     layer.style.fontWeight = '300'
     layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
     layer.style.fontSize = '11px'
@@ -294,8 +296,6 @@ class ImportTransactionsModalView extends View {
   stopObserving () {
   }
 
-  //
-  // Runtime - Accessors - Navigation
   Navigation_Title () {
     return 'Import Transactions'
   }
@@ -323,9 +323,7 @@ class ImportTransactionsModalView extends View {
     self.disable_submitButton()
     const layer = view.layer
     layer.innerHTML = 'Send'
-    layer.addEventListener(
-      'click',
-      function (e) {
+    layer.addEventListener('click', function (e) {
         e.preventDefault()
         if (self.isSubmitButtonDisabled !== true) { // button is enabled
           self._tryToGenerateSend()

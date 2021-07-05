@@ -2,7 +2,7 @@
 
 const Animate = require('velocity-animate')
 const View = require('../../Views/View.web')
-const emoji_web = require('../../Emoji/emoji_web')
+const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 
 class NavigationBarView extends View {
   constructor (options, context) {
@@ -50,7 +50,15 @@ class NavigationBarView extends View {
       layer.style.color = self.defaultNavigationBarTitleColor
       layer.style.position = 'absolute'
       layer.style.top = '-1px'
-      self.context.themeController.StyleLayer_FontAsMiddlingBoldSansSerif(layer)
+      layer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+      if (self.context.isMobile === true) {
+        layer.style.fontSize = '13px'
+        layer.style.fontWeight = 'bold'
+      } else {
+        layer.style.fontSize = '12px' // design says 13 but chrome/webkit/electron renders oddly, simulating with…
+        layer.style.fontWeight = '500'
+        layer.style.letterSpacing = '0.5px'
+      }
       self.titleLayer_marginX_pxComponent = 16
       self.titleLayer_marginX_pctComponent = 0.15
       layer.style.boxSizing = 'border-box'
@@ -137,18 +145,21 @@ class NavigationBarView extends View {
     const clicked_fn = function () {
       self.emit(self.EventName_backButtonTapped()) // animated
     }
-    const themeController = self.context.themeController
-    if (typeof themeController === 'undefined' || !themeController) {
-      throw Error(self.constructor.name + " didn't find a context.themeController")
-    }
-    const _new_back_leftBarButtonView__fn = themeController.NavigationBarView__New_back_leftBarButtonView
-    if (typeof _new_back_leftBarButtonView__fn !== 'function' || !_new_back_leftBarButtonView__fn) {
-      throw Error("themeController didn't implement NavigationBarView__New_back_leftBarButtonView")
-    }
-    const view = _new_back_leftBarButtonView__fn.apply(themeController, [clicked_fn])
-    if (view == null || typeof view === 'undefined') {
-      throw Error('Got nil leftBarButtonView from themeController')
-    }
+
+    return self._NavigationBarView__New_back_leftBarButtonView(clicked_fn)
+  }
+
+  _NavigationBarView__New_back_leftBarButtonView (clicked_fn) {
+    const self = this
+    const view = commonComponents_navigationBarButtons.New_LeftSide_BackButtonView(self.context)
+    const layer = view.layer
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      if (view.isEnabled !== false) { // button is enabled
+        clicked_fn()
+      }
+      return false
+    })
     return view
   }
 
@@ -197,7 +208,7 @@ class NavigationBarView extends View {
     }
     //
     self.titleLayer.style.color = titleTextColor
-    self.titleLayer.innerHTML = emoji_web.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(self.context, titleString)
+    self.titleLayer.innerHTML = titleString;
     self.titleLayer.style.width = self._new_titleLayer_styleWidth_withExtraPaddingLeft(extra_paddingLeft)
     self.titleLayer.style.paddingLeft = extra_paddingLeft + 'px'
   }
@@ -229,10 +240,7 @@ class NavigationBarView extends View {
     //
     if (isAnimated === false) {
       self.titleLayer.style.color = titleTextColor
-      self.titleLayer.innerHTML = emoji_web.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(
-        self.context,
-        titleString
-      )
+      self.titleLayer.innerHTML = titleString
       self.titleLayer.style.width = to_styleWidth
       self.titleLayer.style.paddingLeft = extra_paddingLeft + 'px'
       return
@@ -240,10 +248,8 @@ class NavigationBarView extends View {
     const old_titleLayer = self.titleLayer
     const successor_titleLayer = self.titleLayer.cloneNode()
     successor_titleLayer.style.color = titleTextColor
-    successor_titleLayer.innerHTML = emoji_web.NativeEmojiTextToImageBackedEmojiText_orUnlessDisabled_NativeEmojiText(
-      self.context,
-      titleString
-    ) // set up with new title
+    successor_titleLayer.innerHTML = titleString
+
     successor_titleLayer.style.width = to_styleWidth
     successor_titleLayer.style.paddingLeft = extra_paddingLeft + 'px'
     //
@@ -548,7 +554,7 @@ class NavigationBarView extends View {
     const self = this
     if (self.isShowingScrollShadow !== false) {
       self.isShowingScrollShadow = false
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         self.layer.style.boxShadow = 'none'
       } else {
         self.layer.style.backgroundColor = 'none'
@@ -560,7 +566,7 @@ class NavigationBarView extends View {
     const self = this
     if (self.isShowingScrollShadow !== true) {
       self.isShowingScrollShadow = true
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         self.layer.style.boxShadow = '0 1px 0 0 rgba(0,0,0,0.60), 0 3px 6px 0 rgba(0,0,0,0.40)'
       } else { // avoiding shadow
         self.layer.style.backgroundColor = 'black'

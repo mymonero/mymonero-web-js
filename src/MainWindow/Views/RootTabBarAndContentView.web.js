@@ -210,13 +210,13 @@ class RootTabBarAndContentView extends TabBarAndContentView {
   overridable_isHorizontalBar () {
     const self = this
     //
-    return self.context.themeController.TabBarView_isHorizontalBar()
+    return self.context.isMobile
   }
 
   overridable_tabBarView_thickness () {
     const self = this
     //
-    return self.context.themeController.TabBarView_thickness()
+    return self.context.TabBarView_thickness
   }
 
   _selectTab_withContentView (tabBarContentView) {

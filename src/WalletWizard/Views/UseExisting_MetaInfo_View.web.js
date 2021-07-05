@@ -1,6 +1,5 @@
 'use strict'
 
-const View = require('../../Views/View.web')
 const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
@@ -26,10 +25,7 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
       self._setup_form_walletAddrAndKeysFields()
       self._setup_form_toggleLoginModeLayer()
     }
-    if (self.context.isLiteApp != true) {
-      self._setup_form_walletNameField()
-      self._setup_form_walletSwatchField()
-    }
+    
     setTimeout(function () { // after visible… (TODO: improve by doing on VDA or other trigger)
       self.mnemonicTextAreaView.layer.focus()
     }, 600)
@@ -37,7 +33,8 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
 
   _setup_form_walletMnemonicField () {
     const self = this
-    const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+    const div = document.createElement('div')
+    div.className = 'form_field'
     div.style.paddingBottom = '0' // instead of 20, here, special case... we will move the 20 to the "Or, use…" layer
     {
       const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('SECRET MNEMONIC', self.context)
@@ -82,7 +79,8 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
     self.addrAndKeysFieldsContainerLayer = document.createElement('div')
     self.addrAndKeysFieldsContainerLayer.style.display = 'none' // for now
     { // wallet address
-      const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+      const div = document.createElement('div')
+      div.className = 'form_field'
       div.style.paddingBottom = '0' // instead of 20, here, special case... we will move the 20 to the "Or, use…" layer
       {
         const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('ADDRESS', self.context)
@@ -120,7 +118,8 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
       self.addrAndKeysFieldsContainerLayer.appendChild(div)
     }
     { // wallet viewKey
-      const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+      const div = document.createElement('div')
+      div.className = 'form_field'
       div.style.paddingBottom = '0' // instead of 20, here, special case... we will move the 20 to the "Or, use…" layer
       {
         const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('VIEW KEY', self.context)
@@ -158,7 +157,8 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
       self.addrAndKeysFieldsContainerLayer.appendChild(div)
     }
     { // wallet spendKey
-      const div = commonComponents_forms.New_fieldContainerLayer(self.context)
+      const div = document.createElement('div')
+      div.className = 'form_field'
       div.style.paddingBottom = '0' // instead of 20, here, special case... we will move the 20 to the "Or, use…" layer
       {
         const labelLayer = commonComponents_forms.New_fieldTitle_labelLayer('SPEND KEY', self.context)
@@ -201,7 +201,21 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
   _setup_form_toggleLoginModeLayer () {
     const self = this
     const layer = document.createElement('div')
-    self.context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
+    if (self.context.isMobile === true) {
+      layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+      layer.style.fontSize = '11px'
+      layer.style.fontWeight = 'lighter'
+    } else {
+      layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+      layer.style.webkitFontSmoothing = 'subpixel-antialiased' // for chrome browser
+      layer.style.fontSize = '10px'
+      layer.style.letterSpacing = '0.5px'
+      if (typeof process !== 'undefined' && process.platform === 'linux') {
+        layer.style.fontWeight = '700' // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
+      } else {
+        layer.style.fontWeight = '300'
+      }
+    }
     layer.style.fontSize = '11px' // must set 11px so it matches visual weight of other labels
     layer.style.letterSpacing = '0'
     layer.style.color = '#8d8b8d'
@@ -289,16 +303,13 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
     }
     const view = commonComponents_navigationBarButtons.New_LeftSide_CancelButtonView(self.context)
     const layer = view.layer
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        if (view.isEnabled !== false) {
-          self.wizardController._fromScreen_userPickedCancel()
-        }
-        return false
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      if (view.isEnabled !== false) {
+        self.wizardController._fromScreen_userPickedCancel()
       }
-    )
+      return false
+    })
     return view
   }
 
