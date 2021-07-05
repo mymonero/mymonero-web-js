@@ -1541,6 +1541,17 @@ div#currency-table {
 #exchangePage table {
   width: 100%;
 }
+
+#selected-wallet-icon {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 32px;
+  height: 32px;
+  background-size: 32px 32px;
+  background-image: url("../img/wallet-00C6FF@3x.png") !important;
+}
+
 .textInput {
   display: inline-block;
   height: 29px;
