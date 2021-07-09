@@ -16,6 +16,7 @@ const ImportTransactionsModalView = require('./ImportTransactionsModalView.web')
 const FundsRequestQRDisplayView = require('../../RequestFunds/Views/FundsRequestQRDisplayView.web')
 const Currencies = require('../../CcyConversionRates/Currencies')
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
+require('../../Components/TransactionListItem')
 
 class WalletDetailsView extends View {
   constructor (options, context) {
@@ -766,19 +767,28 @@ class WalletDetailsView extends View {
       stateCachedTransactions.forEach(
         function (tx, i) {
           // console.log("tx", JSON.stringify(tx, null, '	'))
-          const listItemLayer = document.createElement('div')
+          const received_JSBigInt = tx.total_received ? (typeof tx.total_received === 'string' ? new JSBigInt(tx.total_received) : tx.total_received) : new JSBigInt('0')
+          const sent_JSBigInt = tx.total_sent ? (typeof tx.total_sent === 'string' ? new JSBigInt(tx.total_sent) : tx.total_sent) : new JSBigInt('0')
+          const date = tx.timestamp // TODO: this in UTC?
+          const dateString = date.toLocaleDateString( // (e.g. 27 NOV 2016)
+            'en-US'/* for now */,
+            { year: 'numeric', month: 'short', day: 'numeric' }
+          ).toUpperCase()
+          const listItemLayer = document.createElement('transaction-list-item')
+          listItemLayer.status = `${tx.isFailed ? 'REJECTED' : (tx.isConfirmed !== true || tx.isUnlocked !== true ? 'PENDING' : 'CONFIRMED')}`
+          listItemLayer.date = dateString
+          listItemLayer.paymentid = `${tx.payment_id || ''}`
+          listItemLayer.amount = monero_amount_format_utils.formatMoney(received_JSBigInt.subtract(sent_JSBigInt))
           listContainerLayer.appendChild(listItemLayer)
-          listItemLayer.style.position = 'relative'
-          listItemLayer.style.left = '0'
-          listItemLayer.style.top = '0'
-          listItemLayer.style.width = '100%'
-          listItemLayer.style.height = '74px'
+          // listItemLayer.style.position = 'relative'
+          // listItemLayer.style.left = '0'
+          // listItemLayer.style.top = '0'
+          // listItemLayer.style.width = '100%'
+          // listItemLayer.style.height = '74px'
 
-          listItemLayer.classList.add('utility')
-          listItemLayer.classList.add('hoverable-cell')
-          listItemLayer.addEventListener(
-            'click',
-            function (e) {
+          // listItemLayer.classList.add('utility')
+          // listItemLayer.classList.add('hoverable-cell')
+          listItemLayer.addEventListener('click', function (e) {
               e.preventDefault() // not that there would be one
               const clicked_layer = this
               // NOTE: here, we can safely capture the parent scope's `tx` or `i`
@@ -786,98 +796,98 @@ class WalletDetailsView extends View {
               return false
             }
           )
-          listItemLayer.appendChild(commonComponents_tables.New_tableCell_accessoryChevronLayer(self.context))
+          //listItemLayer.appendChild(commonComponents_tables.New_tableCell_accessoryChevronLayer(self.context))
           //
-          const layer1 = document.createElement('div')
-          layer1.style.width = '100%'
-          layer1.style.height = '38px'
-          listItemLayer.appendChild(layer1)
+          // const layer1 = document.createElement('div')
+          // layer1.style.width = '100%'
+          // layer1.style.height = '38px'
+          // listItemLayer.appendChild(layer1)
           //
           { // Amount
-            const div = document.createElement('div')
-            layer1.appendChild(div)
-            div.style.verticalAlign = 'top'
-            div.style.textAlign = 'left'
-            div.style.fontSize = '12px' // design says 13px but looks too big in actual app
-            div.style.fontWeight = '400'
-            div.style.letterSpacing = '0.5px'
-            div.style.float = 'left'
-            div.style.height = '34px'
-            div.style.boxSizing = 'border-box'
-            div.style.padding = '21px 0 0 16px'
-            div.style.fontFamily = 'Native-Regular, input, menlo, monospace'
-            div.style.color = tx.approx_float_amount < 0 ? '#F97777' : '#FCFBFC'
-            // div.style.webkitUserSelect = "all" // decided to comment this because it interferes with cell click
-            const received_JSBigInt = tx.total_received ? (typeof tx.total_received === 'string' ? new JSBigInt(tx.total_received) : tx.total_received) : new JSBigInt('0')
-            const sent_JSBigInt = tx.total_sent ? (typeof tx.total_sent === 'string' ? new JSBigInt(tx.total_sent) : tx.total_sent) : new JSBigInt('0')
-            div.innerHTML = monero_amount_format_utils.formatMoney(received_JSBigInt.subtract(sent_JSBigInt))
+            // const div = document.createElement('div')
+            // layer1.appendChild(div)
+            // div.style.verticalAlign = 'top'
+            // div.style.textAlign = 'left'
+            // div.style.fontSize = '12px' // design says 13px but looks too big in actual app
+            // div.style.fontWeight = '400'
+            // div.style.letterSpacing = '0.5px'
+            // div.style.float = 'left'
+            // div.style.height = '34px'
+            // div.style.boxSizing = 'border-box'
+            // div.style.padding = '21px 0 0 16px'
+            // div.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+            // div.style.color = tx.approx_float_amount < 0 ? '#F97777' : '#FCFBFC'
+            // // div.style.webkitUserSelect = "all" // decided to comment this because it interferes with cell click
+            // const received_JSBigInt = tx.total_received ? (typeof tx.total_received === 'string' ? new JSBigInt(tx.total_received) : tx.total_received) : new JSBigInt('0')
+            // const sent_JSBigInt = tx.total_sent ? (typeof tx.total_sent === 'string' ? new JSBigInt(tx.total_sent) : tx.total_sent) : new JSBigInt('0')
+            // div.innerHTML = monero_amount_format_utils.formatMoney(received_JSBigInt.subtract(sent_JSBigInt))
           }
           { // Date
-            const div = document.createElement('div')
-            layer1.appendChild(div)
-            div.style.verticalAlign = 'top'
-            div.style.float = 'right'
+            // const div = document.createElement('div')
+            // layer1.appendChild(div)
+            // div.style.verticalAlign = 'top'
+            // div.style.float = 'right'
 
-            div.style.fontSize = '12px' // design says 13px but looks too big in actual app
-            div.style.letterSpacing = '0.5px'
-            div.style.fontWeight = '100'
+            // div.style.fontSize = '12px' // design says 13px but looks too big in actual app
+            // div.style.letterSpacing = '0.5px'
+            // div.style.fontWeight = '100'
 
-            div.style.height = '34px'
-            div.style.boxSizing = 'border-box'
-            div.style.padding = '21px 41px 0 0'
-            div.style.fontFamily = 'Native-Light, input, menlo, monospace'
-            div.style.color = '#FCFBFC'
-            const date = tx.timestamp // TODO: this in UTC?
-            const dateString = date.toLocaleDateString( // (e.g. 27 NOV 2016)
-              'en-US'/* for now */,
-              { year: 'numeric', month: 'short', day: 'numeric' }
-            ).toUpperCase()
-            div.innerHTML = dateString
+            // div.style.height = '34px'
+            // div.style.boxSizing = 'border-box'
+            // div.style.padding = '21px 41px 0 0'
+            // div.style.fontFamily = 'Native-Light, input, menlo, monospace'
+            // div.style.color = '#FCFBFC'
+            // const date = tx.timestamp // TODO: this in UTC?
+            // const dateString = date.toLocaleDateString( // (e.g. 27 NOV 2016)
+            //   'en-US'/* for now */,
+            //   { year: 'numeric', month: 'short', day: 'numeric' }
+            // ).toUpperCase()
+            // div.innerHTML = dateString
           }
           //
-          const layer2 = document.createElement('div')
-          layer2.style.width = '100%'
-          layer2.style.height = '34px'
-          listItemLayer.appendChild(layer2)
+          // const layer2 = document.createElement('div')
+          // layer2.style.width = '100%'
+          // layer2.style.height = '34px'
+          // listItemLayer.appendChild(layer2)
           //
           { // Payment ID (or contact name?)
-            const div = document.createElement('div')
-            layer2.appendChild(div)
-            div.style.verticalAlign = 'top'
-            div.style.float = 'left'
-            div.style.width = 'auto'
-            div.style.maxWidth = '189px'
-            div.style.boxSizing = 'border-box'
-            div.style.padding = '1px 0 0 16px'
-            //
-            div.style.whiteSpace = 'nowrap'
-            div.style.overflow = 'hidden'
-            div.style.textOverflow = 'ellipsis'
-            //
-            div.style.fontFamily = 'Native-Light, input, menlo, monospace'
-            div.style.fontSize = '13px'
-            div.style.color = '#9E9C9E'
-            div.style.fontWeight = '100'
-            //
-            div.innerHTML = `${tx.payment_id || ''}`
+            // const div = document.createElement('div')
+            // layer2.appendChild(div)
+            // div.style.verticalAlign = 'top'
+            // div.style.float = 'left'
+            // div.style.width = 'auto'
+            // div.style.maxWidth = '189px'
+            // div.style.boxSizing = 'border-box'
+            // div.style.padding = '1px 0 0 16px'
+            // //
+            // div.style.whiteSpace = 'nowrap'
+            // div.style.overflow = 'hidden'
+            // div.style.textOverflow = 'ellipsis'
+            // //
+            // div.style.fontFamily = 'Native-Light, input, menlo, monospace'
+            // div.style.fontSize = '13px'
+            // div.style.color = '#9E9C9E'
+            // div.style.fontWeight = '100'
+            // //
+            // div.innerHTML = `${tx.payment_id || ''}`
           }
           { // Status
-            const div = document.createElement('div')
-            layer2.appendChild(div)
-            div.style.float = 'right'
-            div.style.display = 'inline-block'
-            div.style.textAlign = 'right'
-            div.style.verticalAlign = 'top'
+            // const div = document.createElement('div')
+            // layer2.appendChild(div)
+            // div.style.float = 'right'
+            // div.style.display = 'inline-block'
+            // div.style.textAlign = 'right'
+            // div.style.verticalAlign = 'top'
 
-            div.style.fontFamily = 'Native-Regular, input, menlo, monospace'
-            div.style.fontWeight = '500'
-            div.style.fontSize = '10px' // design says 11 but next to 13px->12px, looks too big, so, 10
-            div.style.letterSpacing = '0.5px'
+            // div.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+            // div.style.fontWeight = '500'
+            // div.style.fontSize = '10px' // design says 11 but next to 13px->12px, looks too big, so, 10
+            // div.style.letterSpacing = '0.5px'
 
-            div.style.boxSizing = 'border-box'
-            div.style.padding = '3px 41px 0 0'
-            div.style.color = '#6B696B'
-            div.innerHTML = `${tx.isFailed ? 'REJECTED' : (tx.isConfirmed !== true || tx.isUnlocked !== true ? 'PENDING' : 'CONFIRMED')}`
+            // div.style.boxSizing = 'border-box'
+            // div.style.padding = '3px 41px 0 0'
+            // div.style.color = '#6B696B'
+            // div.innerHTML = `${tx.isFailed ? 'REJECTED' : (tx.isConfirmed !== true || tx.isUnlocked !== true ? 'PENDING' : 'CONFIRMED')}`
           }
         }
       )
