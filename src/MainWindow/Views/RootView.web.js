@@ -4,13 +4,21 @@ const View = require('../../Views/View.web')
 const RootFooterView = require('./RootFooterView.web')
 const ConnectivityMessageBarView = require('./ConnectivityMessageBarView.web')
 const RootTabBarAndContentView = require('./RootTabBarAndContentView.web')
-const LandingPageGreeting = require('../../Components/LandingPageGreeting')
+require('../../Components/LandingPageGreeting')
+require('../../Components/FooterMenu');
+require("../../Components/FundRequest");
+require("../../Components/Contacts");
+require("../../Components/LoginWithMnemonic.js")
+
 class RootView extends View {
   constructor (options, context) {
     super(options, context)
 
     const self = this
     self.setup_views()
+    console.log(self);
+    // We should have had the content-page tag added by now,
+    
   }
 
   setup_views () {
@@ -26,7 +34,8 @@ class RootView extends View {
     const tabBarViewAndContentViewLayer = self.tabBarViewAndContentView.layer
     tabBarViewAndContentViewLayer.style.height = 'calc(100% - 32px)'
 
-    const footerView = new RootFooterView({}, self.context)
+    const footerView = new RootFooterView({ tag: 'footer-menu' }, self.context)
+    console.log(footerView);
     self.footerView = footerView
     self.addSubview(footerView)
 
@@ -40,6 +49,7 @@ class RootView extends View {
         e.preventDefault()
       }
     }
+
   }
 }
 

@@ -15,6 +15,10 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
+        test: /\/Components\/\.(js)$/i,
+        use: ['style-loader', 'css-loader']
+      },
+      {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource'
       },
@@ -37,7 +41,9 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: "node_modules/@mymonero/mymonero-app-bridge/MyMoneroLibAppCpp_WASM.js", to: "../assets/MyMoneroLibAppCpp_WASM.js" },
-        { from: "node_modules/@mymonero/mymonero-app-bridge/MyMoneroLibAppCpp_WASM.wasm", to: "../assets/MyMoneroLibAppCpp_WASM.wasm" }
+        { from: "node_modules/@mymonero/mymonero-app-bridge/MyMoneroLibAppCpp_WASM.wasm", to: "../assets/MyMoneroLibAppCpp_WASM.wasm" },
+        { from: "icon*.png", to: "../dist/assets/img", context: path.resolve(__dirname, 'src', 'assets/img'), },
+        { from: "*.svg", to: "../dist/assets/img", context: path.resolve(__dirname, 'src', 'assets/img'), }
       ]
     })
   ],

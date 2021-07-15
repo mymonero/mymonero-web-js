@@ -21,6 +21,7 @@ class TabBarItemButtonView extends View {
     self.isEnabled = true
     self.setup_views()
     self.Deselect() // also sets selected state
+    console.log(self);
   }
 
   setup_views () {
