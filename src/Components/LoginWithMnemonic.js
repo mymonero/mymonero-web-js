@@ -19,7 +19,7 @@ export class LoginWithMnemonicView extends NavigationController(LitElement) {
 
   constructor() {
     super();
-    this.mnemonicString = "";
+    this.mnemonicString = "domestic hitched aztec motherly friendly agnostic ionic uneven family beyond portents gave nibs waxing tuxedo giving bugs yeti wield tsunami mews drying zodiac zodiac bugs";
   }
 
   static get properties() {
@@ -94,7 +94,7 @@ export class LoginWithMnemonicView extends NavigationController(LitElement) {
       console.log("Logged in, yay");
       console.log(this);
       ____reEnable_userIdleAndScreenSleepFromSubmissionDisable() // we must call this manually as we are not re-enabling the form (or it will break user idle!!)
-      self.selfNavigate("fundRequest") // will dismiss
+      self.selfNavigate("walletsListView") // will dismiss
     }
     //
 

@@ -5,7 +5,8 @@ const NavigationController = (superClass) => class extends superClass {
         let routeMap = {
             "fundRequest": "fund-request",
             "contacts": "contacts-view",
-            "loginWithMnemonic": "login-mnemonic-view"
+            "loginWithMnemonic": "login-mnemonic-view",
+            "walletsListView": "wallets-list-view"
         }
         console.log(event);
         console.log(this.context);
@@ -22,7 +23,8 @@ const NavigationController = (superClass) => class extends superClass {
         let routeMap = {
             "fundRequest": "fund-request",
             "contacts": "contacts-view",
-            "loginWithMnemonic": "login-mnemonic-view"
+            "loginWithMnemonic": "login-mnemonic-view",
+            "walletsListView": "wallets-list-view"
         }
         
         console.log(this.context);

@@ -8,8 +8,9 @@ require('../../Components/LandingPageGreeting')
 require('../../Components/FooterMenu');
 require("../../Components/FundRequest");
 require("../../Components/Contacts");
-require("../../Components/LoginWithMnemonic.js")
-
+require("../../Components/LoginWithMnemonic.js");
+require("../../Components/WalletsListView");
+require("../../Components/WalletPanel");
 class RootView extends View {
   constructor (options, context) {
     super(options, context)
