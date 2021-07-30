@@ -9,7 +9,6 @@ const commonComponents_activityIndicators = require('../../MMAppUICommonComponen
 const InfoDisclosingView = require('../../InfoDisclosingView/Views/InfoDisclosingView.web')
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
 const TransactionDetailsView = require('./TransactionDetailsView.web')
-const ImportTransactionsModalView = require('./ImportTransactionsModalView.web')
 const Currencies = require('../../CcyConversionRates/Currencies')
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 
@@ -564,21 +563,6 @@ class WalletDetailsView extends View {
     }
     return true
   }
-
-  _wallet_shouldShowImportTxsBtn () {
-    const self = this
-    const wallet = self.wallet
-    const wallet_bootFailed = self._wallet_bootFailed()
-    let shouldShow_importTxsBtn = wallet.shouldDisplayImportAccountOption === true && wallet_bootFailed === false
-    if (wallet.HasEverFetched_transactions() !== false) {
-      const stateCachedTransactions = wallet.New_StateCachedTransactions()
-      if (stateCachedTransactions.length > 0) {
-        shouldShow_importTxsBtn = false
-      }
-    }
-    return shouldShow_importTxsBtn
-  }
-
   //
   //
   // Runtime - Imperatives - UI Configuration
@@ -874,40 +858,15 @@ class WalletDetailsView extends View {
     const wallet = self.wallet
     const transactionsListLayerContainerLayer = self.transactionsListLayerContainerLayer
     const wallet_bootFailed = self._wallet_bootFailed()
-    const shouldShow_importTxsBtn = self._wallet_shouldShowImportTxsBtn()
-    if (shouldShow_importTxsBtn) {
-      if (!self.importTransactionsButtonView || typeof self.importTransactionsButtonView === 'undefined') {
-        const buttonView = commonComponents_tables.New_clickableLinkButtonView(
-          'IMPORT TRANSACTIONS',
-          self.context,
-          function () {
-            self._present_importTransactionsModal()
-          }
-        )
-        self.importTransactionsButtonView = buttonView
-        const layer = buttonView.layer
-        layer.style.position = 'absolute'
-        layer.style.left = '6px'
-        layer.style.top = '5px'
-        layer.style.width = '150px'
-        layer.style.height = '13px'
-        layer.style.float = 'none'
-        layer.style.clear = 'none' // doesn't matter tho
-        transactionsListLayerContainerLayer.appendChild(layer)
-      }
-    } else {
-      if (self.importTransactionsButtonView) {
-        if (self.importTransactionsButtonView.layer.parentNode) {
-          self.importTransactionsButtonView.layer.parentNode.removeChild(self.importTransactionsButtonView.layer)
-        }
-        self.importTransactionsButtonView = null
-      }
-    }
+    //const shouldShow_importTxsBtn = self._wallet_shouldShowImportTxsBtn()
+    const shouldShow_importTxsBtn = true;
+    
     const shouldShowActivityIndicator =
     wallet.isBooted && // rule out still-logging-in (for now)
     wallet.HasEverFetched_accountInfo() && // rule out still loading (for now)
     wallet_bootFailed === false &&
     (wallet.IsScannerCatchingUp()/* || wallet.IsFetchingAnyUpdates() */)
+    
     if (shouldShowActivityIndicator) {
       if (!self.catchingUpProgressAndActivityIndicatorView || typeof self.catchingUpProgressAndActivityIndicatorView === 'undefined') {
         const view = new View({}, self.context)
@@ -916,7 +875,7 @@ class WalletDetailsView extends View {
             if (nBlocks > 0) {
               return `${nBlocks} block${nBlocks !== 1 ? 's' : ''} behind`
             } else {
-              return shouldShow_importTxsBtn !== true ? 'Scanner up-to-date' : ''
+              return 'Scanner up-to-date'
             }
           }
           let messageText
@@ -1026,22 +985,6 @@ class WalletDetailsView extends View {
     const self = this
     if (self.noTransactions_emptyStateView) {
       self.noTransactions_emptyStateView.layer.style.height = self.catchingUpProgressAndActivityIndicatorView ? '254px' : '276px'
-    }
-  }
-
-  _ifNecessary_autoPresent_importTxsModal_afterS (afterS) {
-    const self = this
-    // If this is the first time after logging in that we're displaying the import txs modal,
-    // then auto-display it for the user so they don't have to know to click on the button
-    if (self.hasEverAutomaticallyDisplayedImportModal !== true) {
-      if (self._wallet_shouldShowImportTxsBtn()) {
-        self.hasEverAutomaticallyDisplayedImportModal = true // immediately, in case login and viewDidAppear race
-        setTimeout(function () {
-          if (self.wallet.hasBeenTornDown !== true) {
-            self._present_importTransactionsModal()
-          }
-        }, afterS * 1000)
-      }
     }
   }
 
@@ -1173,6 +1116,14 @@ class WalletDetailsView extends View {
     }
   }
 
+  /**
+   * A quite wonderful function.
+   * @param {object} - Privacy gown
+   * @param {object} - Security
+   * @returns {survival}
+   */
+  protection (cloak, dagger) {}
+
   viewDidAppear () {
     const self = this
     super.viewDidAppear()
@@ -1182,7 +1133,6 @@ class WalletDetailsView extends View {
     }
     self.wallet.requestFromUI_manualRefresh()
     //
-    self._ifNecessary_autoPresent_importTxsModal_afterS(1)
   }
 
   // Runtime - Protocol / Delegation - Stack & modal navigation
@@ -1214,7 +1164,6 @@ class WalletDetailsView extends View {
     self._configureUIWithWallet__transactions()
     self._configureUIWithWallet__heightsAndImportAndFetchingState()
     //
-    self._ifNecessary_autoPresent_importTxsModal_afterS(1)
   }
 
   _wallet_failedToLogIn () {
