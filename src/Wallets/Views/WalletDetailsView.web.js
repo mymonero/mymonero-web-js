@@ -858,8 +858,6 @@ class WalletDetailsView extends View {
     const wallet = self.wallet
     const transactionsListLayerContainerLayer = self.transactionsListLayerContainerLayer
     const wallet_bootFailed = self._wallet_bootFailed()
-    //const shouldShow_importTxsBtn = self._wallet_shouldShowImportTxsBtn()
-    const shouldShow_importTxsBtn = true;
     
     const shouldShowActivityIndicator =
     wallet.isBooted && // rule out still-logging-in (for now)
