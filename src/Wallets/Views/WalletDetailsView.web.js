@@ -1114,14 +1114,6 @@ class WalletDetailsView extends View {
     }
   }
 
-  /**
-   * A quite wonderful function.
-   * @param {object} - Privacy gown
-   * @param {object} - Security
-   * @returns {survival}
-   */
-  protection (cloak, dagger) {}
-
   viewDidAppear () {
     const self = this
     super.viewDidAppear()
