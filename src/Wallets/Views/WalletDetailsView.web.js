@@ -1036,16 +1036,6 @@ class WalletDetailsView extends View {
       self.current_transactionDetailsView = view
     }
   }
-
-  _present_importTransactionsModal () {
-    const self = this
-    const view = new ImportTransactionsModalView({ wallet: self.wallet }, self.context)
-    self.currentlyPresented_ImportTransactionsModalView = view
-    const navigationView = new StackAndModalNavigationView({}, self.context)
-    navigationView.SetStackViews([view])
-    self.navigationController.PresentView(navigationView, true)
-  }
-
   //
   // Imperatives - Button functions - CSV export
   _exportTransactionsCSV () {
