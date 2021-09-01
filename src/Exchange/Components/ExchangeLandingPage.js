@@ -13,14 +13,16 @@ export class ExchangeLandingPage extends ExchangeNavigationController(LitElement
 
     connectedCallback() {
         super.connectedCallback();
-        console.log("Page Template view connected to DOM");
+        console.log("ELP Template view connected to DOM");
         console.log(this);
+        console.log(this.context);
         // TODO: disable fiat options if fiat api status returns an error
     }
     
     constructor() {
         super();
         this.clickHandler = this.clickHandler;
+        this.context = {};
         this.providerServices = [
             {
                 service_provider: "changenow",
@@ -63,6 +65,12 @@ export class ExchangeLandingPage extends ExchangeNavigationController(LitElement
         ];
     }
     
+    static get properties() {
+        return {
+          context: Object,
+        }
+      }
+
     clickHandler(event) {
         console.log(event);
     }
@@ -72,7 +80,7 @@ export class ExchangeLandingPage extends ExchangeNavigationController(LitElement
         <div id="exchange-landing-page">
             <div></div>
             ${this.providerServices.map((service) => {
-                return html`<provider-card .service=${service} @click=${this.clickHandler}></provider-card>`
+                return html`<provider-card .service=${service} .context=${this.context} @click=${this.clickHandler}></provider-card>`
             })}            
             </div>
         </div>

@@ -98,6 +98,7 @@ class StackAndModalNavigationView extends StackNavigationView {
       const modalView_layer = modalView.layer
       const preExisting_boxShadow = modalView_layer.style.boxShadow
       function __configureModalLayerForTransitionEnd () {
+        modalView_layer.classList.add("modal-view-layer");
         modalView_layer.style.position = 'absolute' // final style.position needs to be absolute or nav bar effects (due to higher effective z-index) will appear above a position:relative modal
         modalView_layer.style.zIndex = '10'
       }

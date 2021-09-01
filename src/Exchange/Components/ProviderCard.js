@@ -67,6 +67,8 @@ export class ExchangeServiceProviderCard extends ExchangeNavigationController(Li
     console.log("Page Template view connected to DOM");
     console.log(this);
     console.log(this.service);
+    console.log(this.context);
+    // TODO -- refactor context passing to navigateToPage to an event listener
     this.addEventListener('click', () => {
         console.log(this.service);
         if (this.service.navigationType == 'externalUrl') {
@@ -84,13 +86,14 @@ export class ExchangeServiceProviderCard extends ExchangeNavigationController(Li
     if (typeof(window.location) !== 'undefined') {
       window.open(url, "_blank");
     } else if (typeof(global) !== "undefined") {
-      
+
     }
   }
 
   static get properties() {
     return {
       providerServices: { type: Array },
+      context: { type: Object },
       service: { type: Object }
     }
   }
@@ -105,6 +108,7 @@ export class ExchangeServiceProviderCard extends ExchangeNavigationController(Li
   constructor() {
     super();
     this.service = {};
+    this.context = {};
     this.destinationView = "";
     // this.providerServices = [
     //     {

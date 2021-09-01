@@ -4,6 +4,9 @@
 const ExchangeNavigationController = (superClass) => class extends superClass {
     /* class fields & methods to extend superClass with */
     navigateToPage(destination) {
+        console.log(this);
+        console.log("Navigate to page");
+        console.log(this.context);
         let routeMap = {
             "changenowBuyWithFiatView": "changenow-buy-with-fiat-view",
             "changenowFixedRateView": "changenow-fixed-rate-view",
@@ -34,6 +37,27 @@ const ExchangeNavigationController = (superClass) => class extends superClass {
             //
             instance.navigateToPage(destination);
         })
+    }
+
+    renderStyles() {
+        console.log("WTF");
+        let styleElement = document.getElementById("lit-styles");
+        if (typeof(styleElement) === "undefined") {
+            let styles = document.createElement("style");
+            styles.innerHTML = `
+
+                #leftBarButtonHolderView, #rightBarButtonHolderView {
+                    z-index: 10;
+                }
+                #navigation-bar-view-sub-wrapper {
+                    display: none;
+                } 
+            `
+            styles.id = "lit-styles";
+            let navigationView = document.getElementById("NavigationBarView");
+            navigationView.appendChild(styles);
+            console.log("Append those styles");
+        }
     }
 
     clearBackButton() {
