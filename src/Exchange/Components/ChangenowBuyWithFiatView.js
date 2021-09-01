@@ -6,7 +6,7 @@ let fiatApi = new FiatApi({ apiKey: "b1c7ed0a20710e005b65e304b74dce3253cd9ac1600
 require("./WalletSelector");
 require("./BuyWithFiatLoadingScreenChangenowView");
 require("./SearchableSelect");
-
+require("./ActivityIndicator");
 export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitElement) {
     static get styles() {
         return css`
@@ -18,7 +18,6 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             min-width: 41px;
             height: 41px;
             z-index: 12;
-            background: red;
         }
         .submit-button {
             z-index: 13;
@@ -262,8 +261,12 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             estimatedCryptoRange: {
                 type: Object
             },
-            currencyCode: { type: String },
-            currencyName: { type: String },
+            inCurrencyCode: { type: String },
+            inCurrencyName: { type: String },
+            inCurrencyValue: { type: String },
+            outCurrencyCode: { type: String },
+            outCurrencyName: { type: String },
+            outCurrencyValue: { type: String },
             estimateUsingFiat: { type: Boolean },
             context: { type: Object }
         }
@@ -272,11 +275,11 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
     // This function listens for a custom event dispatched from the select box. 
     // It uses the details to update the desired currency
     async updateSelectedCurrency(event) {
-        this.currencyCode = event.detail.selectValue;
-        this.currencyName = event.detail.selectText;
+        this.inCurrencyCode = event.detail.selectValue;
+        this.inCurrencyName = event.detail.selectText;
         // TODO: We need to fire the following events off in parallel
-        this.estimatedFiatRange = await this.fiatApi.getMinMaxRange(this.currencyCode, "XMR");
-        this.estimatedCryptoRange = await this.fiatApi.getMinMaxRange("XMR", this.currencyCode);
+        this.estimatedFiatRange = await this.fiatApi.getMinMaxRange(this.inCurrencyCode, "XMR");
+        this.estimatedCryptoRange = await this.fiatApi.getMinMaxRange("XMR", this.inCurrencyCode);
         // Update placeholder with min-max
         console.log(this.estimatedFiatRange);
         console.log(this.estimatedCryptoRange);
@@ -287,6 +290,8 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         console.log("handle estimate POST fired");
         console.log("Test?");
         console.log(this);
+        console.log(this.inCurrencyCode);
+        console.log(this.inCurrencyValue);
         console.log(event);
         let options = {
             detail: { 
@@ -359,6 +364,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             let fiatCurrencies = await this.fiatApi.getAvailableFiatCurrencies();
             console.log(fiatCurrencies);
             this.fiatCurrencies = fiatCurrencies;
+            console.log("Reqhest update");
             this.requestUpdate(); // Check if this is necessary
             //this.displayLoadingScreen = false;
             this.displayOrderScreen = true;
@@ -435,9 +441,14 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         this.estimatedFiatRange = {};
         this.estimatedCryptoRange = {};
         this.fiatMinMaxString = "Please select a currency";
-        this.currencyCode = "";
-        this.currencyName = "";
+        this.inCurrencyCode = "";
+        this.inCurrencyName = "";
+        this.inCurrencyValue = "";
+        this.outCurrencyCode = "XMR";
+        this.outCurrencyName = "Monero";
+        this.outCurrencyValue = "";
         this.estimateUsingFiat = true;
+        this.outCurrencyValue = "";
         this.fiatCurrencies = [{
             "block_explorer_url_mask": null,
             "currency_type": "FIAT",
@@ -479,8 +490,17 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
     }
     
     handleCurrencyInput(event) {
+        if (event.path[0].id == "inCurrencyValue") {
+            this.inCurrencyValue = event.path[0].value;
+        } else if (event.path[0].id == "outCurrencyValue") {
+            this.outCurrencyValue = event.path[0].value;
+        }
+        console.log(this);
         console.log(event);
-
+        // We would invoke a timer, and when the timer expires, do a GET (giving the user a chance to finish typing)
+        console.log(this.inCurrencyCode);
+        console.log(this.inCurrencyValue);
+        console.log(this.inCurrencyValue,this.outCurrencyValue)
     }
     
     render() {
@@ -495,6 +515,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             </div>
             <div class="content-container empty-page-content-container">
                 <!-- <buy-with-fiat-loading-screen-changenow></buy-with-fiat-loading-screen-changenow> -->
+                <activity-indicator .loadingText="Beep boop"></activity-indicator>
                 <buy-with-fiat-loading-screen-changenow ?hidden=${!this.displayLoadingScreen}></buy-with-fiat-loading-screen-changenow>
                 <!-- <div class="message-label exchangeRate" id="explanatory-message">Oh look loading screen</div> -->
                 <div class="base-button hoverable-cell navigation-blue-button-enabled action right-add-button exchange-button" id="exchange-xmr">dafuqExchange XMR</div>
@@ -515,10 +536,10 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                             <table class="full-width">
                                 <tbody><tr>
                                     <td>   
-                                        <div class="field_title form-field-title">${this.currencyName} to send
+                                        <div class="field_title form-field-title">${this.inCurrencyName} to send
                                             <div style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0;">
                                                 <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                                <input id="inCurrencyValue" @input=${this.handleCurrencyInput} class="textInput currencyInput" type="text" placeholder="00.00" value="">
+                                                <input id="inCurrencyValue" @input=${this.handleCurrencyInput} class="textInput currencyInput" type="text" placeholder="00.00" .value=${this.inCurrencyValue}>
                                                 <div id="inCurrencySelector">
                                                     <searchable-select .values=${this.fiatCurrencies}></searchable-select>
                                                     <!-- <select id="inCurrencySelectList" class="currencySelect">
@@ -532,11 +553,16 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                                         </div>
                                     </td>
                                     <td>
-                                        <div id="inInputDiv" class="field_title form-field-title"><span id="outCurrencyTickerCode">BTC</span> you will receive
+                                        <div id="inInputDiv" class="field_title form-field-title"><span id="outCurrencyTickerCode">XMR</span> you will receive
                                             <div class="" style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0">
                                                 <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                                <input id="outCurrencyValue" class="textInput currencyInput" type="text" placeholder="00.00" value="">
-                                                <div id="outCurrencySelector"><select id="outCurrencySelectList" class="currencySelect"><option value="BTC">BTC</option><option value="ETH">ETH</option></select></div><div class="selectIndicator" style="right: 12px; top: 33px;"></div>
+                                                <input id="outCurrencyValue" @input=${this.handleCurrencyInput} class="textInput currencyInput" type="text" placeholder="00.00" .value=${this.outCurrencyValue}>
+                                                <div id="outCurrencySelector">
+                                                    <select id="outCurrencySelectList" class="currencySelect">
+                                                        <option value="XMR">XMR</option>
+                                                    </select>
+                                                </div>
+                                                <div class="selectIndicator" style="right: 12px; top: 33px;"></div>
                                             </div>
                                         </div>
                                     </td>
@@ -603,14 +629,14 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         }
         
         </style>
-        <div id="addressValidationLoader" class="graphicAndLabel activityIndicators on-normal-background" style="font-family: Native-Light, input, menlo, monospace; -webkit-font-smoothing: subpixel-antialiased; font-size: 10px; letter-spacing: 0.5px; font-weight: 300; color: rgb(158, 156, 158); padding-left: 0px;">
+        <!-- <div id="addressValidationLoader" class="graphicAndLabel activityIndicators on-normal-background" style="font-family: Native-Light, input, menlo, monospace; -webkit-font-smoothing: subpixel-antialiased; font-size: 10px; letter-spacing: 0.5px; font-weight: 300; color: rgb(158, 156, 158); padding-left: 0px;">
             <div class="loader" id="addressValidationLoaderContainer">
                 <div class="block block1"></div>
                 <div class="block block2"></div>
                 <div class="block block3"></div>
             </div>&nbsp;
             <span id="addressValidationLoaderText">Validating Address</span>
-        </div>
+        </div> -->
             </div>
             <div id="validation-messages"></div>
             <div id="address-messages"></div>
@@ -618,13 +644,13 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         </div>
                 
         </div>
-        <div id="order-status">
+        <!-- <div id="order-status">
 
-        </div>
+        </div> -->
     </div>
-    <div id="exchangePage">
+    <!-- <div id="exchangePage">
          
-                </div>
+                </div> -->
                 </div></div></div>
             </div>
         </div>
