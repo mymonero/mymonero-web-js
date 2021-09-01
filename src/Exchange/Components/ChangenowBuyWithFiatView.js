@@ -10,6 +10,46 @@ require("./SearchableSelect");
 export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitElement) {
     static get styles() {
         return css`
+        .submit-button-wrapper {
+            position: fixed;
+            top: -45px;
+            right: 16px;
+            width: 15%;
+            min-width: 41px;
+            height: 41px;
+            z-index: 12;
+            background: red;
+        }
+        .submit-button {
+            z-index: 13;
+            cursor: default;
+            border-radius: 3px;
+            height: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            text-align: center;
+            border: none;
+            text-decoration: none;
+            line-height: 24px;
+            box-sizing: border-box;
+            width: auto;
+            padding: 0px 8px;
+            background-color: rgb(0, 198, 255);
+            box-shadow: rgb(22 20 22) 0px 0.5px 1px 0px, rgb(255 255 255 / 20%) 0px 0.5px 0px 0px inset;
+            color: rgb(22, 20, 22);
+            font-weight: 300;
+            -webkit-font-smoothing: subpixel-antialiased;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            float: right;
+            margin-top: 5px;
+            -webkit-app-region: no-drag;
+            position: fixed;
+            right: 16px;
+            font-weight: bold;
+            top: -40px;
+            z-index: 10000;
+        }
+        
         .hidden {
             display: none !important;
         }
@@ -215,18 +255,102 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             fiatCurrencies: { 
                 type: Array,
                 reflect: true
-            }
+            },
+            estimatedFiatRange: {
+                type: Object
+            }, 
+            estimatedCryptoRange: {
+                type: Object
+            },
+            currencyCode: { type: String },
+            currencyName: { type: String },
+            estimateUsingFiat: { type: Boolean },
+            context: { type: Object }
         }
     }
     
+    // This function listens for a custom event dispatched from the select box. 
+    // It uses the details to update the desired currency
+    async updateSelectedCurrency(event) {
+        this.currencyCode = event.detail.selectValue;
+        this.currencyName = event.detail.selectText;
+        // TODO: We need to fire the following events off in parallel
+        this.estimatedFiatRange = await this.fiatApi.getMinMaxRange(this.currencyCode, "XMR");
+        this.estimatedCryptoRange = await this.fiatApi.getMinMaxRange("XMR", this.currencyCode);
+        // Update placeholder with min-max
+        console.log(this.estimatedFiatRange);
+        console.log(this.estimatedCryptoRange);
+
+    }
+
+    async fireEstimateEvent(event) {
+        console.log("handle estimate POST fired");
+        console.log("Test?");
+        console.log(this);
+        console.log(event);
+        let options = {
+            detail: { 
+                
+            },
+            bubbles: true,
+            composed: true
+        };
+        let estimatePostEvent = new CustomEvent("fire-estimate-event", options)
+        this.dispatchEvent(estimatePostEvent, options)
+    }
+    
+    async handleEstimateEvent(event) {
+        console.log("Hi from handle stimate event");
+        console.log(this);
+        console.log(event);
+    }
+
+    renderStyles() {
+        console.log("Should append styles");
+        let styleElement = document.getElementById("lit-styles");
+        typeof(styleElement);
+        if (styleElement === null) {
+            let styles = document.createElement("style");
+            styles.innerHTML = `
+                #stack-view-stage-view {
+                    z-index: 21 !important;
+                }
+                #leftBarButtonHolderView {
+                    z-index: 10;
+                }
+                #rightBarButtonHolderView {
+                    display: none;
+                }
+                #navigation-bar-view-sub-wrapper {
+                    display: none;
+                } 
+                changenow-buy-with-fiat-view {
+                    z-index: 50;
+                }
+            `
+            styles.id = "lit-styles";
+            let navigationView = document.getElementById("NavigationBarView");
+            navigationView.appendChild(styles);
+            console.log("Append those styles");
+        }
+    }
 
     async connectedCallback() {
         super.connectedCallback();
-        console.log(this);
-        this.displayLoadingScreen = true;
-        console.log("Page Template view connected to DOM");
-        console.log(this);
+        console.log("Try append styles");
+        this.renderStyles();
         this.fiatApi = fiatApi;
+        console.log("CBWFV template added");
+        console.log(this.context);
+        this.updateSelectedCurrency.bind(this);
+        this.addEventListener('searchable-select-update', this.updateSelectedCurrency);
+        //this.addEventListener('fire-estimate-event', this.handleEstimateEvent);
+        //let orderBtn = document.getElementById("order-button");
+        //this.fireEstimateEvent.bind(this);
+        //document.addEventListener('click', this.fireEstimateEvent, false);
+        this.displayLoadingScreen = true;
+        // TODO: DELETE NEXT LINE AFTER DEBUGGING
+        this.displayOrderScreen = true;
         let apiIsAvailable = await this.checkAPIIsAvailable();
         if (apiIsAvailable) {
             this.displayLoadingScreen = false;
@@ -235,7 +359,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             let fiatCurrencies = await this.fiatApi.getAvailableFiatCurrencies();
             console.log(fiatCurrencies);
             this.fiatCurrencies = fiatCurrencies;
-            this.requestUpdate();
+            this.requestUpdate(); // Check if this is necessary
             //this.displayLoadingScreen = false;
             this.displayOrderScreen = true;
         } else {
@@ -285,13 +409,35 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         }
     }
     
+    async getTransactionEstimate() {
+        try {
+            let response = await this.fiatApi.getTransactionEstimate();
+            console.log(response);
+            if (response.message == "OK") {
+                return true;
+            } else {
+                return false;
+            }
+        } catch(error) {
+            // TODO: build out better error handling
+            console.error("API not available -- network error or unexpected error or ChangeNow response object's format changed")
+            console.log(error);
+        }
+    }
+
     constructor() {
         super();
-
+        this.context = {};
         this.displayLoadingScreen = false;
         this.displayOrderScreen = false;
         this.displayConfirmationScreen = false;
         this.clickHandler = this.clickHandler;
+        this.estimatedFiatRange = {};
+        this.estimatedCryptoRange = {};
+        this.fiatMinMaxString = "Please select a currency";
+        this.currencyCode = "";
+        this.currencyName = "";
+        this.estimateUsingFiat = true;
         this.fiatCurrencies = [{
             "block_explorer_url_mask": null,
             "currency_type": "FIAT",
@@ -322,8 +468,8 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             "networks": [],
             "ticker": "ZAR",
         }    
-    
     ];
+        this.selectedFiatCurrency = "";
         //this.setScreenTitle("Buy Monero With Fiat");
         this.wallets = [
             {},
@@ -332,14 +478,21 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         ];
     }
     
-    clickHandler(event) {
+    handleCurrencyInput(event) {
         console.log(event);
+
     }
     
     render() {
         // We're going to use conditionals and classes to determine which elements to hide
         return html`
         <div id="changenow-buy-with-fiat">
+            <div class="submit-button-wrapper" @click=${this.fireEstimateEvent}>
+                <!-- <button class="submit-button" @click=${this.handleEstimateEvent}> -->
+                <button class="submit-button" @click=${this.fireEstimateEvent}>
+                    Create Order
+                </button>
+            </div>
             <div class="content-container empty-page-content-container">
                 <!-- <buy-with-fiat-loading-screen-changenow></buy-with-fiat-loading-screen-changenow> -->
                 <buy-with-fiat-loading-screen-changenow ?hidden=${!this.displayLoadingScreen}></buy-with-fiat-loading-screen-changenow>
@@ -362,10 +515,10 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                             <table class="full-width">
                                 <tbody><tr>
                                     <td>   
-                                        <div class="field_title form-field-title">XMR to send
+                                        <div class="field_title form-field-title">${this.currencyName} to send
                                             <div style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0;">
                                                 <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                                <input id="inCurrencyValue" class="textInput currencyInput" type="text" placeholder="00.00" value="">
+                                                <input id="inCurrencyValue" @input=${this.handleCurrencyInput} class="textInput currencyInput" type="text" placeholder="00.00" value="">
                                                 <div id="inCurrencySelector">
                                                     <searchable-select .values=${this.fiatCurrencies}></searchable-select>
                                                     <!-- <select id="inCurrencySelectList" class="currencySelect">
@@ -373,8 +526,8 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                                                     </select> -->
                                                 </div>
                                             </div>
-                                            <div id="minimum-fee">
-                                                <span id="minimum-fee-text" class="field_title form-field-title" style="margin-top: 8px; color: rgb(158, 156, 158); display: inline-block;" data-minimum-amount="0.54792129">0.54792129 XMR minimum (excluding tx fee)</span>
+                                            <div id="transaction-range">
+                                                <span id="transaction-range" class="field_title form-field-title" style="margin-top: 8px; color: rgb(158, 156, 158); display: inline-block;">${this.fiatMinMaxString}</span>
                                             </div>
                                         </div>
                                     </td>
