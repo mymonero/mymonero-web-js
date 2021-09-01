@@ -224,6 +224,12 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             color: rgb(223, 222, 223);
             background-color: rgb(29, 27, 29);
         }
+        #inCurrencySelector {
+            float: right;
+        }
+        #currency-loader {
+            float: right;
+        }
         `;
         /*
             #getOfferLoader {
@@ -261,6 +267,8 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             estimatedCryptoRange: {
                 type: Object
             },
+            estimatedFiatRangeString: { type: String },
+            estimatedCryptoRangeString: { type: String },
             inCurrencyCode: { type: String },
             inCurrencyName: { type: String },
             inCurrencyValue: { type: String },
@@ -278,12 +286,11 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         this.inCurrencyCode = event.detail.selectValue;
         this.inCurrencyName = event.detail.selectText;
         // TODO: We need to fire the following events off in parallel
-        this.estimatedFiatRange = await this.fiatApi.getMinMaxRange(this.inCurrencyCode, "XMR");
-        this.estimatedCryptoRange = await this.fiatApi.getMinMaxRange("XMR", this.inCurrencyCode);
-        // Update placeholder with min-max
-        console.log(this.estimatedFiatRange);
-        console.log(this.estimatedCryptoRange);
-
+        let rangeQueryArray = [this.fiatApi.getMinMaxRange(this.inCurrencyCode, "XMR"), this.fiatApi.getMinMaxRange("XMR", this.inCurrencyCode)]
+        let [estimatedFiatRange, estimatedCryptoRange] = await Promise.all(rangeQueryArray);
+        this.estimatedFiatRange = estimatedFiatRange;
+        this.estimatedCryptoRange = estimatedCryptoRange;
+        this.estimatedFiatRangeString = `${estimatedFiatRange.min} - ${estimatedFiatRange.max}`
     }
 
     async fireEstimateEvent(event) {
@@ -342,11 +349,11 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
 
     async connectedCallback() {
         super.connectedCallback();
-        console.log("Try append styles");
         this.renderStyles();
         this.fiatApi = fiatApi;
+        this.wallets = this.context.walletsListController.records;
+        console.log(this.wallets);
         console.log("CBWFV template added");
-        console.log(this.context);
         this.updateSelectedCurrency.bind(this);
         this.addEventListener('searchable-select-update', this.updateSelectedCurrency);
         //this.addEventListener('fire-estimate-event', this.handleEstimateEvent);
@@ -367,6 +374,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             console.log("Reqhest update");
             this.requestUpdate(); // Check if this is necessary
             //this.displayLoadingScreen = false;
+            this.displayCurrencyLoadingIndicator = false;
             this.displayOrderScreen = true;
         } else {
             // Show 'not available'
@@ -437,8 +445,11 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         this.displayLoadingScreen = false;
         this.displayOrderScreen = false;
         this.displayConfirmationScreen = false;
+        this.displayCurrencyLoadingIndicator = true;
         this.clickHandler = this.clickHandler;
         this.estimatedFiatRange = {};
+        this.estimatedFiatRangeString = "";
+        this.estimatedCryptoRangeString = "";
         this.estimatedCryptoRange = {};
         this.fiatMinMaxString = "Please select a currency";
         this.inCurrencyCode = "";
@@ -515,10 +526,10 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             </div>
             <div class="content-container empty-page-content-container">
                 <!-- <buy-with-fiat-loading-screen-changenow></buy-with-fiat-loading-screen-changenow> -->
-                <activity-indicator .loadingText="Beep boop"></activity-indicator>
+                <activity-indicator .loadingText=${"Beep boop"}></activity-indicator>
                 <buy-with-fiat-loading-screen-changenow ?hidden=${!this.displayLoadingScreen}></buy-with-fiat-loading-screen-changenow>
                 <!-- <div class="message-label exchangeRate" id="explanatory-message">Oh look loading screen</div> -->
-                <div class="base-button hoverable-cell navigation-blue-button-enabled action right-add-button exchange-button" id="exchange-xmr">dafuqExchange XMR</div>
+                <div class="base-button hoverable-cell navigation-blue-button-enabled action right-add-button exchange-button" id="exchange-xmr">Title here?</div>
                 <div ?hidden=${!this.displayOrderScreen}>
                     <div class="exchangeScreen exchange-page-panel">
                         <div class="content-container exchange-page-content-container" id="orderForm">
@@ -536,10 +547,15 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                             <table class="full-width">
                                 <tbody><tr>
                                     <td>   
-                                        <div class="field_title form-field-title">${this.inCurrencyName} to send
+                                        <div class="field_title form-field-title">${this.inCurrencyName.length == 0 ? "Please select a currency" : this.inCurrencyName + " you will pay" } 
                                             <div style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0;">
                                                 <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                                <input id="inCurrencyValue" @input=${this.handleCurrencyInput} class="textInput currencyInput" type="text" placeholder="00.00" .value=${this.inCurrencyValue}>
+                                                <input id="inCurrencyValue" 
+                                                    @input=${this.handleCurrencyInput} 
+                                                    class="textInput currencyInput" 
+                                                    type="text" 
+                                                    .placeholder=${this.estimatedFiatRangeString.length > 0 ? this.estimatedFiatRangeString : "00.00" } 
+                                                    .value=${this.inCurrencyValue}>
                                                 <div id="inCurrencySelector">
                                                     <searchable-select .values=${this.fiatCurrencies}></searchable-select>
                                                     <!-- <select id="inCurrencySelectList" class="currencySelect">
@@ -549,6 +565,9 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                                             </div>
                                             <div id="transaction-range">
                                                 <span id="transaction-range" class="field_title form-field-title" style="margin-top: 8px; color: rgb(158, 156, 158); display: inline-block;">${this.fiatMinMaxString}</span>
+                                                <div id="currency-loader">
+                                                    <activity-indicator .loadingText=${"Loading supported currencies"} ?hidden=${!this.displayCurrencyLoadingIndicator}></activity-indicator>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -556,7 +575,12 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                                         <div id="inInputDiv" class="field_title form-field-title"><span id="outCurrencyTickerCode">XMR</span> you will receive
                                             <div class="" style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0">
                                                 <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                                <input id="outCurrencyValue" @input=${this.handleCurrencyInput} class="textInput currencyInput" type="text" placeholder="00.00" .value=${this.outCurrencyValue}>
+                                                <input id="outCurrencyValue" 
+                                                    @input=${this.handleCurrencyInput} 
+                                                    class="textInput currencyInput" 
+                                                    type="text" 
+                                                    .placeholder=${this.estimatedCryptoRangeString.length > 0 ? this.estimatedCryptoRangeString : "00.00" } 
+                                                    .value=${this.outCurrencyValue}>
                                                 <div id="outCurrencySelector">
                                                     <select id="outCurrencySelectList" class="currencySelect">
                                                         <option value="XMR">XMR</option>

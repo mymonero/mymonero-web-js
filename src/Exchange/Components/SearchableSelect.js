@@ -90,7 +90,7 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
         padding: 0px;
         border-radius: 0px 4px 4px 0px;
         -webkit-appearance: none;
-        top: 24px;
+        top: 0px;
         right: 5px;
         left: auto;
         float: left;
@@ -100,13 +100,13 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
         float: right;
     }
     .dropdown-content {
-        top: 60px;
+        top: 30px;
         float: right;
         right: 0px;
     }
     .dropdown {
         float: right;
-        top: 23px;
+        top: 0px;
         right: 5px;
     }
     `;
@@ -294,7 +294,7 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
     return html` 
         <div class="dropdown">
             <button @click=${this.toggleElement} class="dropbtn currencySelect">${this.buttonText}</button>
-            <div id="dropdown" class="dropdown-content" ?hidden=${this.showDropdown}>
+            <div id="dropdown" class="dropdown-content" ?hidden=${!this.showDropdown}>
                 <input type="text" placeholder="Search.." id="searchText" @input=${this.updateSearchTextValue} .value=${this.searchString}>
                 <!-- <a href="#about">About</a>
                 <a href="#base">Base</a>
