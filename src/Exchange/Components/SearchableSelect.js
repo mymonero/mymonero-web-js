@@ -15,11 +15,6 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
       cursor: pointer;
     }
     
-    /* Dropdown button on hover & focus */
-    .dropbtn:hover, .dropbtn:focus {
-      background-color: #3e8e41;
-    }
-    
     /* The search field */
     #myInput {
       box-sizing: border-box;
@@ -187,6 +182,7 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
         if (changedProperties.get("values")?.length > 0) {
             console.log("Update this sucker");
             this.filteredValues = this.values;
+
         }
         console.log(this.values);
         this.filteredvalues = this.values;
@@ -294,20 +290,9 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
     return html` 
         <div class="dropdown">
             <button @click=${this.toggleElement} class="dropbtn currencySelect">${this.buttonText}</button>
-            <div id="dropdown" class="dropdown-content" ?hidden=${!this.showDropdown}>
+            <div id="dropdown" class="dropdown-content" ?hidden=${this.showDropdown}>
                 <input type="text" placeholder="Search.." id="searchText" @input=${this.updateSearchTextValue} .value=${this.searchString}>
-                <!-- <a href="#about">About</a>
-                <a href="#base">Base</a>
-                <a href="#blog">Blog</a>
-                <a href="#contact">Contact</a>
-                <a href="#custom">Custom</a>
-                <a href="#support">Support</a>
-                <a href="#tools">Tools</a> -->
-                ${console.log(this.values, this)}
-                ${ console.log("wtf")}
                 ${this.filteredValues.map((object) => {
-                    console.log(this);
-                    console.log(object);
                     return html`<option value="${object.ticker}" @click=${this.handleSelectionEvent}>${object.name} - ${object.ticker}</option>`
                 })}           
             </div>
