@@ -251,45 +251,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             background-color: rgb(56, 54, 56) !important;
         }
         /** Exchange estimate details */
-        ._1cirut65EB12USDiEhO2zq {
-         padding: 20px 12px;
-         font-size: 14px;
-         line-height: 16px;
-         font-weight: normal;
-         color: #a9a9a9;
-         }
-         ._1pp_gWT5dnuzZJA1mo3gvF {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            width: 100%;
-        }
-        ._2NuhlQ6U4VlrLBMQGTwVva {
-            display: flex;
-            flex-direction: column;
-        }
-        ._1pp_gWT5dnuzZJA1mo3gvF {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            width: 100%;
-        }
-        ._2fdmvG_PL73fAbFIB6iqQS {
-            display: flex;
-            align-items: center;
-        }
-        ._20hVU_-g9vCHTYfwdhhDDx {
-            margin-left: 5px;
-            display: none;
-            align-items: center;
-        }
-        ._39Mx3V_-7c4QeAK7Ja-evS {
-            position: relative;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
+
         .estimate-label {
             margin: 10px 0px 0px 15px;
             font-size: 13px;
@@ -338,26 +300,6 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             position: relative;
         }
         `;
-        /*
-            #getOfferLoader {
-                float: left;
-                // min-height: 28px;
-            }
-            #getOfferLoader div { 
-                // display: none; 
-            }
-            #getOfferLoader {
-                padding: 0px 24px 0 0;
-                display: none;
-            }
-            #tx-fee {
-                float: right;
-            }
-            #btc-address {
-                clear: both;
-            }
-        
-        */
     }
 
     static get properties() {
@@ -366,9 +308,10 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             displayLoadingScreen: { type: Boolean },
             displayEstimateRetrieval: { type: Boolean },
             displayOrderScreen: { type: Boolean },
-
-            /* Error handler values */
-            handleCurrencyInputResponseErrorString: { type: String },
+            displayPurchaseButton: { type: Boolean },
+            displayPurchaseRedirectIndicator: { type: Boolean },
+            displayErrorString: { type: Boolean },
+            errorString: { type: String },
             fiatCurrencies: { 
                 type: Array,
                 reflect: true
@@ -400,6 +343,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
     // This function listens for a custom event dispatched from the select box. 
     // It uses the details to update the desired currency
     async updateSelectedCurrency(event) {
+        this.clearEstimate();
         this.inCurrencyCode = event.detail.selectValue;
         this.inCurrencyName = event.detail.selectText;
         this.displayMinMaxLoadingIndicator = true;
@@ -414,12 +358,12 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
     }
 
     async fireEstimateEvent(event) {
-        console.log("handle estimate POST fired");
-        console.log("Test?");
-        console.log(this);
-        console.log(this.inCurrencyCode);
-        console.log(this.inCurrencyValue);
-        console.log(event);
+        // console.log("handle estimate POST fired");
+        // console.log("Test?");
+        // console.log(this);
+        // console.log(this.inCurrencyCode);
+        // console.log(this.inCurrencyValue);
+        // console.log(event);
         let options = {
             detail: { 
                 
@@ -457,48 +401,24 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         })
         this.redirectUrl = estimateResponse.redirect_url;
         this.estimateDetails = estimateDetails;
-        
-        /* 
-        {"id":"4900188772",
-        "status":"new",
-        "email":null,"errors":[],"status_details":null,"from_currency":"GBP",
-        "initial_from_currency":"GBP",
-        "from_network":null,"from_currency_with_network":null,"from_amount":"0",
-        "deposit_type":"VISA_MC1",
-        "payout_type":"CRYPTO_THROUGH_CN",
-        "expected_from_amount":"75.5555",
-        "initial_expected_from_amount":"75.5555",
-        "to_currency":"XMR",
-        "to_network":null,"to_currency_with_network":null,"to_amount":null,"output_hash":null,"expected_to_amount":"0.3075642",
-        "location":"ZA",
-        "created_at":"2021-09-03T09:13:04.822Z",
-        "updated_at":"2021-09-03T09:13:04.822Z",
-        "partner_id":"5833338174",
-        "external_partner_link_id":null,"estimate_breakdown":{"toAmount":"0.3075642",
-        "fromAmount":75.5555,
-        "serviceFees":
-            [{"name":"Bank fee","amount":"3.02222","currency":"GBP"},{"name":"Service fee","amount":"2.25","currency":"GBP"}],
-        "convertedAmount":
-            {"amount":"70.28328","currency":"GBP"},
-        "estimatedExchangeRate":"0.00437606",
-        "networkFee":{"amount":"0.001",
-        "currency":"XMR"
-    }},"payout":{"address":"47joJKcNWs66f6ein9qTTVFyzeGnmBEGWKomSuMmqwaBYGj7gv2RvFRRUy1xtzpn6qE8BBpDnuFbp44qe9X1XmK78vqXaij","extra_id":"1"},"redirect_url":"https://payments.guardarian.com/checkout?tid=4900188772"}
-            */
-        console.log(estimateResponse);
     }
     
-    redirectToURL() {
-        window.open(this.redirectUrl);
-    }
-
-    async handleEstimateEvent(event) {
-        console.log("Hi from handle stimate event");
-        console.log(this);
-        console.log(event);
+    async redirectToURL() {
+        this.displayPurchaseButton = false;
+        this.displayPurchaseRedirectIndicator = true;
+        try {
+            let estimateResponse = await this.fiatApi.createExchangeTransaction(this.inCurrencyValue, this.inCurrencyCode, "XMR", this.selectedWallet.public_address);
+            window.open(estimateResponse.redirectUrl);
+            this.displayPurchaseRedirectIndicator = false;
+        } catch (error) {
+            // Error communicating with server to retrieve response -- show error
+            this.errorString = error.message;
+            console.log(error);
+        }
     }
 
     renderStyles() {
+        // These styles are necessary for if we ever have a top-right action button
         console.log("Should append styles");
         let styleElement = document.getElementById("lit-styles");
         typeof(styleElement);
@@ -557,15 +477,18 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         if (apiIsAvailable) {
             this.displayLoadingScreen = false;
             this.displayOrderScreen = true;
-            
-            let fiatCurrencies = await this.fiatApi.getAvailableFiatCurrencies();
-            console.log(fiatCurrencies);
-            this.fiatCurrencies = fiatCurrencies;
-            console.log("Reqhest update");
-            this.requestUpdate(); // Check if this is necessary
-            //this.displayLoadingScreen = false;
-            this.displayCurrencyLoadingIndicator = false;
-            this.displayOrderScreen = true;
+            try {
+                let fiatCurrencies = await this.fiatApi.getAvailableFiatCurrencies();
+                this.fiatCurrencies = fiatCurrencies;
+                console.log("Reqhest update");
+                this.requestUpdate(); // Check if this is necessary
+                //this.displayLoadingScreen = false;
+                this.displayCurrencyLoadingIndicator = false;
+                this.displayOrderScreen = true;
+            } catch (error) {
+                this.displayErrorResponse = true;
+                this.displayErrorString = error.message;
+            }
         } else {
             // Show 'not available'
         }
@@ -637,7 +560,8 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         this.displayOrderScreen = false;
         this.displayConfirmationScreen = false;
         this.displayCurrencyLoadingIndicator = true;
-        this.handleCurrencyInputResponseErrorString = false;
+        this.displayPurchaseButton = true;
+        this.errorString = false;
         this.clickHandler = this.clickHandler;
         this.estimateDetails = {
             convertedAmount: "",
@@ -709,11 +633,36 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         ];
     }
     
+    clearEstimate() {
+        // We cannot unset the keys on this object because rendering depends on it
+        this.estimateDetails = {
+            convertedAmount: "",
+            expected_to_amount: "",
+            estimatedExchangeRate: "",
+            estimatedExchangeRateString: "",
+            id: "",
+            initial_from_currency: "",
+            initial_expected_from_amount: "",
+            networkFee: "",
+            redirected_amount: "",
+            serviceFees: "",
+            serviceFeeString: "",
+            bankFeeString: "",
+            to_currency: "",
+            networkFeeString: ""
+        };
+    }
+
     handleCurrencyInput(event) {
+        this.clearEstimate();
         if (event.path[0].id == "inCurrencyValue") {
             this.inCurrencyValue = event.path[0].value;
         } else if (event.path[0].id == "outCurrencyValue") {
             this.outCurrencyValue = event.path[0].value;
+        }
+
+        if (this.estimateRequestTimer !== 'undefined') {
+            clearTimeout(this.estimateRequestTimer);
         }
 
         this.estimateRequestTimer = setTimeout(() => {
@@ -734,13 +683,43 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
     }
 
     async handleCurrencyInputResponse() {
+        console.log("Handle currency input");
+        console.log(this);
         this.displayEstimateRetrieval = true;
         try {
             let response = await this.fiatApi.getTransactionEstimate(this.inCurrencyValue, this.inCurrencyCode, "XMR");
-            this.outCurrencyValue = response.value;
+            console.log("Doing the estimate detail thing");
+            console.log(this.estimateDetails);
+            console.log(response);
+            let estimateDetails = {};
+            estimateDetails.convertedAmount = response.converted_amount.amount;
+            //estimateDetails.expected_to_amount = response.expected_to_amount;
+            estimateDetails.estimatedExchangeRate = response.estimated_exchange_rate;
+            estimateDetails.estimatedExchangeRateString = response.estimated_exchange_rate + " " + response.to_currency;
+            //estimateDetails.id = response.id;
+            estimateDetails.initial_from_currency = response.from_currency;
+            estimateDetails.initial_expected_from_amount = this.inCurrencyValue;
+            estimateDetails.networkFee = response.network_fee.amount;
+            //estimateDetails.redirected_amount = response.redirected_amount;
+            estimateDetails.serviceFees = response.service_fees;
+            estimateDetails.to_currency = response.to_currency;
+            //this.outCurrencyValue = response.value;
+            estimateDetails.expected_to_amount = response.value;
+            estimateDetails.networkFeeString = response.network_fee.amount + " " + response.network_fee.currency            
+            estimateDetails.serviceFeeString = "N/A"
+            estimateDetails.bankFeeString = "N/A"
+            response.service_fees.forEach((fee) => {
+                if (fee.name.toUpperCase() === "BANK FEE") {
+                    estimateDetails.bankFeeString = fee.amount + " " + fee.currency
+                } else if (fee.name.toUpperCase() == "SERVICE FEE") {
+                    estimateDetails.serviceFeeString = fee.amount + " " + fee.currency
+                }
+            })
+            this.estimateDetails = estimateDetails;
         } catch (error) {
-            this.displayEstimateRetrievalError = true;
-            this.handleCurrencyInputResponseErrorString = error.message;
+            console.error(error, error.message);
+            this.errorString = error.message;
+            this.errorString = error.message;
         }
         this.displayEstimateRetrieval = false;
     }
@@ -750,23 +729,13 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         return html`
         <div id="changenow-buy-with-fiat">
             <div class="submit-button-wrapper">
-                <!-- <button class="submit-button" @click=${this.handleEstimateEvent}> -->
-                <button class="submit-button" @click=${this.fireEstimateEvent}>
-                    Get Quote
-                </button>
+                &nbsp;
             </div>
             <div class="content-container empty-page-content-container">
-                <!-- <buy-with-fiat-loading-screen-changenow></buy-with-fiat-loading-screen-changenow> -->
-                <!-- <activity-indicator .loadingText=${"Loading text would go here"}></activity-indicator> -->
                 <buy-with-fiat-loading-screen-changenow ?hidden=${!this.displayLoadingScreen}></buy-with-fiat-loading-screen-changenow>
-                <!-- <div class="message-label exchangeRate" id="explanatory-message">Oh look loading screen</div> -->
                 <div ?hidden=${!this.displayOrderScreen}>
                     <div class="exchangeScreen exchange-page-panel">
                         <div class="content-container exchange-page-content-container" id="orderForm">
-                        <div id="server-rates-messages"></div>
-                        <div id="loader" class="">
-                            <!-- gets replaced by loader -->
-                        </div>
                         <div class="form_field wallet-select-wrapper">
                             <wallet-selector .wallets=${this.wallets}></wallet-selector>
                         </div>
@@ -796,8 +765,8 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                                                     <activity-indicator .loadingText=${"Loading supported currencies"} ?hidden=${!this.displayCurrencyLoadingIndicator}></activity-indicator>
                                                     <activity-indicator .loadingText=${"Please wait while we load the minimum and maximum transaction amount limits"} ?hidden=${!this.displayMinMaxLoadingIndicator}></activity-indicator>
                                                     <activity-indicator .loadingText=${"Busy retrieving estimate"} ?hidden=${!this.displayEstimateRetrieval}></activity-indicator>
-                                                    <div id="errorResponse" class="graphicAndLabel activityIndicators on-normal-background" ?hidden=${!this.displayErrorResponse}>
-                                                        <span id="errorResponseText">${this.handleCurrencyInputResponseErrorString}</span>
+                                                    <div id="errorResponse" ?hidden=${!this.displayErrorResponse}>
+                                                        <span id="errorResponseText">${this.errorString}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -826,25 +795,16 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                                         </div>
                                         -->
                                     </td>
-                                </tr>
-                                <input id="in_address" type="hidden" value="">
+    </tr>
                             </tbody></table>
                         </div>
 
             
                         <div class="form_field" id="getOfferLoader">
-        <div id="getOffer" class="graphicAndLabel activityIndicators on-normal-background" style="font-family: Native-Light, input, menlo, monospace; -webkit-font-smoothing: subpixel-antialiased; font-size: 10px; letter-spacing: 0.5px; font-weight: 300; color: rgb(158, 156, 158); padding-left: 0px;">
-            <div class="loader">
-                <div class="block block1"></div>
-                <div class="block block2"></div>
-                <div class="block block3"></div>
-            </div>&nbsp;
-            <span id="activityLoaderText">Fetching offer</span>
-        </div>
             </div>
             <div class="form_field" id="estimate-details">
                 <!-- {"id":"4900188772","status":"new","email":null,"errors":[],"status_details":null,"from_currency":"GBP","initial_from_currency":"GBP","from_network":null,"from_currency_with_network":null,"from_amount":"0","deposit_type":"VISA_MC1","payout_type":"CRYPTO_THROUGH_CN","expected_from_amount":"75.5555","initial_expected_from_amount":"75.5555","to_currency":"XMR","to_network":null,"to_currency_with_network":null,"to_amount":null,"output_hash":null,"expected_to_amount":"0.3075642","location":"ZA","created_at":"2021-09-03T09:13:04.822Z","updated_at":"2021-09-03T09:13:04.822Z","partner_id":"5833338174","external_partner_link_id":null,"estimate_breakdown":{"toAmount":"0.3075642","fromAmount":75.5555,"serviceFees":[{"name":"Bank fee","amount":"3.02222","currency":"GBP"},{"name":"Service fee","amount":"2.25","currency":"GBP"}],"convertedAmount":{"amount":"70.28328","currency":"GBP"},"estimatedExchangeRate":"0.00437606","networkFee":{"amount":"0.001","currency":"XMR"}},"payout":{"address":"47joJKcNWs66f6ein9qTTVFyzeGnmBEGWKomSuMmqwaBYGj7gv2RvFRRUy1xtzpn6qE8BBpDnuFbp44qe9X1XmK78vqXaij","extra_id":"1"},"redirect_url":"https://payments.guardarian.com/checkout?tid=4900188772"} -->
-                <div class="estimate-wrapper" ?hidden=${Object.keys(this.estimateDetails).length == 0}>
+                <div class="estimate-wrapper" ?hidden=${Object.keys(this.estimateDetails?.expected_to_amount).length == 0}>
                     <div class="estimate-row even-row">
                         <div class="estimate-label">You send</div>
                         <div class="estimate-value">
@@ -874,16 +834,16 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                     <div class="estimate-row even-row">
                         <div class="estimate-label"></div>
                         <div class="estimate-value">
-                            <a @click=${this.redirectToURL} class="confirmation-button">Buy XMR</a>
+                            <a @click=${this.redirectToURL} ?hidden=${!this.displayPurchaseButton} class="confirmation-button">Buy XMR</a>
+                            <activity-indicator .loadingText=${"Busy finalising estimate and redirecting you to our partner"} ?hidden=${!this.displayPurchaseRedirectIndicator}></activity-indicator>
                         </div>    
                     </div>
                     <div class="estimate-row odd-row">
                         <div class="estimate-label"></div>
-                        <div class="estimate-value">* This is an expected rate. Guardarian will pick the best rate for you during the moment of exchange.</div>    
+                        <div class="estimate-value">* Please note that this is an estimate, and that your final rate may differ. The exchange and the quoted rate are controlled by our third-party partner.</div>    
                     </div>
                 </div>
             </div>
-            <!-- <div id="getAddressValidationLoader"> -->
                 
         <style>
         #addressValidationLoader {
@@ -918,28 +878,12 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         }
         
         </style>
-        <!-- <div id="addressValidationLoader" class="graphicAndLabel activityIndicators on-normal-background" style="font-family: Native-Light, input, menlo, monospace; -webkit-font-smoothing: subpixel-antialiased; font-size: 10px; letter-spacing: 0.5px; font-weight: 300; color: rgb(158, 156, 158); padding-left: 0px;">
-            <div class="loader" id="addressValidationLoaderContainer">
-                <div class="block block1"></div>
-                <div class="block block2"></div>
-                <div class="block block3"></div>
-            </div>&nbsp;
-            <span id="addressValidationLoaderText">Validating Address</span>
-        </div> -->
+
             </div>
-            <div id="validation-messages"></div>
-            <div id="address-messages"></div>
-            <div id="server-messages"></div>
         </div>
                 
         </div>
-        <!-- <div id="order-status">
-
-        </div> -->
     </div>
-    <!-- <div id="exchangePage">
-         
-                </div> -->
                 </div></div></div>
             </div>
         </div>
