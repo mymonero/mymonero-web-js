@@ -213,7 +213,7 @@ export class BuyWithFiatLoadingScreenChangenowView extends ExchangeNavigationCon
     render() {
         // We're going to use conditionals and classes to determine which elements to hide
         return html`
-            La la la loaaading!!!!!!!!!!!!!
+            
         `;
     }
 
