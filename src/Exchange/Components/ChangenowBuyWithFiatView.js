@@ -190,6 +190,18 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             text-indent: 20px;
             min-width: 104px;
         }
+        span#outCurrencyValue {
+            width: calc(100% - 70px);
+            padding: 0px 0px;
+            text-indent: 148px;
+            position: relative;
+            right: 40px;
+            left: 0px;
+            padding: 0px 3px;
+            margin-right: 5px;
+            text-indent: 20px;
+            min-width: 104px;
+        }
         .textInput {
             display: inline-block;
             height: 29px;
@@ -322,6 +334,9 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         .estimate-row:last-of-type {
             border-radius: 0px 0px 10px 10px;
         }
+        .wallet-select-wrapper {
+            position: relative;
+        }
         `;
         /*
             #getOfferLoader {
@@ -377,7 +392,8 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             outCurrencyValue: { type: String },
             estimateUsingFiat: { type: Boolean },
             context: { type: Object },
-            redirectUrl: { type: String }
+            redirectUrl: { type: String },
+            selectedWallet: { type: Object}
         }
     }
     
@@ -413,7 +429,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         };
         let estimatePostEvent = new CustomEvent("fire-estimate-event", options)
         this.dispatchEvent(estimatePostEvent, options)
-        let estimateResponse = await this.fiatApi.createExchangeTransaction(this.inCurrencyValue, this.inCurrencyCode, "XMR", "47joJKcNWs66f6ein9qTTVFyzeGnmBEGWKomSuMmqwaBYGj7gv2RvFRRUy1xtzpn6qE8BBpDnuFbp44qe9X1XmK78vqXaij")
+        let estimateResponse = await this.fiatApi.createExchangeTransaction(this.inCurrencyValue, this.inCurrencyCode, "XMR", this.selectedWallet.public_address);
         // todo -- service fee can be array of multiple fees -- bank fee not always charged
         const estimateDetails = {
             convertedAmount: estimateResponse.convertedAmount,
@@ -426,11 +442,19 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             networkFee: estimateResponse.estimate_breakdown.networkFee,
             redirected_amount: estimateResponse.redirected_amount,
             serviceFees: estimateResponse.estimate_breakdown.serviceFees,
-            serviceFeeString: estimateResponse.estimate_breakdown.serviceFees[1].amount,
-            bankFeeString: estimateResponse.estimate_breakdown.serviceFees[0].amount,
+            serviceFeeString: "N/A",
+            bankFeeString: "N/A",
             to_currency: estimateResponse.to_currency,
             networkFeeString: estimateResponse.estimate_breakdown.networkFee.amount + " " + estimateResponse.estimate_breakdown.networkFee.currency
         }
+        const serviceFees = estimateResponse.serviceFees;
+        estimateResponse.estimate_breakdown.serviceFees.forEach((fee) => {
+            if (fee.name.toUpperCase() === "BANK FEE") {
+                estimateDetails.bankFeeString = fee.amount + " " + fee.currency
+            } else if (fee.name.toUpperCase() == "SERVICE FEE") {
+                estimateDetails.serviceFeeString = fee.amount + " " + fee.currency
+            }
+        })
         this.redirectUrl = estimateResponse.redirect_url;
         this.estimateDetails = estimateDetails;
         
@@ -504,6 +528,12 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         }
     }
 
+    updateSelectedWallet(event) {
+        console.log("Update wallet on form");
+        console.log(event);
+        this.selectedWallet = event.detail.wallet;
+    }
+
     async connectedCallback() {
         super.connectedCallback();
         this.renderStyles();
@@ -513,6 +543,8 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         console.log("CBWFV template added");
         this.updateSelectedCurrency.bind(this);
         this.addEventListener('searchable-select-update', this.updateSelectedCurrency);
+        this.addEventListener('wallet-selector-update', this.updateSelectedWallet);
+        
         //this.addEventListener('fire-estimate-event', this.handleEstimateEvent);
         //let orderBtn = document.getElementById("order-button");
         //this.fireEstimateEvent.bind(this);
@@ -735,11 +767,8 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                         <div id="loader" class="">
                             <!-- gets replaced by loader -->
                         </div>
-                        <div>
-                            <div id="orderStatusPage" class="active">
-                                <wallet-selector .wallets=${this.wallets}></wallet-selector>
-                                
-                            </div>
+                        <div class="form_field wallet-select-wrapper">
+                            <wallet-selector .wallets=${this.wallets}></wallet-selector>
                         </div>
                         <div class="form_field" id="currency-table">
                             <table class="full-width">
@@ -775,15 +804,18 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                                         </div>
                                     </td>
                                     <td>
+                                        <!--
                                         <div id="inInputDiv" class="field_title form-field-title"><span id="outCurrencyTickerCode">XMR</span> you will receive
                                             <div class="" style="position: relative; left: 0px; top: 0px; padding: 2px 0 0 0">
                                                 <span class="field_title form-field-title label-spacing" style="margin-top: 0px;">AMOUNT</span>
-                                                <input id="outCurrencyValue" 
+                                                <span id="outCurrencyValue">${this.outCurrencyValue}</span>
+                                                <!-- CN API doesn't support getting a fiat value to pay from a crypto amount yet
+                                                    <input id="outCurrencyValue" 
                                                     @input=${this.handleCurrencyInput} 
                                                     class="textInput currencyInput" 
                                                     type="text" 
                                                     .placeholder=${this.estimatedCryptoRangeString.length > 0 ? this.estimatedCryptoRangeString : "00.00" } 
-                                                    .value=${this.outCurrencyValue}>
+                                                    .value=${this.outCurrencyValue}> 
                                                 <div id="outCurrencySelector">
                                                     <select id="outCurrencySelectList" class="currencySelect">
                                                         <option value="XMR">XMR</option>
@@ -792,6 +824,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                                                 <div class="selectIndicator" style="right: 12px; top: 33px;"></div>
                                             </div>
                                         </div>
+                                        -->
                                     </td>
                                 </tr>
                                 <input id="in_address" type="hidden" value="">
@@ -820,7 +853,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                     </div>
                     <div class="estimate-row odd-row">
                         <div class="estimate-label">Bank Fee</div>
-                        <div class="estimate-value">${this.estimateDetails.serviceFeeString}</div>
+                        <div class="estimate-value">${this.estimateDetails.bankFeeString}</div>
                     </div>
                     <div class="estimate-row even-row">
                         <div class="estimate-label">Service Fee</div>
