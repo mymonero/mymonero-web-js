@@ -16,15 +16,20 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
     }
     
     /* The search field */
-    #myInput {
-      box-sizing: border-box;
-      background-image: url('searchicon.png');
-      background-position: 14px 12px;
-      background-repeat: no-repeat;
-      font-size: 16px;
-      padding: 14px 20px 12px 45px;
-      border: none;
-      border-bottom: 1px solid #ddd;
+    input {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;      
+        background-position: 14px 12px;
+        background-repeat: no-repeat;
+        font-size: 16px;
+        margin: 12px 10px;
+        padding: 6px 0px 6px 12px;
+        min-width: 200px;
+        border: 1px solid rgba(255,255,255, 0.5);
+        background-color: rgb(29, 27, 29);
+        border-radius: 3px;
+        color: #ffffff;
     }
     
     /* The search field when it gets focus/clicked on */
@@ -32,15 +37,17 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
     
     /* The container <div> - needed to position the dropdown content */
     .dropdown {
-      position: relative;
-      display: inline-block;
+        background-color: rgb(29, 27, 29);
+        position: relative;
+        display: inline-block;
+        color: #000000;
     }
     
     /* Dropdown Content (Hidden by Default) */
     .dropdown-content {
         //display: none;
         position: absolute;
-        background-color: #f6f6f6;
+        background: rgb(56, 54, 56);
         //min-width: 230px;
         border: 1px solid #ddd;
         z-index: 1;
@@ -48,23 +55,29 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
         overflow-y: scroll;
         overflow-x: hidden;
     }
-    
-    /* Links inside the dropdown */
+
+    .dropdown-content::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .dropdown-content::-webkit-scrollbar-track {
+        background: rgb(56, 54, 56);
+    }
+    .dropdown-content::-webkit-scrollbar-thumb {
+        background: #f6f6f6;
+    }
+
+    /* Options inside the dropdown */
     .dropdown-content option {
-      color: black;
       padding: 12px 16px;
       text-decoration: none;
       display: block;
+      background: rgb(56, 54, 56);
+      color: white;
     }
     
     /* Change color of dropdown links on hover */
-    .dropdown-content option:hover {background-color: #f1f1f1}
     
-    /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-    .show {display:block;}
-    option {
-        color: black;
-    }
 
     /*  Consider the styles above generic styles. The following styles are custom to currency select. 
         TODO: consider refactoring these into a different file */
@@ -180,7 +193,7 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
         console.log(this);
         console.log(changedProperties);
         if (changedProperties.get("values")?.length > 0) {
-            console.log("Update this sucker");
+            //this.showDropdown = false;
             this.filteredValues = this.values;
 
         }
@@ -263,8 +276,6 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
 
   handleSelectionEvent(event) {
         let selectObject = this.selectedElement;
-
-        this.showDropdown = false;
         let options = {
             detail: { 
                 selectValue: event.path[0].value,
@@ -290,7 +301,7 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
     return html` 
         <div class="dropdown">
             <button @click=${this.toggleElement} class="dropbtn currencySelect">${this.buttonText}</button>
-            <div id="dropdown" class="dropdown-content" ?hidden=${this.showDropdown}>
+            <div id="dropdown" class="dropdown-content" ?hidden=${!this.showDropdown}>
                 <input type="text" placeholder="Search.." id="searchText" @input=${this.updateSearchTextValue} .value=${this.searchString}>
                 ${this.filteredValues.map((object) => {
                     return html`<option value="${object.ticker}" @click=${this.handleSelectionEvent}>${object.name} - ${object.ticker}</option>`
