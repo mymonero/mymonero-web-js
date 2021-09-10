@@ -24,16 +24,16 @@ export class ExchangeLandingPage extends ExchangeNavigationController(LitElement
         this.clickHandler = this.clickHandler;
         this.context = {};
         this.providerServices = [
-            {
-                service_provider: "changenow",
-                title: "Exchange Monero for other cryptocurrencies (floating rate)",
-                description: `
-                    Exchange your Monero for any of a number of cryptocurrencies using ChangeNow's floating rate exchange. 
-                    The floating rate allows you to exchange smaller amounts of Monero than fixed rates. 
-                    With this method of exchange, due to the volitility of cryptocurrency, you may receive an amount that is slightly different to what you expect.`,
-                navigationType: "internalLink",
-                destination: "changenowFloatingRateView"
-            },
+            // {
+            //     service_provider: "changenow",
+            //     title: "Exchange Monero for other cryptocurrencies (floating rate)",
+            //     description: `
+            //         Exchange your Monero for any of a number of cryptocurrencies using ChangeNow's floating rate exchange. 
+            //         The floating rate allows you to exchange smaller amounts of Monero than fixed rates. 
+            //         With this method of exchange, due to the volitility of cryptocurrency, you may receive an amount that is slightly different to what you expect.`,
+            //     navigationType: "internalLink",
+            //     destination: "changenowFloatingRateView"
+            // },
             {
                 service_provider: "changenow",
                 title: "Exchange Monero for other cryptocurrencies (fixed rate)",
@@ -44,7 +44,7 @@ export class ExchangeLandingPage extends ExchangeNavigationController(LitElement
                 navigationType: "internalLink",
                 destination: "changenowFixedRateView"
             },
-            {
+            { 
                 service_provider: "changenow",
                 title: "Buy Monero using fiat currency",
                 description: `
