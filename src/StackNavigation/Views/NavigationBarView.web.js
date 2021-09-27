@@ -21,12 +21,13 @@ class NavigationBarView extends View {
     { // self.layer
       const layer = self.layer
       layer.classList.add('NavigationBarView')
+      layer.id = 'NavigationBarView'
       layer.style.position = 'absolute' // https://developers.google.com/web/updates/2016/12/position-sticky
       layer.style.top = '0%'
       layer.style.zIndex = '9'
       layer.style.width = '100%'
       layer.style.height = `41px`
-      layer.style.backgroundColor = '#272527'
+      //layer.style.backgroundColor = '#272527'
       layer.style.transition = 'box-shadow 0.06 ease-in-out'
       layer.style.webkitAppRegion = 'drag' // make draggable
       layer.style.webkitUserSelect = 'none'
@@ -34,10 +35,12 @@ class NavigationBarView extends View {
     { // background decoration view
       const view = new View({}, self.context)
       const layer = view.layer
+      layer.id = "navigation-bar-view-sub-wrapper";
       layer.style.position = 'absolute'
       layer.style.width = '100%'
       layer.style.height = `41px`
-      layer.style.backgroundColor = '#272527'
+      //layer.style.backgroundColor = '#272527'
+      layer.style.zIndex = '10';
       self.backgroundView = view
       self.addSubview(view)
     }
@@ -83,6 +86,7 @@ class NavigationBarView extends View {
       layer.style.width = '15%'
       layer.style.minWidth = `41px`
       layer.style.height = `41px`
+      layer.id = "leftBarButtonHolderView";
       self.addSubview(view)
     }
     { // rightBarButtonHolderView
@@ -94,6 +98,7 @@ class NavigationBarView extends View {
       layer.style.width = '15%'
       layer.style.minWidth = `41px`
       layer.style.height = `41px`
+      layer.id = "rightBarButtonHolderView";
       self.addSubview(view)
     }
   }
