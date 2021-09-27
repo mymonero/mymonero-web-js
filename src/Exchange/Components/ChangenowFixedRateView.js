@@ -20,6 +20,19 @@ export class ChangenowFixedRateView extends ExchangeNavigationController(LitElem
 
     static get styles() {
         return css`    
+        #explanatory-message {
+            color: rgb(252, 251, 252);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            height: 41px;
+            text-align: center;
+            line-height: 41px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .submit-button-wrapper {
             position: fixed;
             top: -45px;
@@ -75,16 +88,11 @@ export class ChangenowFixedRateView extends ExchangeNavigationController(LitElem
 
     connectedCallback() {
         super.connectedCallback();
-        console.log("Fixed rate view connected to DOM");
-        console.log(this.context)
-        console.log(exchangeHelper);
         exchangeHelper.doInit(this.context);
         //this.sendFunds = ExchangeUtils.default.sendFunds
-        console.log(this);
     }
     
     sendFunds() {
-        console.log("sendFunds invoked");
         const in_amount = document.getElementById('in_amount_remaining').innerHTML
         const send_address = document.getElementById('receiving_subaddress').innerHTML
         const in_amount_str = '' + in_amount
@@ -116,15 +124,11 @@ export class ChangenowFixedRateView extends ExchangeNavigationController(LitElem
     
     render() {
         let exchangeFormTemplate = exchangeHelper.htmlFormTemplate();
-        console.log(exchangeFormTemplate);
         let exchangeFormHtml = exchangeFormTemplate.content.firstElementChild.cloneNode(true);
-        console.log(exchangeFormHtml);
-
-
 
         return html`
         <div id="exchange-landing-page">
-            <div id="explanatory-message">Landing page</div>
+            <div id="explanatory-message">Loading Exchange. Please wait.</div>
             ${exchangeFormHtml}
             </div>
         </div>

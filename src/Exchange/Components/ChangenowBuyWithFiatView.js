@@ -309,6 +309,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             displayEstimateRetrieval: { type: Boolean },
             displayOrderScreen: { type: Boolean },
             displayPurchaseButton: { type: Boolean },
+            displayRedirectUrl: { type: Boolean },
             displayPurchaseRedirectIndicator: { type: Boolean },
             displayErrorString: { type: Boolean },
             errorString: { type: String },
@@ -358,12 +359,6 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
     }
 
     async fireEstimateEvent(event) {
-        // console.log("handle estimate POST fired");
-        // console.log("Test?");
-        // console.log(this);
-        // console.log(this.inCurrencyCode);
-        // console.log(this.inCurrencyValue);
-        // console.log(event);
         let options = {
             detail: { 
                 
@@ -408,8 +403,10 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         this.displayPurchaseRedirectIndicator = true;
         try {
             let estimateResponse = await this.fiatApi.createExchangeTransaction(this.inCurrencyValue, this.inCurrencyCode, "XMR", this.selectedWallet.public_address);
-            window.open(estimateResponse.redirectUrl);
+            console.log(estimateResponse.redirect_url)
+            window.open(estimateResponse.redirect_url);
             this.displayPurchaseRedirectIndicator = false;
+            this.displayPurchaseButton = true;
         } catch (error) {
             // Error communicating with server to retrieve response -- show error
             this.errorString = error.message;
@@ -419,7 +416,6 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
 
     renderStyles() {
         // These styles are necessary for if we ever have a top-right action button
-        console.log("Should append styles");
         let styleElement = document.getElementById("lit-styles");
         typeof(styleElement);
         if (styleElement === null) {
@@ -427,6 +423,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             styles.innerHTML = `
                 #stack-view-stage-view {
                     z-index: 21 !important;
+                    top: 36px !important;
                 }
                 #leftBarButtonHolderView {
                     z-index: 10;
@@ -444,13 +441,10 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             styles.id = "lit-styles";
             let navigationView = document.getElementById("NavigationBarView");
             navigationView.appendChild(styles);
-            console.log("Append those styles");
         }
     }
 
     updateSelectedWallet(event) {
-        console.log("Update wallet on form");
-        console.log(event);
         this.selectedWallet = event.detail.wallet;
     }
 
@@ -459,18 +453,11 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         this.renderStyles();
         this.fiatApi = fiatApi;
         this.wallets = this.context.walletsListController.records;
-        console.log(this.wallets);
-        console.log("CBWFV template added");
         this.updateSelectedCurrency.bind(this);
         this.addEventListener('searchable-select-update', this.updateSelectedCurrency);
         this.addEventListener('wallet-selector-update', this.updateSelectedWallet);
         
-        //this.addEventListener('fire-estimate-event', this.handleEstimateEvent);
-        //let orderBtn = document.getElementById("order-button");
-        //this.fireEstimateEvent.bind(this);
-        //document.addEventListener('click', this.fireEstimateEvent, false);
         this.displayLoadingScreen = true;
-        // TODO: DELETE NEXT LINE AFTER DEBUGGING
         this.displayOrderScreen = true;
         this.displayMinMaxLoadingIndicator = false;
         let apiIsAvailable = await this.checkAPIIsAvailable();
@@ -480,7 +467,6 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             try {
                 let fiatCurrencies = await this.fiatApi.getAvailableFiatCurrencies();
                 this.fiatCurrencies = fiatCurrencies;
-                console.log("Reqhest update");
                 this.requestUpdate(); // Check if this is necessary
                 //this.displayLoadingScreen = false;
                 this.displayCurrencyLoadingIndicator = false;
@@ -607,22 +593,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
             "name": "Euro",
             "networks": [],
             "ticker": "EUR",
-        },
-        {
-            "block_explorer_url_mask": null,
-            "currency_type": "FIAT",
-            "default_exchange_value": "300",
-            "enabled": true,
-            "has_external_id": false,
-            "id": "4881817401",
-            "is_available": null,
-            "is_featured": null,
-            "is_stable": null,
-            "logo_url": "",
-            "name": "Rand",
-            "networks": [],
-            "ticker": "ZAR",
-        }    
+        }  
     ];
         this.selectedFiatCurrency = "";
         //this.setScreenTitle("Buy Monero With Fiat");
@@ -666,44 +637,26 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         }
 
         this.estimateRequestTimer = setTimeout(() => {
-            console.log(this);
-            console.log("User input event finished -- get estimate");
             if (this.inCurrencyCode.length > 0) {
-                console.log("Looks legit");
                 // TODO: Put this into standalone function 
                 this.handleCurrencyInputResponse();
             }
         }, 2000);
-        console.log(this);
-        console.log(event);
-        // We would invoke a timer, and when the timer expires, do a GET (giving the user a chance to finish typing)
-        console.log(this.inCurrencyCode);
-        console.log(this.inCurrencyValue);
-        console.log(this.inCurrencyValue,this.outCurrencyValue)
     }
 
     async handleCurrencyInputResponse() {
-        console.log("Handle currency input");
-        console.log(this);
         this.displayEstimateRetrieval = true;
         try {
             let response = await this.fiatApi.getTransactionEstimate(this.inCurrencyValue, this.inCurrencyCode, "XMR");
-            console.log("Doing the estimate detail thing");
-            console.log(this.estimateDetails);
-            console.log(response);
             let estimateDetails = {};
             estimateDetails.convertedAmount = response.converted_amount.amount;
-            //estimateDetails.expected_to_amount = response.expected_to_amount;
             estimateDetails.estimatedExchangeRate = response.estimated_exchange_rate;
             estimateDetails.estimatedExchangeRateString = response.estimated_exchange_rate + " " + response.to_currency;
-            //estimateDetails.id = response.id;
             estimateDetails.initial_from_currency = response.from_currency;
             estimateDetails.initial_expected_from_amount = this.inCurrencyValue;
             estimateDetails.networkFee = response.network_fee.amount;
-            //estimateDetails.redirected_amount = response.redirected_amount;
             estimateDetails.serviceFees = response.service_fees;
             estimateDetails.to_currency = response.to_currency;
-            //this.outCurrencyValue = response.value;
             estimateDetails.expected_to_amount = response.value;
             estimateDetails.networkFeeString = response.network_fee.amount + " " + response.network_fee.currency            
             estimateDetails.serviceFeeString = "N/A"
@@ -836,6 +789,7 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
                         <div class="estimate-value">
                             <a @click=${this.redirectToURL} ?hidden=${!this.displayPurchaseButton} class="confirmation-button">Buy XMR</a>
                             <activity-indicator .loadingText=${"Busy finalising estimate and redirecting you to our partner"} ?hidden=${!this.displayPurchaseRedirectIndicator}></activity-indicator>
+                            <div ?hidden=${!this.displayRedirectUrl}>Successfully created conversion transaction. You can view your exchange at ${this.redirectUrl}</div>
                         </div>    
                     </div>
                     <div class="estimate-row odd-row">
