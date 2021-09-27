@@ -4,6 +4,8 @@ const View = require('../../Views/View.web')
 const RootFooterView = require('./RootFooterView.web')
 const ConnectivityMessageBarView = require('./ConnectivityMessageBarView.web')
 const RootTabBarAndContentView = require('./RootTabBarAndContentView.web')
+require("../../Exchange/Components/ExchangeLandingPage");
+
 
 class RootView extends View {
   constructor (options, context) {

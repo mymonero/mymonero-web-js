@@ -2,7 +2,7 @@
   "name": "MyMonero",
   "author": "MyMonero",
   "description": "The simplest way to use Monero",
-  "version": "1.1.22",
+  "version": "1.2.0",
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": "https://github.com/mymonero/mymonero-web-js",
   "scripts": {
@@ -15,6 +15,7 @@
     "node": ">=12.4.0"
   },
   "dependencies": {
+    "@mymonero/changenow-exchange-integration": "^1.2.1",
     "@mymonero/mymonero-app-bridge": "^1.0.11",
     "@mymonero/mymonero-bigint": "^1.0.5",
     "@mymonero/mymonero-exchange-helper": "^1.1.14",
@@ -39,6 +40,8 @@
     "fastclick": "1.0.6",
     "html5-fs": "0.1.1",
     "jsqr": "1.1.1",
+    "lit": "*",
+    "lit-html": "^1.4.1",
     "mymonero-exchange": "^0.1.5",
     "path-browserify": "^1.0.1",
     "qrcode": "^1.4.4",
@@ -54,7 +57,7 @@
     "babel-core": "6.26.3",
     "babel-loader": "8.0.6",
     "babel-minify": "0.5.1",
-    "copy-webpack-plugin": "^8.1.0",
+    "copy-webpack-plugin": "^8.1.1",
     "css-loader": "^5.2.0",
     "process": "0.11.10",
     "request": "2.88.0",

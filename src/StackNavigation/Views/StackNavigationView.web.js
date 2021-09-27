@@ -28,6 +28,7 @@ class StackNavigationView extends View {
       layer.style.width = '100%'
       layer.style.height = '100%'
       layer.style.overflow = 'hidden' // because we don't want modals presented in self to create a scroll bar - bad thangs happen
+      layer.id = "stack-navigation-view"
     }
     { // navigationBarView
       const NavigationBarView = require('./NavigationBarView.web')
@@ -49,6 +50,7 @@ class StackNavigationView extends View {
       const view = new View({}, self.context)
       {
         const layer = view.layer
+        layer.id = "stack-view-stage-view"
         layer.style.zIndex = '1'
         layer.style.position = 'absolute'
         layer.style.left = '0'

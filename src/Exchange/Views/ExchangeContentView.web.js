@@ -48,6 +48,8 @@ class ExchangeContentView extends View {
     layer.style.marginLeft = margin_side + 'px'
     layer.style.width = `calc(100% - ${2 * margin_side}px)`
     layer.style.height = `calc(100% - ${marginTop}px - 15px)`
+    layer.id = "main-exchange-wrapper";
+    layer.style.zIndex = 21;
 
     ecvSelf._setup_emptyStateContainerView(context)
     ecvSelf.observerIsSet = false
@@ -61,7 +63,7 @@ class ExchangeContentView extends View {
   _setup_tabButtonClickListener(context) {
     const self = this;
     //console.log("Setting up tab button click listener");
-    let tabElement = document.getElementById('tabButton-exchange');
+    //let tabElement = document.getElementById('tabButton-exchange');
     //tabElement.addEventListener('click', self.renderExchangeForm.bind(context))
   }
 
@@ -100,12 +102,22 @@ class ExchangeContentView extends View {
       const layer = view.layer
       layer.classList.add('emptyScreens')
       layer.classList.add('empty-page-panel')
+      layer.id = "exchange-content-container"
     }
+
     let contentContainerLayer
     {
       const layer = document.createElement('div')
       layer.classList.add('content-container')
       layer.classList.add('empty-page-content-container')
+      // These styles are necessary to hide the navigation buttons so that we can create backwards-dependancy with new Lit elements and our legacy navigation code
+      let styleElement = document.createElement('style');
+      styleElement.innerHTML = `
+        #navigation-bar-view-sub-wrapper, #rightBarButtonHolderView {
+          display: none;
+        }
+      `
+      layer.appendChild(styleElement);
       view.layer.appendChild(layer)
       contentContainerLayer = layer
     }
@@ -115,85 +127,93 @@ class ExchangeContentView extends View {
       layer.classList.add('message-label')
       layer.classList.add('exchangeRate')
       layer.id = 'explanatory-message'
-      layer.innerHTML = 'You can exchange XMR to Bitcoin here. Please wait while we load rates.'
+      let subLayer = document.createElement("exchange-landing-page");
+      subLayer.context = self.context;
+      console.log(subLayer);
+      layer.appendChild(subLayer);
+
       contentContainerLayer.appendChild(layer)
     }
+    
+    
+    // {
+    //   // Send Funds
+    //   const layer = document.createElement('div')
+    //   // we use ES6's spread operator (...buttonClasses) to invoke the addition of classes -- cleaner than a foreach
+    //   const buttonClasses = ['base-button', 'hoverable-cell', 'navigation-blue-button-enabled', 'action', 'right-add-button', 'exchange-button']
+    //   layer.classList.add(...buttonClasses)
+    //   layer.id = 'exchange-xmr'
+    //   layer.innerText = 'Exchange XMR'
+    //   const orderSent = false
+    //   layer.addEventListener('click', function (orderSent) {
+    //     const exchangePageDiv = document.getElementById('exchangePage')
+    //     //exchangePageDiv.classList.remove('active')
 
-    {
-      // Send Funds
-      const layer = document.createElement('div')
-      // we use ES6's spread operator (...buttonClasses) to invoke the addition of classes -- cleaner than a foreach
-      const buttonClasses = ['base-button', 'hoverable-cell', 'navigation-blue-button-enabled', 'action', 'right-add-button', 'exchange-button']
-      layer.classList.add(...buttonClasses)
-      layer.id = 'exchange-xmr'
-      layer.innerText = 'Exchange XMR'
-      const orderSent = false
-      layer.addEventListener('click', function (orderSent) {
-        const exchangePageDiv = document.getElementById('exchangePage')
-        //exchangePageDiv.classList.remove('active')
-
-        /* 
-                    * We define the status update and the response handling function here, since we need to update the DOM with status feedback from the monero-daemon.
-                    * We pass them as the final argument to ExchangeUtils.sendFunds
-                    * It performs the necessary DOM-based status updates in this file so that we don't tightly couple DOM updates to a Utility module.
-                    */
-        //function validation_status_fn = exchangeHelper.validationStatusCallback
-        /*
-                    * We perform the necessary DOM-based status updates in this file so that we don't tightly couple DOM updates to a Utility module.
-                    */
-        // function handle_response_fn (err, mockedTransaction) {
-        //   let str
-        //   const monerodUpdates = document.getElementById('monerod-updates')
-        //   if (err) {
-        //     str = typeof err === 'string' ? err : err.message
-        //     monerodUpdates.innerText = str
-        //     return
-        //   }
-        //   str = 'Sent successfully.'
-        //   monerodUpdates.innerText = str
-        // }
-        // No cancel handler code since we don't provide a cancel method
-        function cancelled_fn () { // canceled_fn
-          // No cancel handler code since we don't provide a cancel method
-        }
+    //     /* 
+    //                 * We define the status update and the response handling function here, since we need to update the DOM with status feedback from the monero-daemon.
+    //                 * We pass them as the final argument to ExchangeUtils.sendFunds
+    //                 * It performs the necessary DOM-based status updates in this file so that we don't tightly couple DOM updates to a Utility module.
+    //                 */
+    //     //function validation_status_fn = exchangeHelper.validationStatusCallback
+    //     /*
+    //                 * We perform the necessary DOM-based status updates in this file so that we don't tightly couple DOM updates to a Utility module.
+    //                 */
+    //     // function handle_response_fn (err, mockedTransaction) {
+    //     //   let str
+    //     //   const monerodUpdates = document.getElementById('monerod-updates')
+    //     //   if (err) {
+    //     //     str = typeof err === 'string' ? err : err.message
+    //     //     monerodUpdates.innerText = str
+    //     //     return
+    //     //   }
+    //     //   str = 'Sent successfully.'
+    //     //   monerodUpdates.innerText = str
+    //     // }
+    //     // No cancel handler code since we don't provide a cancel method
+    //     function cancelled_fn () { // canceled_fn
+    //       // No cancel handler code since we don't provide a cancel method
+    //     }
         
-        let sendFunds = ExchangeUtils.default.sendFunds;
+    //     let sendFunds = ExchangeUtils.default.sendFunds;
 
-        const in_amount = document.getElementById('in_amount_remaining').innerHTML
-        const send_address = document.getElementById('receiving_subaddress').innerHTML
-        const in_amount_str = '' + in_amount
+    //     const in_amount = document.getElementById('in_amount_remaining').innerHTML
+    //     const send_address = document.getElementById('receiving_subaddress').innerHTML
+    //     const in_amount_str = '' + in_amount
 
-        const selectedWallet = document.getElementById('selected-wallet')
-        const selectorOffset = selectedWallet.dataset.walletoffset
-        const sweep_wallet = false // TODO: Add sweeping functionality
-        try {
-          if (context.walletsListController.hasOwnProperty('orderSent')) {
-            console.log('Order already sent previously')
-          } else {
-            context.walletsListController.orderSent = false
-          }
+    //     const selectedWallet = document.getElementById('selected-wallet')
+    //     const selectorOffset = selectedWallet.dataset.walletoffset
+    //     const sweep_wallet = false // TODO: Add sweeping functionality
+    //     try {
+    //       if (context.walletsListController.hasOwnProperty('orderSent')) {
+    //         console.log('Order already sent previously')
+    //       } else {
+    //         context.walletsListController.orderSent = false
+    //       }
 
-          sendFunds(context.walletsListController.records[0], in_amount, send_address, sweep_wallet, exchangeHelper.sendFundsValidationStatusCallback, exchangeHelper.handleSendFundsResponseCallback, context)
-        } catch (error) {
-          console.log(error)
-        }
-      })
+    //       sendFunds(context.walletsListController.records[0], in_amount, send_address, sweep_wallet, exchangeHelper.sendFundsValidationStatusCallback, exchangeHelper.handleSendFundsResponseCallback, context)
+    //     } catch (error) {
+    //       console.log(error)
+    //     }
+    //   })
 
-      contentContainerLayer.appendChild(layer)
-    }
-    {
-      // let's make the xmr.to form in HTML for sanity's sake
-      const layer = document.createElement('div')
-      // layer.classList.add("xmr_input");
-      // We clone the first element of the template so that we get an instance of the first element, rather than a document fragment. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template
-      let html = self.exchangeFormTemplate.content.firstElementChild.cloneNode(true);
-      layer.appendChild(html)
-      contentContainerLayer.appendChild(layer)
-    }
+    //   contentContainerLayer.appendChild(layer)
+    // }
+    // {
+    //   // let's make the xmr.to form in HTML for sanity's sake
+    //   const layer = document.createElement('div')
+    //   // layer.classList.add("xmr_input");
+    //   // We clone the first element of the template so that we get an instance of the first element, rather than a document fragment. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template
+    //   let html = self.exchangeFormTemplate.content.firstElementChild.cloneNode(true);
+    //   layer.appendChild(html)
+    //   contentContainerLayer.appendChild(layer)
+    // }
 
-    let e = document.getElementById("exchangePage");
+    // e.appendChild(styleElement);
+    //
     self.emptyStateMessageContainerView = view
     self.addSubview(view)
+
+
 
     //const a = document.getElementById('server-invalid')
     setTimeout(() => {
@@ -231,7 +251,7 @@ class ExchangeContentView extends View {
       }
     }
     
-    return view
+    //return view
   }
 }
 
