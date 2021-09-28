@@ -508,7 +508,6 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
     async checkAPIIsAvailable() {
         try {
             let response = await this.fiatApi.getFiatAPIStatus();
-            console.log(response);
             if (response.message == "OK") {
                 return true;
             } else {
@@ -524,7 +523,6 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
     async getTransactionEstimate() {
         try {
             let response = await this.fiatApi.getTransactionEstimate();
-            console.log(response);
             if (response.message == "OK") {
                 return true;
             } else {
@@ -626,9 +624,9 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
     handleCurrencyInput(event) {
         this.clearEstimate();
         var eventPath = event.path || (event.composedPath && event.composedPath());
-        if (eventPath.id == "inCurrencyValue") {
+        if (eventPath[0].id == "inCurrencyValue") {
             this.inCurrencyValue = eventPath[0].value;
-        } else if (eventPath.id == "outCurrencyValue") {
+        } else if (eventPath[0].id == "outCurrencyValue") {
             this.outCurrencyValue = eventPath[0].value;
         }
 
