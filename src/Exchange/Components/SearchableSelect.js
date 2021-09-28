@@ -122,12 +122,7 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    console.log(this.destinationView);
-    console.log("Page Template view connected to DOM");
-    console.log(this);
-    console.log(this.service);
     this.addEventListener('click', () => {
-        console.log(this.service);
         if (this.service.navigationType == 'externalUrl') {
             this.openExternal(this.service.destination);
         } else if (this.service.navigationType == 'internalLink') {
@@ -179,45 +174,18 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
         }
     }
 
-//   clickHandler(event) {
-//     console.log("Hi from clickhandler");  
-//     console.log(event);
-//     console.log(this);
-
-//   }
-
     willUpdate(changedProperties) {
         // only need to check changed properties for an expensive computation.
         super.willUpdate(changedProperties);
-        console.log("Will update");
-        console.log(this);
-        console.log(changedProperties);
         if (changedProperties.get("values")?.length > 0) {
-            //this.showDropdown = false;
             this.filteredValues = this.values;
-
         }
-        console.log(this.values);
         this.filteredvalues = this.values;
     }
 
     attributeChangedCallback() {
         super.attributeChangedCallback();
-        console.log("attributeChangedCallback");
-        console.log(this);
     }
-
-    myHasChanged(obj) {
-        console.log("myHasChanged");
-        console.log(this);
-        console.log(obj);
-    }
-
-    // hasChanged() {
-    //     super.hasChanged();
-    //     console.log("hasChanged")
-    //     console.log(this)
-    // }
 
   connectedCallback() {
         super.connectedCallback();
@@ -293,10 +261,8 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
   }
 
     updateSearchTextValue(event) {
-        console.log(event);
         var eventPath = event.path || (event.composedPath && event.composedPath());
         this.searchString = eventPath[0].value;
-        console.log("filtering " + this.searchString);
         this.filterSelect();
     }
 
