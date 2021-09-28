@@ -276,23 +276,26 @@ export class SearchableSelect extends ExchangeNavigationController(LitElement) {
 
   handleSelectionEvent(event) {
         let selectObject = this.selectedElement;
+        // Chrome uses event.path while Firefox uses composedPath
+        var eventPath = event.path || (event.composedPath && event.composedPath());
         let options = {
             detail: { 
-                selectValue: event.path[0].value,
-                selectText: event.path[0].innerText
+                selectValue: eventPath[0].value,
+                selectText: eventPath[0].innerText
             },
             bubbles: true,
             composed: true
         };
         let selectOptionUpdated = new CustomEvent("searchable-select-update", options)
-        this.buttonText = event.path[0].value;
+        this.buttonText = eventPath[0].value;
         this.dispatchEvent(selectOptionUpdated, options)
         this.toggleElement();
   }
 
     updateSearchTextValue(event) {
         console.log(event);
-        this.searchString = event.path[0].value;
+        var eventPath = event.path || (event.composedPath && event.composedPath());
+        this.searchString = eventPath[0].value;
         console.log("filtering " + this.searchString);
         this.filterSelect();
     }

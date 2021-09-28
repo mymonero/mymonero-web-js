@@ -403,7 +403,6 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
         this.displayPurchaseRedirectIndicator = true;
         try {
             let estimateResponse = await this.fiatApi.createExchangeTransaction(this.inCurrencyValue, this.inCurrencyCode, "XMR", this.selectedWallet.public_address);
-            console.log(estimateResponse.redirect_url)
             window.open(estimateResponse.redirect_url);
             this.displayPurchaseRedirectIndicator = false;
             this.displayPurchaseButton = true;
@@ -626,10 +625,11 @@ export class ChangenowBuyWithFiatView extends ExchangeNavigationController(LitEl
 
     handleCurrencyInput(event) {
         this.clearEstimate();
-        if (event.path[0].id == "inCurrencyValue") {
-            this.inCurrencyValue = event.path[0].value;
-        } else if (event.path[0].id == "outCurrencyValue") {
-            this.outCurrencyValue = event.path[0].value;
+        var eventPath = event.path || (event.composedPath && event.composedPath());
+        if (eventPath.id == "inCurrencyValue") {
+            this.inCurrencyValue = eventPath[0].value;
+        } else if (eventPath.id == "outCurrencyValue") {
+            this.outCurrencyValue = eventPath[0].value;
         }
 
         if (this.estimateRequestTimer !== 'undefined') {
