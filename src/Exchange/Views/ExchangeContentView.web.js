@@ -9,6 +9,9 @@ const commonComponents_activityIndicators = require('../../MMAppUICommonComponen
 const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger // important: grab defined export
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 const ExchangeHelper = require("@mymonero/mymonero-exchange-helper")
+const webComponents = require("@mymonero/mymonero-web-components");
+const pageTemplates = require("@mymonero/mymonero-page-templates");
+const ExchangeLandingPage = pageTemplates.ExchangeLandingPage;
 let exchangeHelper = new ExchangeHelper();
 //let handleOfferError = exchangeHelper.ErrorHelper.handleOfferError;
 
