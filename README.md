@@ -32,25 +32,25 @@ Please don't use the Issues tracker for general support or inquiries. You can al
 # Contributing & Testing
 
 
-## Getting the Source Code
+## Installation
 
-### Download & Install
+Before installing, [download and install Node.js](https://nodejs.org/en/download/).
 
-1. First, ensure that you have recent versions of `node` and `npm` installed.
-
-2. Clone or otherwise download this repository. Then, in your terminal, `cd` into the repo directory.
-
-3. (To get the bleeding edge, and/or if you are going to make changes) Switch to the `develop` branch by executing `git checkout develop`.
-
-4. Install all required `node_modules` by executing `npm install`.
-
-## Browser
-
+Clone the repo and install the dependencies.
 ```bash
-`npm run start`
+git clone https://github.com/mymonero/mymonero-web-js.git
+cd mymonero-web-js
 ```
-*Note:* This will run the command `python -m SimpleHTTPServer 9110`. After this command completes, open your browser of choice and navigate to `http://localhost:9110`.
+```bash
+$ npm install
+```
 
+To start the web wallet, run the following
+```bash
+`npm start`
+```
+
+View the web wallet at: http://localhost:9110
 
 ## Contributing
 
