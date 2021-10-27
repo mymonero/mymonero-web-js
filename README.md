@@ -23,7 +23,7 @@ git clone https://github.com/mymonero/mymonero-web-js.git
 cd mymonero-web-js
 ```
 ```bash
-$ npm install
+npm install
 ```
 
 To start the web wallet, run the following
