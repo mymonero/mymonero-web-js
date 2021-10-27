@@ -6,10 +6,10 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": "https://github.com/mymonero/mymonero-web-js",
   "scripts": {
-    "dev": "(webpack --mode=development) & python2 -m SimpleHTTPServer 9110",
+    "dev": "(webpack --mode=development) & node server",
     "build": "webpack --mode=production",
-    "start": "(webpack --mode=development) & python2 -m SimpleHTTPServer 9110",
-    "watch": "(webpack --mode=development --watch) & python2 -m SimpleHTTPServer 9110"
+    "start": "(webpack --mode=development) & node server",
+    "watch": "(webpack --mode=development --watch) & node server"
   },
   "engines": {
     "node": ">=12.4.0"
