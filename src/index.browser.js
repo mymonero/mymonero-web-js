@@ -15,7 +15,6 @@ window.BootApp = async function () { // encased in a function to prevent scope b
     isDebug: false,
     isMobile: isMobile,
     TabBarView_thickness: isMobile ? 48 : 79,
-    // TODO: detect if Mac … if so, render w/o native emoji (need holistic fallback solution though - see Gitlab post referenced by https://github.com/mymonero/mymonero-app-js/issues/194)
     appDownloadLink_domainAndPath: 'https://mymonero.com',
     appRepoLink: 'https://www.github.com/mymonero/mymonero-app-js/releases/latest',
     HostedMoneroAPIClient_DEBUGONLY_mockSendTransactionSuccess: false,
