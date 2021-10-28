@@ -71,6 +71,7 @@
     "webpack": "^5.27.2",
     "webpack-cli": "^4.5.0",
     "webpack-merge": "4.2.2",
-    "worker-loader": "^3.0.0"
+    "worker-loader": "^3.0.0",
+    "dotenv-webpack": "^7.0.3"
   }
 }
