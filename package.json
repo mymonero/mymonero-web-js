@@ -25,7 +25,6 @@
     "@mymonero/mymonero-monero-config": "^1.0.5",
     "@mymonero/mymonero-money-format": "^1.0.5",
     "@mymonero/mymonero-net-service-utils": "^1.0.5",
-    "@mymonero/mymonero-nettype": "^1.0.5",
     "@mymonero/mymonero-page-templates": "*",
     "@mymonero/mymonero-paymentid-utils": "^1.0.5",
     "@mymonero/mymonero-request-utils": "^1.1.4",
