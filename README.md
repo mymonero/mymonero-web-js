@@ -13,12 +13,25 @@
   <a href="https://opensource.org/licenses/BSD-3-Clause"><img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg"></a>
 </p>
 
-## License and Copyrights
+## Installation
 
-See `LICENSE.txt` for license.
+Before installing, [download and install Node.js](https://nodejs.org/en/download/).
 
-All app source code and assets copyright © 2014-2020 by MyMonero. All rights reserved.
+Clone the repo and install the dependencies.
+```bash
+git clone https://github.com/mymonero/mymonero-web-js.git
+cd mymonero-web-js
+```
+```bash
+npm install
+```
 
+To start the web wallet, run the following
+```bash
+npm start
+```
+
+View the web wallet at: http://localhost:9110
 
 ## Reporting Bugs & Making Feature Requests
 
@@ -28,40 +41,14 @@ If you're reporting a bug, be sure to include all information which we would nee
 
 Please don't use the Issues tracker for general support or inquiries. You can also [contact us](https://mymonero.com/support) directly.
 
-
-# Contributing & Testing
-
-
-## Getting the Source Code
-
-### Download & Install
-
-1. First, ensure that you have recent versions of `node` and `npm` installed.
-
-2. Clone or otherwise download this repository. Then, in your terminal, `cd` into the repo directory.
-
-3. (To get the bleeding edge, and/or if you are going to make changes) Switch to the `develop` branch by executing `git checkout develop`.
-
-4. Install all required `node_modules` by executing `npm install`.
-
-## Browser
-
-```bash
-`npm run start`
-```
-*Note:* This will run the command `python -m SimpleHTTPServer 9110`. After this command completes, open your browser of choice and navigate to `http://localhost:9110`.
-
-
-## Contributing
-
-### Testing
+## Testing
 
 Please submit any bugs as Issues unless they have already been reported.
 
 Suggestions and feedback are very welcome!
 
 
-### Developing
+## Contributing
 
 If you have an improvement to the codebase and would like to have your code shipped in the production MyMonero app, please submit a [pull request](https://help.github.com/articles/about-pull-requests/), even if it's still a WIP. We try to credit all contributors in app release notes.
 
@@ -74,13 +61,17 @@ The maintainer enjoys collaborating with volunteer contributors to the MyMonero 
 There's also an icebox of ideas, features, improvements, known issues, and other todos waiting to be knocked out which are kept in the [Issues](https://github.com/mymonero/monero-app-js/issues) tracker.
 
 
-### Donating
+## Donating
 
 MyMonero Donation Address (XMR): 48yi8KBxh7fdZzwnX2kFCGALRcN1sNjwBHDfd5i9WLAWKs7G9rVbXNnbJTqZhhZCiudVtaMJKrXxmBeBR9kggBXr8X7PxPT
 
 Proceeds from donations are used to fund development on the MyMonero back-end server (a performant version of which we soon™ plan to open-source for anyone to run their own server at home). Any remaining funds will go towards product (app UI) R&D, and hosting costs.
 
+## License and Copyrights
 
+See `LICENSE.txt` for license.
+
+All app source code and assets copyright © 2014-2020 by MyMonero. All rights reserved.
 
 ## Acknowledgements
 
