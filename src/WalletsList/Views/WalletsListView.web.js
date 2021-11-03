@@ -201,7 +201,7 @@ class WalletsListView extends ListView {
   //
   Navigation_Title () {
     const self = this
-    return `<a href="https://mymonero.com" target="_blank" style="text-decoration: none; color: rgb(252, 251, 252); "><span style='width: 30px; height: 20px; display: inline-block; margin-right: 6px;'><span class='title-logo'>&nbsp;</span></span>MyMonero v${self.context.app.getVersion()}</a>`
+    return `<a href="https://mymonero.com" target="_blank" style="text-decoration: none; color: rgb(252, 251, 252); "><span style='width: 30px; height: 20px; display: inline-block; margin-right: 6px;'><span class='title-logo'>&nbsp;</span></span>MyMonero v${self.context.version}</a>`
   }
 
   Navigation_New_RightBarButtonView () {

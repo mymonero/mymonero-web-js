@@ -21,7 +21,7 @@ class RootView extends View {
     container.classList.add('about-container')
     // about logo link
     const logoLink = document.createElement('a')
-    logoLink.classList.add('about-logo');
+    logoLink.classList.add('about-logo')
     logoLink.href = self.context.appDownloadLink_domainAndPath
     logoLink.addEventListener('click', function (e) {
       e.preventDefault()
@@ -32,7 +32,7 @@ class RootView extends View {
     // version text
     const version = document.createElement('div')
     version.classList.add('about-version')
-    version.innerHTML = `Version ${self.context.app.getVersion()}`
+    version.innerHTML = `Version ${self.context.version}`
     self.layer.appendChild(version)
     // github release link
     const release = document.createElement('a')

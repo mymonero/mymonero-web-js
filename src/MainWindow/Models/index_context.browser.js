@@ -21,10 +21,6 @@ const ClipboardJS = require('clipboard')
 
 function NewHydratedContext (initialContext) {
   initialContext = initialContext || {}
-  const app = initialContext.app
-  if (!app) {
-    throw Error('app required')
-  }
 
   const context = initialContext != null ? initialContext : {}
 
@@ -38,9 +34,9 @@ function NewHydratedContext (initialContext) {
     coreBridge_instance: context.monero_utils // the same as coreBridge_instance
   }, context)
   context.hostedMoneroAPIClient = new HostedMoneroAPIClient({
-    appUserAgent_product: context.app.getName(),
-    appUserAgent_version: context.app.getVersion(),
-    apiUrl: context.app.getApiUrl(),
+    appUserAgent_product: context.name,
+    appUserAgent_version: context.version,
+    apiUrl: context.apiUrl,
     request_conformant_module: require('xhr')
   }, context)
   context.openAliasResolver = new OpenAliasResolver({
