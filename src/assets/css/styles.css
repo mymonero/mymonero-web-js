@@ -2837,3 +2837,9 @@ div.customSelect {}
 #leftBarButtonHolderView, #rightBarButtonHolderView {
   z-index: 10;
 }
+
+@media screen and (max-width: 548px) {
+  #stack-view-stage-view {
+    overflow-y: scroll !important;
+  }
+}
