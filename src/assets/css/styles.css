@@ -2838,8 +2838,12 @@ div.customSelect {}
   z-index: 10;
 }
 
-@media screen and (max-width: 548px) {
+@media screen and (max-height: 860px) {
   #stack-view-stage-view {
     overflow-y: scroll !important;
   }
+}
+
+#stack-view-stage-view {
+  background: rgb(39, 37, 39);
 }
