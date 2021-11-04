@@ -25,20 +25,22 @@ cd mymonero-web-js
 ```bash
 npm install
 ```
-Copy the .env.example file to .env
-
-Windows:
-```bash
-copy .env.example .env
-```
-MacOS / Unix:
-```bash
-cp .env.example .env
-```
 To start the web wallet, run the following
 ```bash
 npm start
 ```
+
+Optionally, you can override default environment variables by copying the .env.defaults file to .env
+
+Windows:
+```bash
+copy .env.defaults .env
+```
+MacOS / Unix:
+```bash
+cp .env.defaults .env
+```
+
 
 View the web wallet at: http://localhost:9110
 

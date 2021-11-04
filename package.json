@@ -63,6 +63,7 @@
     "babel-minify": "0.5.1",
     "copy-webpack-plugin": "^8.1.1",
     "css-loader": "^5.2.0",
+    "dotenv-webpack": "^7.0.3",
     "process": "0.11.10",
     "request": "2.88.0",
     "standard": "^16.0.3",
@@ -70,7 +71,6 @@
     "webpack": "^5.27.2",
     "webpack-cli": "^4.5.0",
     "webpack-merge": "4.2.2",
-    "worker-loader": "^3.0.0",
-    "dotenv-webpack": "^7.0.3"
+    "worker-loader": "^3.0.0"
   }
 }
