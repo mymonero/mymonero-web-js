@@ -67,14 +67,14 @@ exports.ScrollCurrentFormElementIntoView = ScrollCurrentFormElementIntoView
 
 let LocalVendor_ScrollPositionEndFixed_Animate = null
 function _shared_scrollConformingElementIntoView (inputLayer) {
-  LocalVendor_ScrollPositionEndFixed_Animate = require('velocity-animate');
-  const selector = `.ClassNameForScrollingAncestorOfScrollToAbleElement`
+  LocalVendor_ScrollPositionEndFixed_Animate = require('velocity-animate')
+  const selector = '.ClassNameForScrollingAncestorOfScrollToAbleElement'
   const scrollingAncestor = inputLayer.closest(selector)
   if (!scrollingAncestor || typeof scrollingAncestor === 'undefined') {
     console.warn('⚠️  Asked to _shared_scrollConformingElementIntoView but no scrollingAncestor found')
     return
   }
-  
+
   LocalVendor_ScrollPositionEndFixed_Animate(inputLayer, 'stop')
   LocalVendor_ScrollPositionEndFixed_Animate(scrollingAncestor, 'stop')
   const navBarHeight = 44 // janky/fragile
@@ -104,7 +104,7 @@ function New_fieldValue_textInputLayer (context, params) {
   if (typeof placeholderText !== 'undefined' && placeholderText !== null) {
     layer.placeholder = placeholderText
   }
-  
+
   layer.Component_default_h = function () { return 29 } // H for height
   layer.style.height = layer.Component_default_h() + 'px'
 
@@ -112,14 +112,14 @@ function New_fieldValue_textInputLayer (context, params) {
     const width = params.target_width - 2 * 1 - 2 * 7
     layer.style.width = width + 'px'
   } else {
-    layer.style.width = `calc(100% - 2px - 14px)`
+    layer.style.width = 'calc(100% - 2px - 14px)'
   }
   layer.style.borderRadius = '4px'
-  layer.style.border = `1px solid rgba(0,0,0,0)` // transparent border to preserve layout while showing validation clr border
+  layer.style.border = '1px solid rgba(0,0,0,0)' // transparent border to preserve layout while showing validation clr border
   layer.style.textAlign = 'left'
   layer.style.fontSize = '13px'
   layer.style.fontWeight = '200'
-  layer.style.padding = `0 7px`
+  layer.style.padding = '0 7px'
   layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
   layer.style.outline = 'none' // no focus ring
   // editable:true
@@ -153,13 +153,17 @@ function New_fieldValue_textAreaView (params, context) {
   if (typeof existingValue !== 'undefined' && existingValue !== null) {
     layer.value = existingValue
   }
+  const name = params.name
+  if (typeof name !== 'undefined' && name !== null) {
+    layer.classList.add(name)
+  }
   const placeholderText = params.placeholderText
   if (typeof placeholderText !== 'undefined' && placeholderText !== null) {
     layer.placeholder = placeholderText
   }
-  layer.style.padding = `9px 8px`
-  layer.style.height = `45px`
-  layer.style.width = `calc(100% - 16px)` // no border so no -2*brdr_w
+  layer.style.padding = '9px 8px'
+  layer.style.height = '45px'
+  layer.style.width = 'calc(100% - 16px)' // no border so no -2*brdr_w
   layer.style.borderRadius = '3px'
   layer.style.border = 'none'
   layer.style.textAlign = 'left'
@@ -200,13 +204,12 @@ function New_fieldValue_textAreaView (params, context) {
   }
   if (context.isMobile === true) {
     layer.addEventListener('focus', function () {
-        // TODO: retain cycle?
-        layer.Component_ScrollIntoViewInFormContainerParent()
-      }
+      // TODO: retain cycle?
+      layer.Component_ScrollIntoViewInFormContainerParent()
+    }
     )
   }
   //
   return view
 }
 exports.New_fieldValue_textAreaView = New_fieldValue_textAreaView
-
