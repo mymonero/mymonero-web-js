@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const CopyPlugin = require('copy-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 
 module.exports = {
   entry: './src/index.browser.js',
@@ -31,21 +32,27 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
-        { from: "node_modules/@mymonero/mymonero-app-bridge/MyMoneroLibAppCpp_WASM.js", to: "../assets/MyMoneroLibAppCpp_WASM.js" },
-        { from: "node_modules/@mymonero/mymonero-app-bridge/MyMoneroLibAppCpp_WASM.wasm", to: "../assets/MyMoneroLibAppCpp_WASM.wasm" }
+        { from: 'node_modules/@mymonero/mymonero-app-bridge/MyMoneroLibAppCpp_WASM.js', to: '../assets/MyMoneroLibAppCpp_WASM.js' },
+        { from: 'node_modules/@mymonero/mymonero-app-bridge/MyMoneroLibAppCpp_WASM.wasm', to: '../assets/MyMoneroLibAppCpp_WASM.wasm' },
+        { from: 'icon*.png', to: '../dist/assets/img', context: path.resolve(__dirname, 'src', 'assets/img') },
+        { from: '*.svg', to: '../dist/assets/img', context: path.resolve(__dirname, 'src', 'assets/img') }
       ]
+    }),
+    new Dotenv({
+      defaults: true
     })
   ],
   resolve: {
-    alias: {
-      process: 'process/browser'
-    },
+    // alias: {
+    // process: 'process/browser'
+    // },
     fallback: {
       fs: false,
       util: require.resolve('util/'),
       crypto: require.resolve('crypto-browserify'),
       stream: require.resolve('stream-browserify'),
-      path: require.resolve('path-browserify')
+      path: require.resolve('path-browserify'),
+      process: require.resolve('process/browser')
     }
   }
 }

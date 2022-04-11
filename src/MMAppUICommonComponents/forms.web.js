@@ -2,15 +2,6 @@
 
 const View = require('../Views/View.web')
 
-const commonComponents_tables = require('./tables.web')
-
-function New_fieldContainerLayer (context) {
-  const layer = document.createElement('div')
-  layer.className = 'form_field'
-  return layer
-}
-exports.New_fieldContainerLayer = New_fieldContainerLayer
-
 function New_fieldTitle_labelLayer (labelText, context) {
   const layer = document.createElement('span')
   layer.innerHTML = labelText
@@ -33,7 +24,21 @@ function New_fieldTitle_rightSide_accessoryLayer (labelText, context) {
   layer.style.margin = '15px 0 8px 8px'
   layer.style.textAlign = 'left'
   //
-  context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
+  if (context.isMobile === true) {
+    layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+    layer.style.fontSize = '11px'
+    layer.style.fontWeight = 'lighter'
+  } else {
+    layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+    layer.style.webkitFontSmoothing = 'subpixel-antialiased' // for chrome browser
+    layer.style.fontSize = '10px'
+    layer.style.letterSpacing = '0.5px'
+    if (typeof process !== 'undefined' && process.platform === 'linux') {
+      layer.style.fontWeight = '700' // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
+    } else {
+      layer.style.fontWeight = '300'
+    }
+  }
   layer.style.float = 'right'
   layer.style.color = '#6B696B'
   layer.style.fontSize = '11px'
@@ -62,23 +67,14 @@ exports.ScrollCurrentFormElementIntoView = ScrollCurrentFormElementIntoView
 
 let LocalVendor_ScrollPositionEndFixed_Animate = null
 function _shared_scrollConformingElementIntoView (inputLayer) {
+  LocalVendor_ScrollPositionEndFixed_Animate = require('velocity-animate');
   const selector = `.ClassNameForScrollingAncestorOfScrollToAbleElement`
   const scrollingAncestor = inputLayer.closest(selector)
   if (!scrollingAncestor || typeof scrollingAncestor === 'undefined') {
     console.warn('⚠️  Asked to _shared_scrollConformingElementIntoView but no scrollingAncestor found')
     return
   }
-  // NOTE: velocity 1.5.0 is waiting on v2 to introduce a fix for
-  // bug in scrolling to element who is wrapped in a relative parent
-  // before its scrollable ancestor (showing bug on e.g. Contact picker);
-  // so patch was manually applied. See local vendored velocity.js header
-  // for note with github issues.
-  { // lazy require to avoid usage in e.g. electron; hopefully the perf hit will not be noticed
-    if (LocalVendor_ScrollPositionEndFixed_Animate == null) {
-      LocalVendor_ScrollPositionEndFixed_Animate = require('../Animation/Vendor/velocity')
-      // ^-- hopefully it will not cause problems to have multiple velocity modules connected to the same DOM
-    }
-  }
+  
   LocalVendor_ScrollPositionEndFixed_Animate(inputLayer, 'stop')
   LocalVendor_ScrollPositionEndFixed_Animate(scrollingAncestor, 'stop')
   const navBarHeight = 44 // janky/fragile
@@ -108,29 +104,26 @@ function New_fieldValue_textInputLayer (context, params) {
   if (typeof placeholderText !== 'undefined' && placeholderText !== null) {
     layer.placeholder = placeholderText
   }
-  //
-  layer.Component_default_padding_h = function () { return 7 } // H for horizontal
-  const padding_h = layer.Component_default_padding_h()
-  //
+  
   layer.Component_default_h = function () { return 29 } // H for height
   layer.style.height = layer.Component_default_h() + 'px'
-  const borderWidth = 1
+
   if (typeof params.target_width !== 'undefined') {
-    const width = params.target_width - 2 * borderWidth - 2 * padding_h
+    const width = params.target_width - 2 * 1 - 2 * 7
     layer.style.width = width + 'px'
   } else {
-    layer.style.width = `calc(100% - ${2 * borderWidth}px - ${2 * padding_h}px)`
+    layer.style.width = `calc(100% - 2px - 14px)`
   }
   layer.style.borderRadius = '4px'
-  layer.style.border = `${borderWidth}px solid rgba(0,0,0,0)` // transparent border to preserve layout while showing validation clr border
+  layer.style.border = `1px solid rgba(0,0,0,0)` // transparent border to preserve layout while showing validation clr border
   layer.style.textAlign = 'left'
   layer.style.fontSize = '13px'
   layer.style.fontWeight = '200'
-  layer.style.padding = `0 ${padding_h}px`
+  layer.style.padding = `0 7px`
   layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
   layer.style.outline = 'none' // no focus ring
   // editable:true
-  if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+  if (context.isMobile !== true) {
     layer.style.boxShadow = '0 0.5px 0 0 rgba(56,54,56,0.50), inset 0 0.5px 0 0 #161416'
   } else { // avoiding shadow
     layer.style.boxShadow = 'inset 0 0.5px 0 0 #161416'
@@ -142,13 +135,10 @@ function New_fieldValue_textInputLayer (context, params) {
     const this_layer = this
     _shared_scrollConformingElementIntoView(this_layer)
   }
-  if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
-    layer.addEventListener(
-      'focus',
-      function () {
-        layer.Component_ScrollIntoViewInFormContainerParent()
-      }
-    )
+  if (context.isMobile === true) {
+    layer.addEventListener('focus', function () {
+      layer.Component_ScrollIntoViewInFormContainerParent()
+    })
   }
   return layer
 }
@@ -167,10 +157,9 @@ function New_fieldValue_textAreaView (params, context) {
   if (typeof placeholderText !== 'undefined' && placeholderText !== null) {
     layer.placeholder = placeholderText
   }
-  const padding_h = 8
   layer.style.padding = `9px 8px`
-  layer.style.height = `${61 - 2 * padding_h}px`
-  layer.style.width = `calc(100% - ${2 * padding_h}px)` // no border so no -2*brdr_w
+  layer.style.height = `45px`
+  layer.style.width = `calc(100% - 16px)` // no border so no -2*brdr_w
   layer.style.borderRadius = '3px'
   layer.style.border = 'none'
   layer.style.textAlign = 'left'
@@ -184,7 +173,7 @@ function New_fieldValue_textAreaView (params, context) {
   //
   view.SetEnabled = function (isEnabled) {
     if (isEnabled) {
-      if (context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (context.isMobile !== true) {
         layer.style.boxShadow = '0 0.5px 0 0 rgba(56,54,56,0.50), inset 0 0.5px 0 0 #161416'
       } else { // avoiding shadow
         layer.style.boxShadow = 'inset 0 0.5px 0 0 #161416'
@@ -209,10 +198,8 @@ function New_fieldValue_textAreaView (params, context) {
     const this_layer = this
     _shared_scrollConformingElementIntoView(this_layer)
   }
-  if (context.CommonComponents_Forms_scrollToInputOnFocus === true) {
-    layer.addEventListener(
-      'focus',
-      function () {
+  if (context.isMobile === true) {
+    layer.addEventListener('focus', function () {
         // TODO: retain cycle?
         layer.Component_ScrollIntoViewInFormContainerParent()
       }
@@ -222,115 +209,4 @@ function New_fieldValue_textAreaView (params, context) {
   return view
 }
 exports.New_fieldValue_textAreaView = New_fieldValue_textAreaView
-//
-function New_fieldValue_selectLayer (params) {
-  const values = params.values || []
-  const layer = document.createElement('select')
-  {
-    values.forEach(
-      function (value, i) {
-        const optionLayer = document.createElement('option')
-        optionLayer.value = value
-        optionLayer.innerHTML = '' + value
-        layer.appendChild(optionLayer)
-      }
-    )
-  }
-  {
-    const existingValue = params.existingValue
-    if (typeof existingValue !== 'undefined' && existingValue !== null) {
-      layer.value = existingValue
-    }
-    layer.style.display = 'inline-block'
-    layer.style.height = '30px'
-    layer.style.width = `calc(100% - 4px - 20px)`
-    layer.style.border = '1px inset #222'
-    layer.style.borderRadius = '4px'
-    layer.style.textAlign = 'left'
-    layer.style.fontSize = '14px'
-    layer.style.color = '#ccc'
-    layer.style.backgroundColor = '#444'
-    layer.style.padding = '0 10px'
-    layer.style.fontFamily = 'monospace'
-  }
-  return layer
-}
-exports.New_fieldValue_selectLayer = New_fieldValue_selectLayer
-//
-function New_fieldAccessory_messageLayer (context) {
-  const layer = document.createElement('p')
-  context.themeController.StyleLayer_FontAsMessageBearingSmallLightMonospace(layer) // name needs improvement
-  layer.style.lineHeight = '15px'
-  layer.style.margin = '7px 7px 0 7px'
-  layer.style.color = '#8d8b8d'
-  layer.style.wordBreak = 'break-word'
-  // TODO: is there any merit to this? ---v
-  /* layer.style.wordBreak = "keep-all" // to get the text to wrap only at the word, not letter */
-  layer.style.webkitUserSelect = 'none'
-  return layer
-}
-exports.New_fieldAccessory_messageLayer = New_fieldAccessory_messageLayer
-function New_fieldAccessory_validationMessageLayer (context) {
-  const layer = New_fieldAccessory_messageLayer(context)
-  layer.style.color = '#f97777'
-  return layer
-}
-exports.New_fieldAccessory_validationMessageLayer = New_fieldAccessory_validationMessageLayer
-//
-function New_NonEditable_ValueDisplayLayer (value, context) {
-  const layer = document.createElement('div')
-  layer.value = value // setting this so there is a common interface with _textView above - some consumers rely on it. this should be standardized into a Value() method of a View
-  layer.style.borderRadius = '3px'
-  layer.style.backgroundColor = '#383638'
-  layer.style.padding = '8px 11px'
-  layer.style.boxSizing = 'border-box'
-  layer.style.width = '100%'
-  layer.style.height = 'auto'
-  //
-  layer.style.color = '#7C7A7C'
-  layer.style.fontSize = '13px'
-  layer.style.fontWeight = '100'
-  layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
-  layer.style.webkitFontSmoothing = 'subpixel-antialiased'
-  layer.innerHTML = value
-  //
-  return layer
-}
-exports.New_NonEditable_ValueDisplayLayer = New_NonEditable_ValueDisplayLayer
-function New_NonEditable_ValueDisplayLayer_BreakWord (value, context) {
-  const layer = New_NonEditable_ValueDisplayLayer(value, context)
-  layer.style.wordBreak = 'break-word'
-  return layer
-}
-exports.New_NonEditable_ValueDisplayLayer_BreakWord = New_NonEditable_ValueDisplayLayer_BreakWord
-function New_NonEditable_ValueDisplayLayer_BreakChar (value, context) {
-  const layer = New_NonEditable_ValueDisplayLayer(value, context)
-  layer.style.wordBreak = 'break-all'
-  return layer
-}
-exports.New_NonEditable_ValueDisplayLayer_BreakChar = New_NonEditable_ValueDisplayLayer_BreakChar
-//
-function New_IconAndMessageLayer (iconPath, messageText, context, optl_imgW, optl_imgH) {
-  const layer = document.createElement('div')
-  layer.classList.add('iconAndMessageLayer')
-  layer.innerHTML = `<img src="${iconPath}" ${optl_imgW ? 'width="' + optl_imgW + '"' : ''} ${optl_imgH ? 'height="' + optl_imgH + '"' : ''} />&nbsp;<span>${messageText}</span>`
-  layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
-  layer.style.webkitFontSmoothing = 'subpixel-antialiased'
-  layer.style.fontSize = '11px'
-  layer.style.fontWeight = '100'
-  layer.style.color = '#8D8B8D'
 
-  return layer
-}
-exports.New_IconAndMessageLayer = New_IconAndMessageLayer
-function New_Detected_IconAndMessageLayer (context) {
-  const layer = New_IconAndMessageLayer( // will call `__inject…`
-    './src/assets/img/detectedCheckmark@3x.png',
-    'Detected',
-    context,
-    '9px',
-    '7px'
-  )
-  return layer
-}
-exports.New_Detected_IconAndMessageLayer = New_Detected_IconAndMessageLayer

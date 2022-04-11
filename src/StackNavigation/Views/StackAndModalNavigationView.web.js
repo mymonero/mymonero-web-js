@@ -98,6 +98,7 @@ class StackAndModalNavigationView extends StackNavigationView {
       const modalView_layer = modalView.layer
       const preExisting_boxShadow = modalView_layer.style.boxShadow
       function __configureModalLayerForTransitionEnd () {
+        modalView_layer.classList.add("modal-view-layer");
         modalView_layer.style.position = 'absolute' // final style.position needs to be absolute or nav bar effects (due to higher effective z-index) will appear above a position:relative modal
         modalView_layer.style.zIndex = '10'
       }
@@ -110,7 +111,7 @@ class StackAndModalNavigationView extends StackNavigationView {
         modalView_layer.style.zIndex = '20' // 20 because we'll want to insert a semi-trans curtain view under the modalView_layer above the old_topStackView
         modalView_layer.style.top = `${self.layer.offsetHeight}px`
         //
-        if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+        if (self.context.isMobile !== true) {
           const to_boxShadow = '0px 0px 100px 2px rgba(0,0,0,0.5)'
           modalView_layer.style.boxShadow = to_boxShadow
         }
@@ -139,7 +140,7 @@ class StackAndModalNavigationView extends StackNavigationView {
                 easing: self._animation_modalPresent_easing(),
                 complete: function () {
                   __configureModalLayerForTransitionEnd()
-                  if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) { // since we didn't change it if this is not the case
+                  if (self.context.isMobile !== true) { // since we didn't change it if this is not the case
                     modalView_layer.style.boxShadow = preExisting_boxShadow // restore pre-existing, in case consumer had put one on
                   }
                   _afterHavingFullyPresentedNewModalView_removeOldTopModalView()

@@ -57,11 +57,6 @@ class ExceptionAlerting {
         el.parentNode.removeChild(el)
       }, 20.5 * 1000)
     })
-    setTimeout(function () {
-      window.ga('send', 'exception', {
-        exDescription: raw_message || 'undefined'
-      })
-    })
   }
 }
 module.exports = ExceptionAlerting

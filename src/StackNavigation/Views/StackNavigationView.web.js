@@ -28,6 +28,7 @@ class StackNavigationView extends View {
       layer.style.width = '100%'
       layer.style.height = '100%'
       layer.style.overflow = 'hidden' // because we don't want modals presented in self to create a scroll bar - bad thangs happen
+      layer.id = "stack-navigation-view"
     }
     { // navigationBarView
       const NavigationBarView = require('./NavigationBarView.web')
@@ -49,6 +50,7 @@ class StackNavigationView extends View {
       const view = new View({}, self.context)
       {
         const layer = view.layer
+        layer.id = "stack-view-stage-view"
         layer.style.zIndex = '1'
         layer.style.position = 'absolute'
         layer.style.left = '0'
@@ -203,7 +205,7 @@ class StackNavigationView extends View {
         stackView_layer.style.zIndex = '2' // 2 because we'll want to insert a semi-trans curtain view under the stackView_layer above the old_topStackView
         stackView_layer.style.left = `${self.stackViewStageView.layer.offsetWidth}px` // we use the stackViewStageView because it's already in the DOM and sized
         //
-        if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+        if (self.context.isMobile !== true) {
           const to_boxShadow = '0px 0px 12px 2px rgba(0,0,0,0.3)'
           stackView_layer.style.boxShadow = to_boxShadow
         }
@@ -238,7 +240,7 @@ class StackNavigationView extends View {
                 easing: self._animation_navigationPush_easing(),
                 complete: function () {
                   stackView_layer.style.zIndex = '0'
-                  if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) { // since we didn't change it if this is not the case
+                  if (self.context.isMobile !== true) { // since we didn't change it if this is not the case
                     stackView_layer.style.boxShadow = preExisting_boxShadow // restore pre-existing, in case consumer had put one on
                   }
                   _afterHavingFullyPresentedNewTopView_removeOldTopStackView()

@@ -1,45 +1,48 @@
-# Web Wallet 
+# MyMonero Web Wallet 
 
-![Logo](https://raw.githubusercontent.com/mymonero/mymonero-app-js/master/docs/assets/icon_100.png "Logo")
+<p align="center">
+  <img alt="MyMonero" src="https://user-images.githubusercontent.com/1645428/120083066-8a394a00-c0c6-11eb-9bc5-1ce02784dab3.png">
+</p>
+
+<p align="center">
+  MyMonero Web Wallet
+</p>
+
+<p align="center">
+  <a href="https://snyk.io/test/github/mymonero/mymonero-utils"><img src="https://snyk.io/test/github/mymonero/mymonero-web-js/badge.svg"></a>
+  <a href="https://opensource.org/licenses/BSD-3-Clause"><img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg"></a>
+</p>
+
+## Installation
+
+Before installing, [download and install Node.js](https://nodejs.org/en/download/).
+
+Clone the repo and install the dependencies.
+```bash
+git clone https://github.com/mymonero/mymonero-web-js.git
+cd mymonero-web-js
+```
+```bash
+npm install
+```
+To start the web wallet, run the following
+```bash
+npm start
+```
+
+Optionally, you can override default environment variables by copying the .env.defaults file to .env
+
+Windows:
+```bash
+copy .env.defaults .env
+```
+MacOS / Unix:
+```bash
+cp .env.defaults .env
+```
 
 
-### Info
-
-1. License and Copyrights
-2. Downloads
-3. Requirements & Install Locations
-4. Reporting Bugs & Making Feature Requests
-
-### Contributing and Testing
-
-1. Getting the Source Code
-2. Repo Contents Overview
-3. Building for Production
-4. Running in Development Mode
-5. Contributing
-6. Acknowledgements
-
-
-## License and Copyrights
-
-See `LICENSE.txt` for license.
-
-All app source code and assets copyright © 2014-2020 by MyMonero. All rights reserved.
-
-
-## Downloads
-
-Download the latest version from our website at [mymonero.com](https://www.mymonero.com) or from the Releases tab.
-
-Developers and pre-release testers who would like to use and work on the app can run it by obtaining the source and running one of the build commands below.
-
-To get set up with the source code, please see **Getting the Source Code** below.
-
-
-### Where is user data saved?
-
-* Browser: None (no data is saved)
-
+View the web wallet at: http://localhost:9110
 
 ## Reporting Bugs & Making Feature Requests
 
@@ -49,55 +52,14 @@ If you're reporting a bug, be sure to include all information which we would nee
 
 Please don't use the Issues tracker for general support or inquiries. You can also [contact us](https://mymonero.com/support) directly.
 
-
-# Contributing & Testing
-
-
-## Getting the Source Code
-
-### Download & Install
-
-1. First, ensure that you have recent versions of `node` and `npm` installed.
-
-2. Clone or otherwise download this repository. Then, in your terminal, `cd` into the repo directory.
-
-3. (To get the bleeding edge, and/or if you are going to make changes) Switch to the `develop` branch by executing `git checkout develop`.
-
-4. Install all required `node_modules` by executing `npm install`.
-
-
-## Repo Contents Overview
-* Local, application source code is located in `local_modules/`. This includes bundled/static third-party "Vendor" libraries such as [EmojiOne](http://emojione.com).
-
-* After installation, non-bundled third-party modules will be located in `node_modules/`.
-
-* App package and build process info is located in `package.json`.
-
-* This readme is located at `README.md`, and the license is located at `LICENSE.txt`.
-
-
-## Building for Production
-
-If you want to run the browser build which is provided in the releases, simply unzip it, `cd` into the browser_build directory, then run `python -m SimpleHTTPServer 9100` (replacing the port with one of your choice if needed). Then, open your browser of choice and navigate to `http://localhost:9100`.
-
-
-### Browser (Web wallet)
-
-`npm run start`
-
-*Note:* This will run the command `python -m SimpleHTTPServer 9100` to serve `./browser_build`. After this command completes, open your browser of choice and navigate to `http://localhost:9100`.
-
-
-## Contributing
-
-### Testing
+## Testing
 
 Please submit any bugs as Issues unless they have already been reported.
 
 Suggestions and feedback are very welcome!
 
 
-### Developing
+## Contributing
 
 If you have an improvement to the codebase and would like to have your code shipped in the production MyMonero app, please submit a [pull request](https://help.github.com/articles/about-pull-requests/), even if it's still a WIP. We try to credit all contributors in app release notes.
 
@@ -105,18 +67,17 @@ If you have an improvement to the codebase and would like to have your code ship
 
 * We reserve the right to refuse to merge any PRs, such as those which introduce breaking changes.
 
-The maintainer enjoys collaborating with volunteer contributors to the MyMonero apps over IRC private message and the #mymonero room on freenode.net (Come say hello!), so PR'd submissions do not have to be at all complete or perfect on their first submission. (To submit a draft PR for review, simply mark it as '[DO NOT MERGE]')
-
-There's also an icebox of ideas, features, improvements, known issues, and other todos waiting to be knocked out which are kept in the [Issues](https://github.com/mymonero/monero-app-js/issues) tracker.
-
-
-### Donating
+## Donating
 
 MyMonero Donation Address (XMR): 48yi8KBxh7fdZzwnX2kFCGALRcN1sNjwBHDfd5i9WLAWKs7G9rVbXNnbJTqZhhZCiudVtaMJKrXxmBeBR9kggBXr8X7PxPT
 
 Proceeds from donations are used to fund development on the MyMonero back-end server (a performant version of which we soon™ plan to open-source for anyone to run their own server at home). Any remaining funds will go towards product (app UI) R&D, and hosting costs.
 
+## License and Copyrights
 
+See `LICENSE.txt` for license.
+
+All app source code and assets copyright © 2014-2020 by MyMonero. All rights reserved.
 
 ## Acknowledgements
 

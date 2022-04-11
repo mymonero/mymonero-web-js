@@ -1,7 +1,6 @@
 'use strict'
 
 const View = require('../../Views/View.web')
-const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const BaseView_AWalletWizardScreen = require('./BaseView_AWalletWizardScreen.web')
 
@@ -42,24 +41,6 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
     }
   }
 
-  _setup_startObserving () {
-    const self = this
-    super._setup_startObserving()
-  }
-
-  //
-  //
-  // Lifecycle - Teardown
-  //
-  TearDown () {
-    const self = this
-    super.TearDown()
-  }
-
-  //
-  //
-  // Runtime - Accessors - Factories
-  //
   _new_messages_subheaderLayer (contentString) {
     const self = this
     const layer = document.createElement('h3')
@@ -133,10 +114,17 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
         layer.style.width = '85px'
       }
       layer.style.height = `${32 - 10 * 2}px`
-      self.context.themeController.StyleLayer_FontAsMessageBearingSmallLightMonospace(layer)
+      layer.style.fontSize = '11px' // we need this to visually stand out slightly more given how it's used
+      if (self.context.isMobile === true) {
+        layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+        layer.style.fontWeight = 'lighter'
+      } else {
+        layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+        layer.style.fontWeight = '100' // instead of 500, cause this color, white, is rendered strong
+      }
       layer.style.color = '#f8f7f8'
       layer.style.background = '#383638'
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         layer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
       } else { // avoiding shadow
         layer.style.boxShadow = 'inset 0 0.5px 0 0 #494749'
@@ -152,7 +140,7 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
       layer.style.left = '9px'
       layer.style.top = '9px'
       layer.style.background = '#1d1b1d'
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         layer.style.boxShadow = '0 0.5px 0 0 rgba(56,54,56,0.50), inset 0 0.5px 0 0 #161416'
       } else { // avoiding shadow
         layer.style.boxShadow = 'inset 0 0.5px 0 0 #161416'
@@ -193,10 +181,6 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
     return view
   }
 
-  //
-  //
-  // Runtime - Accessors - Navigation
-  //
   Navigation_Title () {
     return 'New Wallet'
   }
@@ -233,10 +217,6 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
     return view
   }
 
-  //
-  //
-  // Runtime - Imperatives - Submit button enabled state
-  //
   _configureInteractivityOfNextButton () {
     const self = this
     if (self.acceptCheckboxButtonView.isChecked) {
@@ -262,10 +242,6 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
     }
   }
 
-  //
-  //
-  // Runtime - Delegation - Interactions
-  //
   _userSelectedNextButton () {
     const self = this
     self.wizardController.walletMeta_name = self.context.walletsListController.LiteAppWalletName()
@@ -281,10 +257,6 @@ class CreateWallet_Instructions_View extends BaseView_AWalletWizardScreen {
     )
   }
 
-  //
-  //
-  // Runtime - Delegation - Navigation View special methods
-  //
   navigationView_viewIsBeingPoppedFrom () {
     const self = this
     // I don't always get popped but when I do I maintain correct state

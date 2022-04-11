@@ -5,15 +5,10 @@ const JSBigInt = require('@mymonero/mymonero-bigint').BigInteger
 const View = require('../../Views/View.web')
 const commonComponents_navigationBarButtons = require('../../MMAppUICommonComponents/navigationBarButtons.web')
 const commonComponents_tables = require('../../MMAppUICommonComponents/tables.web')
-const commonComponents_forms = require('../../MMAppUICommonComponents/forms.web')
-const commonComponents_actionButtons = require('../../MMAppUICommonComponents/actionButtons.web')
-const commonComponents_emptyScreens = require('../../MMAppUICommonComponents/emptyScreens.web')
 const commonComponents_activityIndicators = require('../../MMAppUICommonComponents/activityIndicators.web')
 const InfoDisclosingView = require('../../InfoDisclosingView/Views/InfoDisclosingView.web')
 const StackAndModalNavigationView = require('../../StackNavigation/Views/StackAndModalNavigationView.web')
 const TransactionDetailsView = require('./TransactionDetailsView.web')
-const ImportTransactionsModalView = require('./ImportTransactionsModalView.web')
-const FundsRequestQRDisplayView = require('../../RequestFunds/Views/FundsRequestQRDisplayView.web')
 const Currencies = require('../../CcyConversionRates/Currencies')
 const monero_amount_format_utils = require('@mymonero/mymonero-money-format')
 
@@ -81,7 +76,7 @@ class WalletDetailsView extends View {
       layer.style.height = '71px'
       layer.style.marginTop = '16px'
       layer.style.padding = '17px 17px'
-      if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+      if (self.context.isMobile !== true) {
         layer.style.boxShadow = '0 0.5px 1px 0 rgba(0,0,0,0.20), inset 0 0.5px 0 0 rgba(255,255,255,0.20)'
       } else { // avoiding shadow
         layer.style.boxShadow = 'inset 0 0.5px 0 0 rgba(255,255,255,0.20)'
@@ -199,7 +194,6 @@ class WalletDetailsView extends View {
       self.context,
       entitled,
       '',
-      self.context.pasteboard,
       'N/A',
       isTruncatedPreviewForm === true,
       false // isSecretData - NOTE: I have re-enabled copy on secret data for usability purposes
@@ -286,56 +280,6 @@ class WalletDetailsView extends View {
     }
     self.account_InfoDisclosingView = infoDisclosingView
     self.addSubview(infoDisclosingView)
-  }
-
-  _setup_actionButton_receive () {
-    const self = this
-    const buttonView = commonComponents_actionButtons.New_ActionButtonView(
-      'Receive',
-      './src/assets/img/actionButton_iconImage__request@3x.png', // relative to index.html
-      // TODO?: borrowing another module's asset. sort of bad
-      false,
-      function (layer, e) {
-        const requestForWallet = self.context.fundsRequestsListController.records.find(function (r) { // we'll just assume this is booted as well by now
-          return r.is_displaying_local_wallet === true && r.to_address === self.wallet.public_address
-        })
-        if (typeof requestForWallet === 'undefined') {
-          throw Error('Expected requestForWallet to be non nil')
-        }
-        //
-        // hook into existing push functionality to get stuff like reference tracking
-        const view = new FundsRequestQRDisplayView({
-          fundsRequest: requestForWallet,
-          presentedModally: true
-        }, self.context)
-        self.currentlyPresented_qrDisplayView = view
-        const navigationView = new StackAndModalNavigationView({}, self.context)
-        navigationView.SetStackViews([view])
-        self.navigationController.PresentView(navigationView, true)
-      },
-      self.context,
-      undefined,
-      undefined,
-      '16px 16px'
-    )
-    self.actionButtonsContainerView.addSubview(buttonView)
-  }
-
-  _setup_actionButton_send () {
-    const self = this
-    const buttonView = commonComponents_actionButtons.New_ActionButtonView(
-      'Send',
-      './src/assets/img/actionButton_iconImage__send@3x.png', // relative to index.html
-      true,
-      function (layer, e) {
-        self.context.walletAppCoordinator.Trigger_sendFundsFromWallet(self.wallet)
-      },
-      self.context,
-      undefined,
-      undefined,
-      '16px 16px'
-    )
-    self.actionButtonsContainerView.addSubview(buttonView)
   }
 
   _setup_layers_transactionsListLayerContainerLayer () {
@@ -619,21 +563,6 @@ class WalletDetailsView extends View {
     }
     return true
   }
-
-  _wallet_shouldShowImportTxsBtn () {
-    const self = this
-    const wallet = self.wallet
-    const wallet_bootFailed = self._wallet_bootFailed()
-    let shouldShow_importTxsBtn = wallet.shouldDisplayImportAccountOption === true && wallet_bootFailed === false
-    if (wallet.HasEverFetched_transactions() !== false) {
-      const stateCachedTransactions = wallet.New_StateCachedTransactions()
-      if (stateCachedTransactions.length > 0) {
-        shouldShow_importTxsBtn = false
-      }
-    }
-    return shouldShow_importTxsBtn
-  }
-
   //
   //
   // Runtime - Imperatives - UI Configuration
@@ -735,14 +664,44 @@ class WalletDetailsView extends View {
     }
     const stateCachedTransactions = wallet.New_StateCachedTransactions()
     if (stateCachedTransactions.length === 0) {
-      const view = commonComponents_emptyScreens.New_EmptyStateMessageContainerView(
-        '😴',
-        "You don't have any<br/>transactions yet.",
-        self.context,
-        0, // explicit margin h
-        0, // explicit margin v
-        -12 // content translate y
-      )
+      const margin_h = 0
+      const margin_v = 0
+      const view = new View({}, self.context)
+      
+      const layerEmpty = view.layer
+      layerEmpty.classList.add('emptyScreens')
+      layerEmpty.style.width = `calc(100% - ${2 * margin_h}px - 2px)` // -2px for border
+      layerEmpty.style.height = `calc(100% - ${2 * margin_v}px - 2px)` // -2px for border
+      layerEmpty.style.margin = `${margin_v}px ${margin_h}px`
+    
+      const contentContainerLayer = document.createElement('div')
+      contentContainerLayer.classList.add('content-container')
+      contentContainerLayer.style.display = 'table-cell'
+      contentContainerLayer.style.verticalAlign = 'middle'
+      const translateY_px = -12
+      contentContainerLayer.style.transform = 'translateY(' + translateY_px + 'px)' // pull everything up per design
+      view.layer.appendChild(contentContainerLayer)
+    
+      const emojiLayer = document.createElement('div')
+      emojiLayer.classList.add('emoji-label')
+      emojiLayer.innerHTML = '😴'
+      contentContainerLayer.appendChild(emojiLayer)
+    
+      const messageLayer = document.createElement('div')
+      messageLayer.classList.add('message-label')
+      messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
+      messageLayer.style.letterSpacing = '0'
+      messageLayer.style.fontSize = '13px'
+      if (self.context.isMobile === true) {
+        messageLayer.style.fontWeight = 'normal'
+      } else {
+        messageLayer.style.webkitFontSmoothing = 'subpixel-antialiased'
+        messageLayer.style.fontWeight = '300'
+      }
+      messageLayer.innerHTML = "You don't have any<br/>transactions yet."
+    
+      contentContainerLayer.appendChild(messageLayer)
+        
       const layer = view.layer
       layer.style.margin = '16px 0 16px 0'
       self.noTransactions_emptyStateView = view
@@ -755,7 +714,7 @@ class WalletDetailsView extends View {
     self.transactions_listContainerLayer = listContainerLayer
     listContainerLayer.style.margin = '16px 0 16px 0'
     listContainerLayer.style.background = '#383638'
-    if (self.context.Views_selectivelyEnableMobileRenderingOptimizations !== true) {
+    if (self.context.isMobile !== true) {
       listContainerLayer.style.boxShadow = '0 0.5px 1px 0 #161416, inset 0 0.5px 0 0 #494749'
     } else { // avoiding shadow
       listContainerLayer.style.boxShadow = 'inset 0 0.5px 0 0 #494749'
@@ -786,7 +745,15 @@ class WalletDetailsView extends View {
               return false
             }
           )
-          listItemLayer.appendChild(commonComponents_tables.New_tableCell_accessoryChevronLayer(self.context))
+          const layer = document.createElement('img')
+          layer.src = './src/assets/img/list_rightside_chevron@3x.png'
+          layer.style.position = 'absolute'
+          layer.style.pointerEvents = 'none' // b/c we actually don't want to pick up pointer events nor prevent them from being received by the cell
+          layer.style.width = '7px'
+          layer.style.height = '12px'
+          layer.style.right = '16px'
+          layer.style.top = 'calc(50% - 6px)'
+          listItemLayer.appendChild(layer)
           //
           const layer1 = document.createElement('div')
           layer1.style.width = '100%'
@@ -891,40 +858,13 @@ class WalletDetailsView extends View {
     const wallet = self.wallet
     const transactionsListLayerContainerLayer = self.transactionsListLayerContainerLayer
     const wallet_bootFailed = self._wallet_bootFailed()
-    const shouldShow_importTxsBtn = self._wallet_shouldShowImportTxsBtn()
-    if (shouldShow_importTxsBtn) {
-      if (!self.importTransactionsButtonView || typeof self.importTransactionsButtonView === 'undefined') {
-        const buttonView = commonComponents_tables.New_clickableLinkButtonView(
-          'IMPORT TRANSACTIONS',
-          self.context,
-          function () {
-            self._present_importTransactionsModal()
-          }
-        )
-        self.importTransactionsButtonView = buttonView
-        const layer = buttonView.layer
-        layer.style.position = 'absolute'
-        layer.style.left = '6px'
-        layer.style.top = '5px'
-        layer.style.width = '150px'
-        layer.style.height = '13px'
-        layer.style.float = 'none'
-        layer.style.clear = 'none' // doesn't matter tho
-        transactionsListLayerContainerLayer.appendChild(layer)
-      }
-    } else {
-      if (self.importTransactionsButtonView) {
-        if (self.importTransactionsButtonView.layer.parentNode) {
-          self.importTransactionsButtonView.layer.parentNode.removeChild(self.importTransactionsButtonView.layer)
-        }
-        self.importTransactionsButtonView = null
-      }
-    }
+    
     const shouldShowActivityIndicator =
     wallet.isBooted && // rule out still-logging-in (for now)
     wallet.HasEverFetched_accountInfo() && // rule out still loading (for now)
     wallet_bootFailed === false &&
     (wallet.IsScannerCatchingUp()/* || wallet.IsFetchingAnyUpdates() */)
+    
     if (shouldShowActivityIndicator) {
       if (!self.catchingUpProgressAndActivityIndicatorView || typeof self.catchingUpProgressAndActivityIndicatorView === 'undefined') {
         const view = new View({}, self.context)
@@ -933,7 +873,7 @@ class WalletDetailsView extends View {
             if (nBlocks > 0) {
               return `${nBlocks} block${nBlocks !== 1 ? 's' : ''} behind`
             } else {
-              return shouldShow_importTxsBtn !== true ? 'Scanner up-to-date' : ''
+              return 'Scanner up-to-date'
             }
           }
           let messageText
@@ -979,7 +919,21 @@ class WalletDetailsView extends View {
         progressLabelLayer.style.right = '19px'
         progressLabelLayer.style.top = '8px'
         //
-        self.context.themeController.StyleLayer_FontAsSmallRegularMonospace(layer)
+        if (self.context.isMobile === true) {
+          layer.style.fontFamily = 'Native-Regular, input, menlo, monospace'
+          layer.style.fontSize = '11px'
+          layer.style.fontWeight = 'lighter'
+        } else {
+          layer.style.fontFamily = 'Native-Light, input, menlo, monospace'
+          layer.style.webkitFontSmoothing = 'subpixel-antialiased' // for chrome browser
+          layer.style.fontSize = '10px'
+          layer.style.letterSpacing = '0.5px'
+          if (typeof process !== 'undefined' && process.platform === 'linux') {
+            layer.style.fontWeight = '700' // surprisingly does not render well w/o this… not linux thing but font size thing. would be nice to know which font it uses and toggle accordingly. platform is best guess for now
+          } else {
+            layer.style.fontWeight = '300'
+          }
+        }
         //
         progressLabelLayer.style.color = '#9E9C9E'
         layer.appendChild(progressLabelLayer)
@@ -1029,22 +983,6 @@ class WalletDetailsView extends View {
     const self = this
     if (self.noTransactions_emptyStateView) {
       self.noTransactions_emptyStateView.layer.style.height = self.catchingUpProgressAndActivityIndicatorView ? '254px' : '276px'
-    }
-  }
-
-  _ifNecessary_autoPresent_importTxsModal_afterS (afterS) {
-    const self = this
-    // If this is the first time after logging in that we're displaying the import txs modal,
-    // then auto-display it for the user so they don't have to know to click on the button
-    if (self.hasEverAutomaticallyDisplayedImportModal !== true) {
-      if (self._wallet_shouldShowImportTxsBtn()) {
-        self.hasEverAutomaticallyDisplayedImportModal = true // immediately, in case login and viewDidAppear race
-        setTimeout(function () {
-          if (self.wallet.hasBeenTornDown !== true) {
-            self._present_importTransactionsModal()
-          }
-        }, afterS * 1000)
-      }
     }
   }
 
@@ -1098,16 +1036,6 @@ class WalletDetailsView extends View {
       self.current_transactionDetailsView = view
     }
   }
-
-  _present_importTransactionsModal () {
-    const self = this
-    const view = new ImportTransactionsModalView({ wallet: self.wallet }, self.context)
-    self.currentlyPresented_ImportTransactionsModalView = view
-    const navigationView = new StackAndModalNavigationView({}, self.context)
-    navigationView.SetStackViews([view])
-    self.navigationController.PresentView(navigationView, true)
-  }
-
   //
   // Imperatives - Button functions - CSV export
   _exportTransactionsCSV () {
@@ -1185,7 +1113,6 @@ class WalletDetailsView extends View {
     }
     self.wallet.requestFromUI_manualRefresh()
     //
-    self._ifNecessary_autoPresent_importTxsModal_afterS(1)
   }
 
   // Runtime - Protocol / Delegation - Stack & modal navigation
@@ -1217,7 +1144,6 @@ class WalletDetailsView extends View {
     self._configureUIWithWallet__transactions()
     self._configureUIWithWallet__heightsAndImportAndFetchingState()
     //
-    self._ifNecessary_autoPresent_importTxsModal_afterS(1)
   }
 
   _wallet_failedToLogIn () {

@@ -15,16 +15,13 @@ class ModalStandaloneAboutView extends RootView {
     const view = commonComponents_navigationBarButtons.New_LeftSide_CancelButtonView(self.context)
     const layer = view.layer
     layer.innerHTML = 'Close'
-    layer.addEventListener(
-      'click',
-      function (e) {
-        e.preventDefault()
-        { // v--- self.navigationController because self is presented packaged in a StackNavigationView
-          self.navigationController.modalParentView.DismissTopModalView(true)
-        }
-        return false
+    layer.addEventListener('click', function (e) {
+      e.preventDefault()
+      { // v--- self.navigationController because self is presented packaged in a StackNavigationView
+        self.navigationController.modalParentView.DismissTopModalView(true)
       }
-    )
+      return false
+    })
     return view
   }
 }
