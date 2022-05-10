@@ -10,7 +10,7 @@
     "build": "webpack --mode=production",
     "start": "(webpack --mode=development) & node server",
     "watch": "(webpack --mode=development --watch) & node server",
-    "cypress:open": "cypress open"
+    "cypress:open": "npx cypress open"
   },
   "engines": {
     "node": ">=12.4.0"
