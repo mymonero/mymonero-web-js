@@ -25,7 +25,7 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
       self._setup_form_walletAddrAndKeysFields()
       self._setup_form_toggleLoginModeLayer()
     }
-    
+
     setTimeout(function () { // after visible… (TODO: improve by doing on VDA or other trigger)
       self.mnemonicTextAreaView.layer.focus()
     }, 600)
@@ -49,6 +49,7 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
       const view = commonComponents_forms.New_fieldValue_textAreaView({
         placeholderText: 'From your existing wallet'
       }, self.context)
+      view.layer.classList.add('existing_key')
       view.layer.autocorrect = 'off'
       view.layer.autocomplete = 'off'
       view.layer.autocapitalize = 'none'
