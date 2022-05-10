@@ -104,6 +104,7 @@ function New_LeftSide_BackButtonView (context) {
   layer.style.backgroundSize = '9px 14px'
   layer.style.backgroundRepeat = 'no-repeat'
   layer.style.backgroundPosition = '8px 5px'
+  layer.classList.add('back_button')
   return view
 }
 exports.New_LeftSide_BackButtonView = New_LeftSide_BackButtonView
@@ -129,7 +130,8 @@ function New_LeftSide_CancelButtonView (context, title_orUndefinedForDefaultCanc
 		typeof title_orUndefinedForDefaultCancel === 'undefined' ||
 			title_orUndefinedForDefaultCancel === null ||
 			title_orUndefinedForDefaultCancel === ''
-		  ? 'Cancel' : title_orUndefinedForDefaultCancel
+		  ? 'Cancel'
+: title_orUndefinedForDefaultCancel
   layer.innerHTML = title
   layer.style.display = 'block'
   layer.style.float = 'left' // so it sticks to the left of the left btn holder view layer

@@ -95,6 +95,7 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
         //
         const view = commonComponents_forms.New_fieldValue_textAreaView({
         }, self.context)
+        view.layer.classList.add('address')
         view.layer.autocorrect = 'off'
         view.layer.autocomplete = 'off'
         view.layer.autocapitalize = 'none'
@@ -134,6 +135,7 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
         //
         const view = commonComponents_forms.New_fieldValue_textAreaView({
         }, self.context)
+        view.layer.classList.add('view_key')
         view.layer.autocorrect = 'off'
         view.layer.autocomplete = 'off'
         view.layer.autocapitalize = 'none'
@@ -173,6 +175,7 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
         //
         const view = commonComponents_forms.New_fieldValue_textAreaView({
         }, self.context)
+        view.layer.classList.add('spend_key')
         view.layer.autocorrect = 'off'
         view.layer.autocomplete = 'off'
         view.layer.autocapitalize = 'none'

@@ -40,27 +40,27 @@ class InfoDisclosingView extends View {
       layer.style.padding = '0'
       layer.style.overflow = 'hidden'
       layer.addEventListener('click', function (e) {
-          const target = e.target
-          const hasClass_doNotUseForDisclosureToggling = target.classList.contains(self._className_doNotUseForDisclosureToggling())
-          if (hasClass_doNotUseForDisclosureToggling) {
-            return
-          }
-          let target_isInteractiveSubElement = false // derive
-          {
-            if (target.tagName.toLowerCase() == 'a') {
-              target_isInteractiveSubElement = true
-            } else if (target.style.userSelect == 'all' ||
+        const target = e.target
+        const hasClass_doNotUseForDisclosureToggling = target.classList.contains(self._className_doNotUseForDisclosureToggling())
+        if (hasClass_doNotUseForDisclosureToggling) {
+          return
+        }
+        let target_isInteractiveSubElement = false // derive
+        {
+          if (target.tagName.toLowerCase() == 'a') {
+            target_isInteractiveSubElement = true
+          } else if (target.style.userSelect == 'all' ||
 							target.style.webkitUserSelect == 'all' ||
 							target.style.MozUserSelect == 'all' ||
 							target.style.msUserSelect == 'all') {
-              target_isInteractiveSubElement = true
-            }
+            target_isInteractiveSubElement = true
           }
-          if (target_isInteractiveSubElement) {
-            return
-          }
-          self.disclosureButtonView.toggleDisclosed()
         }
+        if (target_isInteractiveSubElement) {
+          return
+        }
+        self.disclosureButtonView.toggleDisclosed()
+      }
       )
     }
     {
@@ -84,6 +84,7 @@ class InfoDisclosingView extends View {
       const view = new View({ tag: 'a' }, self.context)
       const layer = view.layer
       layer.classList.add(self._className_doNotUseForDisclosureToggling()) // even though the toggling animation code ignores 'spam'…
+      layer.classList.add('keys_dropdown_toggle')
       layer.style.position = 'absolute'
       layer.style.left = '14px'
       layer.style.top = '15px'
