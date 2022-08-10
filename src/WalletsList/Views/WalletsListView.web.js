@@ -46,19 +46,19 @@ class WalletsListView extends ListView {
     const view = new View({}, self.context)
     self.emptyStateContainerView = view
     const layer = view.layer
-    layer.style.marginTop = `19px`
+    layer.style.marginTop = '19px'
     layer.style.marginLeft = '16px'
-    layer.style.width = `calc(100% - 32px)`
-    layer.style.height = `calc(100% - 19px)`
+    layer.style.width = 'calc(100% - 32px)'
+    layer.style.height = 'calc(100% - 19px)'
     {
       const emptyStateMessageContainerView = new View({}, self.context)
-    
+
       const layerEmpty = emptyStateMessageContainerView.layer
       layerEmpty.classList.add('emptyScreens')
-      layerEmpty.style.width = `calc(100% - 2 * 0px - 2px)` // -2px for border
-      layerEmpty.style.height = `calc(100% - 2 * 0px - 2px)` // -2px for border
-      layerEmpty.style.margin = `0px 0px`
-    
+      layerEmpty.style.width = 'calc(100% - 2 * 0px - 2px)' // -2px for border
+      layerEmpty.style.height = 'calc(100% - 2 * 0px - 2px)' // -2px for border
+      layerEmpty.style.margin = '0px 0px'
+
       const contentContainerLayer = document.createElement('div')
       contentContainerLayer.classList.add('content-container')
       contentContainerLayer.style.display = 'table-cell'
@@ -66,12 +66,12 @@ class WalletsListView extends ListView {
       const translateY_px = -16
       contentContainerLayer.style.transform = 'translateY(' + translateY_px + 'px)' // pull everything up per design
       emptyStateMessageContainerView.layer.appendChild(contentContainerLayer)
-    
+
       const emojiLayer = document.createElement('div')
       emojiLayer.classList.add('emoji-label')
       emojiLayer.innerHTML = '<div class="smiley"></div>'
       contentContainerLayer.appendChild(emojiLayer)
-    
+
       const messageLayer = document.createElement('div')
       messageLayer.classList.add('message-label')
       messageLayer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif'
@@ -84,9 +84,9 @@ class WalletsListView extends ListView {
         messageLayer.style.fontWeight = '300'
       }
       messageLayer.innerHTML = "Welcome to MyMonero!<br/>Let's get started."
-    
+
       contentContainerLayer.appendChild(messageLayer)
-      
+
       self.emptyStateMessageContainerView = emptyStateMessageContainerView
       view.addSubview(emptyStateMessageContainerView)
     }
