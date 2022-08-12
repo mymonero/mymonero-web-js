@@ -116,6 +116,7 @@ class BaseView_Wallet_MetaInfo extends BaseView_AWalletWizardScreen {
     self.rightBarButtonView = view
     const layer = view.layer
     layer.innerHTML = 'Next'
+    layer.classList.add('next-button')
     layer.addEventListener('click', function (e) {
       e.preventDefault()
       if (self.isSubmitButtonDisabled !== true) { // button is enabled
