@@ -1119,7 +1119,7 @@ class Wallet extends EventEmitter {
   // Runtime - Imperatives - Public - Sending funds
 
   SendFunds (
-    enteredAddressValue, // currency-ready wallet address, but not an OpenAlias address (resolve before calling)
+    destinations, 
     resolvedAddress,
     manuallyEnteredPaymentID,
     resolvedPaymentID,
@@ -1133,7 +1133,6 @@ class Wallet extends EventEmitter {
     contact_hasOpenAliasAddress,
     contact_address,
     //
-    raw_amount_string,
     isSweepTx, // when true, amount will be ignored
     simple_priority,
     //
@@ -1151,6 +1150,7 @@ class Wallet extends EventEmitter {
       return
     }
     self.isSendingFunds = true
+
     //
     // now that we've done that, we can ask the user idle controller to disable user idle until we're done with this - cause it's not something we want to have interrupted by the user idle controller tearing everything down!!
     self.context.userIdleInWindowController.TemporarilyDisable_userIdle()
@@ -1162,6 +1162,7 @@ class Wallet extends EventEmitter {
       // critical to do on every exit from this method
       self.context.userIdleInWindowController.ReEnable_userIdle()
     }
+    const raw_amount_string = destinations[0].send_amount
     const statusUpdate_messageBase = isSweepTx ? 'Sending wallet balance…' : `Sending ${raw_amount_string} XMR…`
     const processStepMessageSuffix_byEnumVal =
 		{
@@ -1231,7 +1232,7 @@ class Wallet extends EventEmitter {
       fromWallet_needsImport: false,
 		  requireAuthentication: self.context.settingsController.authentication_requireWhenSending != false,
 		  //
-		  sending_amount_double_string: raw_amount_string,
+	          destinations: destinations,
 		  hasPickedAContact: hasPickedAContact,
 		  resolvedAddress_fieldIsVisible: resolvedAddress_fieldIsVisible,
 		  manuallyEnteredPaymentID_fieldIsVisible: manuallyEnteredPaymentID_fieldIsVisible,
@@ -1245,7 +1246,6 @@ class Wallet extends EventEmitter {
 		  priority: simple_priority,
 		  nettype: self.context.nettype,
 		  //
-		  enteredAddressValue: enteredAddressValue, // may be ""
 		  resolvedAddress: resolvedAddress, // may be ""
 		  manuallyEnteredPaymentID: manuallyEnteredPaymentID, // may be ""
 		  resolvedPaymentID: resolvedPaymentID, // may be ""
