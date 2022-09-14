@@ -1370,6 +1370,10 @@ class SendFundsView extends View {
       // "detected" payment id. So the `hasPickedAContact` usage above yields slightly
       // ambiguity in code and could be improved to encompass request uri pid "forcing"
     }
+    const destinations = [
+    	{to_address: enteredAddressValue,
+	send_amount: '' + final_XMR_amount_Number}
+    ];
 
     //
     // now if using alternate display currency, be sure to ask for terms agreement before doing send
@@ -1446,7 +1450,7 @@ class SendFundsView extends View {
     //
     function __proceedTo_generateSendTransaction () {
       wallet.SendFunds(
-        enteredAddressValue, // currency-ready wallet address, but not an OpenAlias address (resolve before calling)
+        destinations,
         resolvedAddress,
         manuallyEnteredPaymentID,
         resolvedPaymentID,
@@ -1460,7 +1464,6 @@ class SendFundsView extends View {
         hasPickedAContact ? self.pickedContact.HasOpenAliasAddress() : undefined,
         hasPickedAContact ? self.pickedContact.address : undefined,
         //
-        '' + final_XMR_amount_Number,
         sweeping, // when true, amount will be ignored
         self._selected_simplePriority(),
         //
