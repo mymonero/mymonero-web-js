@@ -1353,7 +1353,7 @@ class SendFundsView extends View {
     const resolvedAddress_fieldIsVisible = self.resolvedAddress_containerLayer.style.display === 'block'
     // Check if Yat
     if (self.isYat) {
-      enteredAddressValue = self.resolvedAddress;
+      enteredAddressValue = resolvedAddress;
     }
     //
     const manuallyEnteredPaymentID = self.manualPaymentIDInputLayer.value || ''
@@ -1375,17 +1375,12 @@ class SendFundsView extends View {
       // ambiguity in code and could be improved to encompass request uri pid "forcing"
     }
 
-    // Yat address
-    if (typeof(enteredAddressValue) === 'undefined' && typeof(resolvedAddress) !== 'undefined') {
-      enteredAddressValue = resolvedAddress
-    }
-
     // OA address
+    // we need to handle oa adresses, we can't purely rely on enteredAddressValue being correct
     if (enteredAddressValue.includes('.')) {
       enteredAddressValue = resolvedAddress
     }
 
-    // we need to handle oa adresses, we can't purely rely on enteredAddressValue being correct
     const destinations = [
     	{
         to_address: typeof(enteredAddressValue) !== 'undefined' ? enteredAddressValue : resolvedAddress,
