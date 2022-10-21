@@ -34,7 +34,7 @@
     "@mymonero/mymonero-tx-parsing-utils": "^1.0.6",
     "@mymonero/mymonero-web-components": "^2.0.2",
     "@mymonero/mymonero-yat-lookup": "^2.1.26",
-    "async": "3.1.0",
+    "async": "3.2.2",
     "bitcoin-address-validation": "^1.0.2",
     "buffer": "^6.0.3",
     "clipboard": "^2.0.8",
