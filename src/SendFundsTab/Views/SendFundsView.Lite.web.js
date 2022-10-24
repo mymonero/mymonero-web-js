@@ -1387,7 +1387,7 @@ class SendFundsView extends View {
 	      send_amount: '' + final_XMR_amount_Number
       }
     ];
-    console.log(destinations);
+
     //
     // now if using alternate display currency, be sure to ask for terms agreement before doing send
     if (!sweeping && selected_ccySymbol != Currencies.ccySymbolsByCcy.XMR) {
