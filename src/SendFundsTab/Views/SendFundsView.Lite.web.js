@@ -35,7 +35,7 @@ class SendFundsView extends View {
   setup () {
     const self = this
     self.isSubmitButtonDisabled = false
-    self.isYatHandle = false
+    self.isYat = false
     self.setup_views()
     self.startObserving()
     //
@@ -1345,12 +1345,16 @@ class SendFundsView extends View {
     }
     //
     const hasPickedAContact = !!(typeof self.pickedContact !== 'undefined' && self.pickedContact)
-    const enteredAddressValue = self.contactOrAddressPickerLayer.ContactPicker_inputLayer.value || ''
+    let enteredAddressValue = self.contactOrAddressPickerLayer.ContactPicker_inputLayer.value || ''
     const enteredAddressValue_exists = enteredAddressValue !== ''
     //
     const resolvedAddress = self.resolvedAddress_valueLayer.innerHTML || ''
     const resolvedAddress_exists = resolvedAddress !== '' // NOTE: it might be hidden, though!
     const resolvedAddress_fieldIsVisible = self.resolvedAddress_containerLayer.style.display === 'block'
+    // Check if Yat
+    if (self.isYat) {
+      enteredAddressValue = resolvedAddress;
+    }
     //
     const manuallyEnteredPaymentID = self.manualPaymentIDInputLayer.value || ''
     const manuallyEnteredPaymentID_exists = manuallyEnteredPaymentID !== ''
@@ -1370,6 +1374,19 @@ class SendFundsView extends View {
       // "detected" payment id. So the `hasPickedAContact` usage above yields slightly
       // ambiguity in code and could be improved to encompass request uri pid "forcing"
     }
+
+    // OA address
+    // we need to handle oa adresses, we can't purely rely on enteredAddressValue being correct
+    if (enteredAddressValue.includes('.')) {
+      enteredAddressValue = resolvedAddress
+    }
+
+    const destinations = [
+    	{
+        to_address: typeof(enteredAddressValue) !== 'undefined' ? enteredAddressValue : resolvedAddress,
+	      send_amount: '' + final_XMR_amount_Number
+      }
+    ];
 
     //
     // now if using alternate display currency, be sure to ask for terms agreement before doing send
@@ -1446,7 +1463,7 @@ class SendFundsView extends View {
     //
     function __proceedTo_generateSendTransaction () {
       wallet.SendFunds(
-        enteredAddressValue, // currency-ready wallet address, but not an OpenAlias address (resolve before calling)
+        destinations,
         resolvedAddress,
         manuallyEnteredPaymentID,
         resolvedPaymentID,
@@ -1460,7 +1477,6 @@ class SendFundsView extends View {
         hasPickedAContact ? self.pickedContact.HasOpenAliasAddress() : undefined,
         hasPickedAContact ? self.pickedContact.address : undefined,
         //
-        '' + final_XMR_amount_Number,
         sweeping, // when true, amount will be ignored
         self._selected_simplePriority(),
         //
@@ -1719,7 +1735,6 @@ class SendFundsView extends View {
     if (hasEmojiCharacters) {
 
       let isYat = yatMoneroLookup.isValidYatHandle(enteredPossibleAddress);
-      self.isYatHandle = isYat;
       if (isYat) {
         const lookup = yatMoneroLookup.lookupMoneroAddresses(enteredPossibleAddress).then((responseMap) => {
           // Our library returns a map with between 0 and 2 keys
@@ -1728,15 +1743,18 @@ class SendFundsView extends View {
             let errorString = `There is no Monero address associated with "${enteredPossibleAddress}"`
             self.validationMessageLayer.SetValidationError(errorString);
           } else if (responseMap.size == 1) {
+            self.isYat = isYat;
             // Either a Monero address or a Monero subaddress was found.
             let iterator = responseMap.values();
             let record = iterator.next();
             self._displayResolvedAddress(record.value);
           } else if (responseMap.size == 2) {
+            self.isYat = isYat;
             let moneroAddress = responseMap.get('0x1001');
             self._displayResolvedAddress(moneroAddress);
           }
         }).catch((error) => {
+          self.isYat = false;
           // If the error status is defined, handle this error according to the HTTP error status code
           if (typeof(error.response) !== "undefined" && typeof(error.response.status) !== "undefined") {
             if (error.response.status == 404) {

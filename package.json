@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@mymonero/changenow-exchange-integration": "^1.3.0-alpha.26",
-    "@mymonero/mymonero-app-bridge": "^2.1.18",
+    "@mymonero/mymonero-app-bridge": "^2.1.28",
     "@mymonero/mymonero-bigint": "^1.0.5",
     "@mymonero/mymonero-exchange-helper": "^1.3.1-alpha.4",
     "@mymonero/mymonero-hosted-api": "^1.1.5",
@@ -33,8 +33,8 @@
     "@mymonero/mymonero-sendfunds-utils": "^1.0.5",
     "@mymonero/mymonero-tx-parsing-utils": "^1.0.6",
     "@mymonero/mymonero-web-components": "^2.0.2",
-    "@mymonero/mymonero-yat-lookup": "^1.1.3",
-    "async": "3.1.0",
+    "@mymonero/mymonero-yat-lookup": "^2.1.26",
+    "async": "3.2.2",
     "bitcoin-address-validation": "^1.0.2",
     "buffer": "^6.0.3",
     "clipboard": "^2.0.8",
@@ -68,7 +68,7 @@
     "request": "2.88.0",
     "standard": "^16.0.3",
     "style-loader": "^2.0.0",
-    "webpack": "^5.27.2",
+    "webpack": "5.59.1",
     "webpack-cli": "^4.5.0",
     "webpack-merge": "4.2.2",
     "worker-loader": "^3.0.0"
