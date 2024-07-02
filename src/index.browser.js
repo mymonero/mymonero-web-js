@@ -4,7 +4,7 @@ import './assets/css/styles.css'
 import './assets/css/clear.browser.css'
 
 window.BootApp = async function () { // encased in a function to prevent scope being lost/freed on mobile
-  const coreBridgeInstance = await require('@mymonero/mymonero-app-bridge')({})
+  const coreBridgeInstance = await require('@mymonero/mymonero-app-bridge')({}, process.env.WEB_URL + '/assets/')
   console.log(process.env.NETTYPE)
   const isMobile = ('ontouchstart' in document.documentElement) // an approximation for 'mobile'
   const config = {
