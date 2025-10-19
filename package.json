@@ -2,14 +2,14 @@
   "name": "MyMonero",
   "author": "MyMonero",
   "description": "The simplest way to use Monero",
-  "version": "1.3.2",
+  "version": "1.3.5",
   "license": "SEE LICENSE IN LICENSE.txt",
   "repository": "https://github.com/mymonero/mymonero-web-js",
   "scripts": {
-    "dev": "(NODE_OPTIONS=--openssl-legacy-provider webpack --mode=development) & node server",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode=production",
-    "start": "(NODE_OPTIONS=--openssl-legacy-provider webpack --mode=development) & node server",
-    "watch": "(NODE_OPTIONS=--openssl-legacy-provider webpack --mode=development --watch) & node server"
+    "dev": "(webpack --mode=development) & node server",
+    "build": "webpack --mode=production",
+    "start": "(webpack --mode=development) & node server",
+    "watch": "(webpack --mode=development --watch) & node server"
   },
   "engines": {
     "node": ">=12.4.0"
