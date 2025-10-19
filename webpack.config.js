@@ -53,7 +53,7 @@ module.exports = {
       stream: require.resolve('stream-browserify'),
       path: require.resolve('path-browserify'),
       process: require.resolve('process/browser'),
-      vm: require.resolve('vm-browserify')
+      vm: false 
     }
   }
 }
