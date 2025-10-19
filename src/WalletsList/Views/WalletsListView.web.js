@@ -279,18 +279,6 @@ class WalletsListView extends ListView {
         -webkit-font-smoothing: subpixel-antialiased;
       }
       </style>
-      <img src="/assets/img/MM-to-Cake.jpg" style="width: auto; max-width: 100%;">
-      <div style="font-weight:bold; margin-bottom: 1.25em; font-size: 1.25em; margin-top: 0.5em;" class="announcement">MyMonero will be sunsetting its services in January 2026</div>
-      <div style="text-align:left; margin-bottom: 1em;" class="announcement">
-      Dear Monero Community,
-      </div>
-      <div style="text-align: justify; margin-bottom: 1em;" class="announcement">After over a decade of serving the Monero ecosystem, MyMonero has decided to sunset its wallet service on Tuesday, January 06, 2026. We've worked closely with the Cake Wallet team to help provide continuity for our users, given their strong track record in the Monero community. We understand the trust you've placed in us since 2014, and we're committed to ensuring a smooth, secure, and privacy-preserving transition for all users.</div>
-
-      <div style="text-align:left; margin-bottom: 1em;" class="announcement">Please migrate your Monero to <a href="https://docs.cakewallet.com/tutorials/mymonero/" target="_blank" class="no-decoration">Cake Wallet</a> prior to January, 2026 to ensure uninterrupted access to your funds.</div>
-
-      <div style="text-align:left; margin-bottom: 1em;" class="announcement"><a href="https://mymonero.com/?announcement=1" class="no-decoration" target="_blank">Read more about this change here.</a></div>
-      <div style="text-align:left; margin-bottom: 1em;" class="announcement">Thank you for being part of this journey with us.</div>
-      
       <img src="/src/assets/img/MM-to-Cake.jpg" style="width: auto; max-width: 100%;">
       <div style="font-weight:bold; margin-bottom: 1.25em; font-size: 1.25em; margin-top: 0.5em;">MyMonero will be sunsetting its services in January 2026</div>
       <div style="text-align:left; margin-bottom: 1em;">
