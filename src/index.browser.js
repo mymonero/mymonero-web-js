@@ -2,6 +2,7 @@
 
 import './assets/css/styles.css'
 import './assets/css/clear.browser.css'
+import '/src/assets/css/sweetalert2.css'
 
 window.BootApp = async function () { // encased in a function to prevent scope being lost/freed on mobile
   const coreBridgeInstance = await require('@mymonero/mymonero-app-bridge')({})
