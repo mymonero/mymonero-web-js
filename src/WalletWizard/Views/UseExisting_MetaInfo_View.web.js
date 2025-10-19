@@ -50,6 +50,7 @@ class UseExisting_MetaInfo_View extends BaseView_Wallet_MetaInfo {
         name: 'existing_key',
         placeholderText: 'From your existing wallet'
       }, self.context)
+      view.layer.value = ''
       view.layer.autocorrect = 'off'
       view.layer.autocomplete = 'off'
       view.layer.autocapitalize = 'none'
